@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="min_openhab_widget_height">48dp</dimen>
+    <dimen name="single_pane_gab_size">32dp</dimen>
+    
+</resources>
