@@ -1,13 +1,15 @@
 package de.akuz.android.openhab.ui.widgets;
 
-import android.app.DialogFragment;
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import de.akuz.android.openhab.core.objects.Item;
+import de.akuz.android.openhab.core.objects.LinkedPage;
+import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
 
 public abstract class AbstractOpenHABWidget extends LinearLayout implements
@@ -117,9 +119,7 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 		public void sendCommand(Item item, String command,
 				ItemUpdateListener listener);
 
-		public void loadSubPage(String pageUrl);
-
-		public void loadParentPage(String pageUrl);
+		public void loadPage(Page page);
 
 		public boolean serverPushEnabled();
 
@@ -132,7 +132,7 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 		if (commandInterface != null) {
 			Log.i(TAG,
 					"Command interface is not NULL and Widget has child page, loading child page");
-			commandInterface.loadSubPage(widget.getLinkedPage().getLink());
+			commandInterface.loadPage(widget.getLinkedPage());
 		}
 
 	}

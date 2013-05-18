@@ -42,8 +42,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private SpiceManager spiceManager;
 
-	private Context mContext;
-
 	private String baseUrl;
 	private String pageUrl;
 
@@ -55,8 +53,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private UUID atmosphereId;
 
-	public PageXMLConnection(Context context, SpiceManager spiceManager) {
-		this.mContext = context;
+	public PageXMLConnection(SpiceManager spiceManager) {
 		this.spiceManager = spiceManager;
 		uiHandler = new Handler();
 		atmosphereId = UUID.randomUUID();

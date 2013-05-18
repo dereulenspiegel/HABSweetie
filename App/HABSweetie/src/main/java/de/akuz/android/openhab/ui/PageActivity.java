@@ -1,19 +1,13 @@
 package de.akuz.android.openhab.ui;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
 
 import com.google.api.client.http.HttpResponseException;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -21,6 +15,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
@@ -32,18 +27,12 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	private final static String TAG = PageActivity.class.getSimpleName();
 
-	private LinearLayout pageFragmentContainerRight;
-	private LinearLayout pageFragmentContainerLeft;
-
-	private Fragment currentFragment;
-	private Fragment leftFragment;
-	private Fragment rightFragment;
+	private ViewPager pager;
+	private OpenHABPagePagerAdapter pagerAdapter;
 
 	private String baseUrl;
 
 	private String selectedSitemapUrl;
-
-	private Map<String, PageFragment> fragmentCache = new WeakHashMap<String, PageFragment>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +43,12 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		Log.d(TAG, "Registering receiver for SSL Decision");
 		sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
 		setContentView(R.layout.page_activity);
-		pageFragmentContainerLeft = findView(R.id.pageFragmentContainerLeft);
-		pageFragmentContainerRight = findView(R.id.pageFragmentContainerRight);
+		pagerAdapter = new OpenHABPagePagerAdapter(this,
+				getSupportFragmentManager());
+		pager = findView(R.id.pager);
+		pager.setAdapter(pagerAdapter);
+		pager.setOnPageChangeListener(pagerAdapter);
+		pager.setOffscreenPageLimit(0);
 
 		getActionBar().setTitle("HABSweetie");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,24 +59,18 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "Resuming PageActivity");
-		currentFragment = getFragmentManager().findFragmentById(
-				R.id.pageFragmentContainerLeft);
-		if (currentFragment == null) {
-			baseUrl = getPreferenceStringValue(R.string.pref_url_key);
-			Log.d(TAG, "Using base url " + baseUrl);
-			String pageUrl = getPreferenceStringValue(R.string.pref_default_sitemap_url_key);
-			if (pageUrl != null && baseUrl != null
-					&& !pageUrl.startsWith(baseUrl)) {
-				pageUrl = null;
-			}
-			if ((pageUrl != null && baseUrl != null)
-					|| selectedSitemapUrl != null) {
-				loadSubPage(pageUrl);
-			} else if (baseUrl != null) {
-				loadAvailableSitemaps();
-			} else {
-				makeCrouton(R.string.please_configure_this_app, Style.ALERT);
-			}
+		baseUrl = getPreferenceStringValue(R.string.pref_url_key);
+		Log.d(TAG, "Using base url " + baseUrl);
+		String pageUrl = getPreferenceStringValue(R.string.pref_default_sitemap_url_key);
+		if (pageUrl != null && baseUrl != null && !pageUrl.startsWith(baseUrl)) {
+			pageUrl = null;
+		}
+		if ((pageUrl != null && baseUrl != null) || selectedSitemapUrl != null) {
+			loadSubPage(pageUrl);
+		} else if (baseUrl != null) {
+			loadAvailableSitemaps();
+		} else {
+			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 		}
 	}
 
@@ -135,89 +122,25 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 				});
 	}
 
+	public void loadSubPage(Page page) {
+		Log.d(TAG, "Loading page: " + page.getLink());
+		int position = pagerAdapter.goOnePageDown(page);
+		pager.setCurrentItem(position , true);
+	}
+
 	public void loadSubPage(String pageUrl) {
-		Log.d(TAG, "Loading page: " + pageUrl);
-		selectedSitemapUrl = pageUrl;
-		loadingIndicatorTrue();
-		if (isSinglePaneMode()) {
-			loadSubPageSinglePaneMode(pageUrl);
-		} else {
-			loadSubPageMultiPaneMode(pageUrl);
-		}
+		pagerAdapter.initializeWithFirstPage(pageUrl);
+		pager.setCurrentItem(0, true);
 	}
 
-	public void loadParentPage(String pageUrl) {
-		if (isSinglePaneMode()) {
-			loadSubPageSinglePaneMode(pageUrl);
-		} else {
-			loadParentPageMultiPane(pageUrl);
-		}
-	}
-
-	public void loadParentPageMultiPane(String pageUrl) {
-		if (rightFragment == null) {
-			return;
-		}
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		PageFragment parentPage = getFragmentForUrl(pageUrl);
-		rightFragment = leftFragment;
-		ft.replace(R.id.pageFragmentContainerLeft, parentPage);
-		leftFragment = parentPage;
-		ft.replace(R.id.pageFragmentContainerRight, rightFragment);
-		ft.commit();
-	}
-
-	public boolean isSinglePaneMode() {
-		return pageFragmentContainerRight == null
-				|| pageFragmentContainerRight.getVisibility() == View.GONE;
-	}
-
-	private void loadSubPageMultiPaneMode(String pageUrl) {
-		Log.d(TAG, "Loading sub page in multi pane mode");
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		PageFragment subPage = getFragmentForUrl(pageUrl);
-		if (leftFragment != null) {
-			ft.remove(leftFragment);
-		}
-		if (rightFragment != null) {
-			ft.remove(rightFragment);
-		}
-		if (leftFragment == null) {
-			leftFragment = subPage;
-			pageFragmentContainerRight.setVisibility(View.GONE);
-			ft.add(R.id.pageFragmentContainerLeft, subPage);
-		} else if (rightFragment == null) {
-			pageFragmentContainerRight.setVisibility(View.VISIBLE);
-			rightFragment = subPage;
-			ft.addToBackStack(null);
-			ft.add(R.id.pageFragmentContainerRight, subPage);
-		} else {
-			ft.remove(rightFragment);
-			ft.replace(R.id.pageFragmentContainerLeft, rightFragment);
-			ft.replace(R.id.pageFragmentContainerLeft, subPage);
-			ft.addToBackStack(null);
-			rightFragment = leftFragment;
-			leftFragment = subPage;
-		}
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-		ft.commitAllowingStateLoss();
-	}
-
-	private void loadSubPageSinglePaneMode(String pageUrl) {
-		Log.d(TAG, "Loading page in single pane mode" + pageUrl);
-		FragmentTransaction trans = getFragmentManager().beginTransaction();
-		PageFragment pageFragment = getFragmentForUrl(pageUrl);
-		trans.replace(R.id.pageFragmentContainerLeft, pageFragment);
-		if (currentFragment != null) {
-			trans.addToBackStack(null);
-		}
-		currentFragment = pageFragment;
-		trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-		trans.commitAllowingStateLoss();
+	public void loadParentPage(Page pageUrl) {
+		pagerAdapter.goOnePageUp();
+		pager.setCurrentItem(pagerAdapter.getCount() - 2, true);
 	}
 
 	@Override
 	public void sitemapSelected(Sitemap selectedSitemap) {
+		selectedSitemapUrl = selectedSitemap.link;
 		loadSubPage(selectedSitemap.homepage.link);
 
 	}
@@ -235,18 +158,6 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private PageFragment getFragmentForUrl(String pageUrl) {
-		if (fragmentCache.containsKey(pageUrl)) {
-			PageFragment fragment = fragmentCache.get(pageUrl);
-			if (fragment != null) {
-				return fragment;
-			}
-		}
-		PageFragment fragment = PageFragment.build(pageUrl);
-		fragmentCache.put(pageUrl, fragment);
-		return fragment;
 	}
 
 	private void handleException(Throwable t) {

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 
 	protected SpiceManager spiceManager = new SpiceManager(
 			OpenHABRestService.class);

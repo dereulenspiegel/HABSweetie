@@ -35,7 +35,7 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 	@Override
 	public T decode(EVENT_TYPE e, String s) {
 		if (EVENT_TYPE.MESSAGE == e) {
-			Log.d(TAG, resultClass.getSimpleName() + " Decoding message " + s);
+//			Log.d(TAG, resultClass.getSimpleName() + " Decoding message " + s);
 			long receivedAt = System.currentTimeMillis();
 			ByteArrayInputStream is = new ByteArrayInputStream(s.getBytes());
 			try {
@@ -45,7 +45,7 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 				object.setBaseUrl(baseUrl);
 				return object;
 			} catch (IOException e1) {
-				Log.e(TAG, "Error decoding the message", e1);
+//				Log.e(TAG, "Error decoding the message", e1);
 			}
 		}
 		return null;

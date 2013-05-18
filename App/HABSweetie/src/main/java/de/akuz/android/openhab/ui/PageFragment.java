@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
 
-import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -49,6 +49,8 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	private PageConnectionInterface pageConnection;
 
+	private OpenHABPagePagerAdapter pageAdapter;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,12 +60,15 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
-		pageConnection = new PageXMLConnection(getActivity(),
-				pageActivity.getSpiceManager());
+		pageConnection = new PageXMLConnection(pageActivity.getSpiceManager());
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
 		loadCompletePage();
 
+	}
+
+	private void setPageAdapter(OpenHABPagePagerAdapter pagerAdapter) {
+		this.pageAdapter = pagerAdapter;
 	}
 
 	private void loadCompletePage() {
@@ -88,35 +93,39 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	}
 
-	public static PageFragment build(String pageUrl) {
+	public static PageFragment build(String pageUrl,
+			OpenHABPagePagerAdapter adapter) {
 		Bundle args = new Bundle();
 		args.putString(PAGE_URL_ARG, pageUrl);
 		PageFragment fragment = new PageFragment();
 		fragment.setArguments(args);
+		fragment.setPageAdapter(adapter);
 		return fragment;
 	}
 
 	private void updateActionBar() {
-		if (isVisible() && pageActivity != null) {
-			if (page.getIconUrl() != null) {
-				ImageLoader.getInstance().loadImage(page.getIconUrl(), this);
-			} else {
-				pageActivity.updateTitleAndIcon(page.getTitle(), null);
-			}
-		}
+		// if (isVisible() && pageActivity != null) {
+		// if (page.getIconUrl() != null) {
+		// ImageLoader.getInstance().loadImage(page.getIconUrl(), this);
+		// } else {
+		// pageActivity.updateTitleAndIcon(page.getTitle(), null);
+		// }
+		// }
 	}
 
 	@Override
 	public void onResume() {
 		pageActivity = (PageActivity) getActivity();
 		super.onResume();
-		if (page != null) {
-			updatePage(page);
-		}
 	}
 
 	private void updatePage(final Page page) {
-		this.page = page;
+		if (page.getWidget() != null) {
+			this.page = page;
+		} else {
+			this.page.setIcon(page.getIcon());
+			this.page.setTitle(page.getTitle());
+		}
 		updateActionBar();
 		if (page.getWidget() != null) {
 			listAdapter.batchAddOrUpdateWidgets(page.getWidget());
@@ -142,17 +151,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	}
 
 	@Override
-	public void loadSubPage(String pageUrl) {
+	public void loadPage(Page page) {
 		if (!pageActivity.isFinishing()) {
-			pageActivity.loadSubPage(pageUrl);
-		}
-
-	}
-
-	@Override
-	public void loadParentPage(String pageUrl) {
-		if (!pageActivity.isFinishing()) {
-			pageActivity.loadParentPage(pageUrl);
+			pageAdapter.showPage(page);
 		}
 
 	}
@@ -171,13 +172,14 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	@Override
 	public void pageUpdateReceived(Page page) {
-		Log.d(TAG, "Received Page update");
-		// Ugly workaroung for cases where widget updates are parsed as page
+		// Ugly workaround for cases where widget updates are parsed as page
 		// updates
 		if (page.getId() != null) {
+			Log.d(TAG, "Received Page update");
 			updatePage(page);
 			pageActivity.loadingIndicatorFalse();
 		} else {
+			Log.d(TAG, "Received widget update");
 			listAdapter.batchAddOrUpdateWidgets(page.getWidget());
 		}
 

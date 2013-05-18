@@ -104,4 +104,15 @@ public class Page extends AbstractOpenHABObject {
 		}
 	}
 
+	public boolean hasSubPage(String pageUrl) {
+		if (widget != null) {
+			for (Widget w : widget) {
+				if (w.hasLinkedPage(pageUrl)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }

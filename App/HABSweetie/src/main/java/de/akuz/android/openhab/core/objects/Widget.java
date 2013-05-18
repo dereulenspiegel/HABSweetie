@@ -24,7 +24,7 @@ public class Widget extends AbstractOpenHABObject {
 	@Key
 	protected ArrayList<Mapping> mapping;
 	@Key
-	protected LinkedPage linkedPage;
+	protected Page linkedPage;
 	@Key
 	protected Boolean switchSupport;
 	@Key
@@ -96,11 +96,11 @@ public class Widget extends AbstractOpenHABObject {
 		this.mapping = mapping;
 	}
 
-	public LinkedPage getLinkedPage() {
+	public Page getLinkedPage() {
 		return linkedPage;
 	}
 
-	public void setLinkedPage(LinkedPage linkedPage) {
+	public void setLinkedPage(Page linkedPage) {
 		this.linkedPage = linkedPage;
 	}
 
@@ -277,6 +277,20 @@ public class Widget extends AbstractOpenHABObject {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+
+	public boolean hasLinkedPage(String pageUrl) {
+		if (linkedPage != null && linkedPage.getLink().equals(pageUrl)) {
+			return true;
+		} else if (widget != null) {
+			for (Widget w : widget) {
+				if (w.hasLinkedPage(pageUrl)) {
+					return true;
+				}
+			}
+
 		}
 		return false;
 	}
