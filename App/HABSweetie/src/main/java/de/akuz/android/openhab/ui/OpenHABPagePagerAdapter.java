@@ -127,23 +127,6 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 		return position;
 	}
 
-	public int goOnePageDown(Page page) {
-		PageFragment fragment = getPageFragment(page.getLink());
-		int position = fragmentList.size();
-		for (PageFragment p : fragmentList) {
-			if (p.getPage() != null && p.getPage().hasSubPage(page.getLink())) {
-				position = fragmentList.indexOf(p) + 1;
-			}
-		}
-		int size = fragmentList.size();
-		for (int i = position + 1; i < size; i++) {
-			fragmentList.remove(i);
-		}
-		fragmentList.add(position, fragment);
-		notifyDataSetChanged();
-		return position;
-	}
-
 	public void goOnePageUp() {
 		if (fragmentList.size() == 1
 				&& fragmentList.get(0).getPage().getParent() != null) {

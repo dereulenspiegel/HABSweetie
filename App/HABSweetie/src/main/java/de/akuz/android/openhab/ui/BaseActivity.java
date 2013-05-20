@@ -2,6 +2,8 @@ package de.akuz.android.openhab.ui;
 
 import java.text.MessageFormat;
 
+import javax.inject.Inject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,10 @@ import android.view.View;
 
 import com.octo.android.robospice.SpiceManager;
 
+import dagger.ObjectGraph;
+import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.core.OpenHABRestService;
 import de.duenndns.ssl.InteractionReceiver;
@@ -23,14 +28,20 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class BaseActivity extends FragmentActivity {
 
-	protected SpiceManager spiceManager = new SpiceManager(
-			OpenHABRestService.class);
+	@Inject
+	protected SpiceManager spiceManager;
 
 	protected InteractionReceiver sslInteractionReceiver;
+
+	protected ObjectGraph activityGraph;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		BootstrapApplication app = (BootstrapApplication) getApplication();
+		activityGraph = app.getObjectGraph()
+				.plus(new CommunicationModule(this));
+		activityGraph.inject(this);
 	}
 
 	@Override
@@ -116,13 +127,22 @@ public class BaseActivity extends FragmentActivity {
 		return PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(resId), null);
 	}
-	
+
 	protected void makeCrouton(int resId, Style style, Object... params) {
 		String message = getString(resId);
 		if (params != null && params.length > 0) {
 			message = MessageFormat.format(message, params);
 		}
 		Crouton.makeText(this, message, style).show();
+	}
+
+	public void inject(Object o) {
+		activityGraph.inject(o);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getInstance(Class<?> clazz) {
+		return (T) activityGraph.get(clazz);
 	}
 
 }

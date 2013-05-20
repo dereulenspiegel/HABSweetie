@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Function;
@@ -15,7 +17,6 @@ import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 import org.atmosphere.wasync.impl.AtmosphereClient;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
@@ -40,7 +41,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private List<PageUpdateListener> listeners = new LinkedList<PageUpdateListener>();
 
-	private SpiceManager spiceManager;
+	@Inject
+	SpiceManager spiceManager;
 
 	private String baseUrl;
 	private String pageUrl;
@@ -53,8 +55,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private UUID atmosphereId;
 
-	public PageXMLConnection(SpiceManager spiceManager) {
-		this.spiceManager = spiceManager;
+	@Inject
+	public PageXMLConnection() {
 		uiHandler = new Handler();
 		atmosphereId = UUID.randomUUID();
 	}
@@ -303,7 +305,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private void notifyListenersOfWidgetUpdate(final Widget widget) {
 		uiHandler.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				for (final PageUpdateListener l : listeners) {
@@ -329,7 +331,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private void notifyListenersOfException(final Throwable t) {
 		uiHandler.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				for (final PageUpdateListener l : listeners) {

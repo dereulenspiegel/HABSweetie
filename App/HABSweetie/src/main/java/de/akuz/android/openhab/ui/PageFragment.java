@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
 
+import javax.inject.Inject;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -13,14 +15,12 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.google.api.client.http.HttpResponseException;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.PageConnectionInterface;
 import de.akuz.android.openhab.core.PageUpdateListener;
-import de.akuz.android.openhab.core.PageXMLConnection;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
@@ -47,7 +47,8 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	private PageActivity pageActivity;
 
-	private PageConnectionInterface pageConnection;
+	@Inject
+	PageConnectionInterface pageConnection;
 
 	private OpenHABPagePagerAdapter pageAdapter;
 
@@ -60,7 +61,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
-		pageConnection = new PageXMLConnection(pageActivity.getSpiceManager());
+		((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
 		loadCompletePage();

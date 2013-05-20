@@ -124,8 +124,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	public void loadSubPage(Page page) {
 		Log.d(TAG, "Loading page: " + page.getLink());
-		int position = pagerAdapter.goOnePageDown(page);
-		pager.setCurrentItem(position , true);
+		int position = pagerAdapter.showPage(page);
+		pager.setCurrentItem(position, true);
 	}
 
 	public void loadSubPage(String pageUrl) {

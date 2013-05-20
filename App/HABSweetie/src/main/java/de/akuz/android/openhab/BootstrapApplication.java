@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import dagger.ObjectGraph;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
 import de.akuz.android.openhab.ui.widgets.FrameWidget;
 import de.akuz.android.openhab.ui.widgets.OpenHABWidgetFactory;
@@ -38,10 +39,14 @@ public class BootstrapApplication extends Application {
 
 	private MemorizingTrustManager trustManager;
 
+	private ObjectGraph objectGraph;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
+
+		objectGraph = ObjectGraph.create(new AndroidModule(this));
 
 		// register MemorizingTrustManager for HTTPS
 		try {
@@ -69,6 +74,10 @@ public class BootstrapApplication extends Application {
 
 		initializeImageLoader();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
+	}
+
+	public ObjectGraph getObjectGraph() {
+		return objectGraph;
 	}
 
 	public void initializeImageLoader() {
