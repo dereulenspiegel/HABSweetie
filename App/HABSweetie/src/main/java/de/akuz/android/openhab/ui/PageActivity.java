@@ -133,11 +133,6 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		pager.setCurrentItem(0, true);
 	}
 
-	public void loadParentPage(Page pageUrl) {
-		pagerAdapter.goOnePageUp();
-		pager.setCurrentItem(pagerAdapter.getCount() - 2, true);
-	}
-
 	@Override
 	public void sitemapSelected(Sitemap selectedSitemap) {
 		selectedSitemapUrl = selectedSitemap.link;

@@ -154,7 +154,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Override
 	public void loadPage(Page page) {
 		if (!pageActivity.isFinishing()) {
-			pageAdapter.showPage(page);
+			pageActivity.loadSubPage(page);
 		}
 
 	}
