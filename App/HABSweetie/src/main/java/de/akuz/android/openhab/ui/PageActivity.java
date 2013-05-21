@@ -34,6 +34,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	private String selectedSitemapUrl;
 
+	private PageActivityStateFragment stateFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "PageActivity has been created");
@@ -43,10 +45,21 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		Log.d(TAG, "Registering receiver for SSL Decision");
 		sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
 		setContentView(R.layout.page_activity);
-		pagerAdapter = new OpenHABPagePagerAdapter(this,
-				getSupportFragmentManager());
 		pager = findView(R.id.pager);
-		pager.setAdapter(pagerAdapter);
+		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
+				.findFragmentByTag(PageActivityStateFragment.TAG);
+		if (stateFragment == null) {
+			pagerAdapter = new OpenHABPagePagerAdapter(this,
+					getSupportFragmentManager());
+			pager.setAdapter(pagerAdapter);
+			stateFragment = new PageActivityStateFragment();
+		} else {
+			pagerAdapter = new OpenHABPagePagerAdapter(this,
+					getSupportFragmentManager(),
+					stateFragment.getAvailablePageFragments());
+			pager.setAdapter(pagerAdapter);
+			pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
+		}
 		pager.setOnPageChangeListener(pagerAdapter);
 		pager.setOffscreenPageLimit(0);
 
@@ -72,6 +85,13 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		} else {
 			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
+		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
 	}
 
 	public void loadingIndicatorTrue() {

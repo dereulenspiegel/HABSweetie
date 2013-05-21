@@ -1,6 +1,7 @@
 package de.akuz.android.openhab.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +37,22 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 
 	private int pageCount;
 
+	public OpenHABPagePagerAdapter(Context ctx, FragmentManager fm,
+			List<PageFragment> loadedFragments) {
+		this(ctx, fm);
+		fragmentList.addAll(loadedFragments);
+	}
+
 	public OpenHABPagePagerAdapter(Context ctx, FragmentManager fm) {
 		super(fm);
 		mContext = ctx;
 		pageCount = mContext.getResources().getInteger(R.integer.page_count);
 		Log.d(TAG, "Working with a page count of " + pageCount);
 		pageWidth = 1.0f / pageCount;
+	}
+
+	public List<PageFragment> getFragmentList() {
+		return Collections.unmodifiableList(fragmentList);
 	}
 
 	@Override

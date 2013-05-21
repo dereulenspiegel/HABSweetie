@@ -40,8 +40,8 @@ public class CommunicationModule {
 	}
 
 	@Provides
-	public PageConnectionInterface providePageConnection() {
-		return new PageXMLConnection();
+	public PageConnectionInterface providePageConnection(PageXMLConnection con) {
+		return con;
 	}
 
 }

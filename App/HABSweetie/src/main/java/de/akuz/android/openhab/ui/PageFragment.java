@@ -61,7 +61,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
-		((BaseActivity) getActivity()).inject(pageConnection);
+//		((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
 		loadCompletePage();
