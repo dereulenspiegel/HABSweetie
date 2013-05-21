@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import javax.inject.Inject;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +29,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 
 	private float pageWidth;
 
-	private List<PageFragment> fragmentList = new ArrayList<PageFragment>();
+	private List<PageFragment> fragmentList;
 
 	private Set<PageFragment> removedFragments = new HashSet<PageFragment>();
 
@@ -40,11 +38,15 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 	public OpenHABPagePagerAdapter(Context ctx, FragmentManager fm,
 			List<PageFragment> loadedFragments) {
 		this(ctx, fm);
-		fragmentList.addAll(loadedFragments);
+		fragmentList = new ArrayList<PageFragment>();
+		if (loadedFragments != null) {
+			fragmentList.addAll(loadedFragments);
+		}
 	}
 
 	public OpenHABPagePagerAdapter(Context ctx, FragmentManager fm) {
 		super(fm);
+		fragmentList = new ArrayList<PageFragment>();
 		mContext = ctx;
 		pageCount = mContext.getResources().getInteger(R.integer.page_count);
 		Log.d(TAG, "Working with a page count of " + pageCount);

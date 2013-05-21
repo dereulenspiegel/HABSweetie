@@ -1,9 +1,10 @@
 package de.akuz.android.openhab.ui;
 
-import android.content.SharedPreferences.Editor;
+import javax.inject.Inject;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -35,6 +37,9 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	private String selectedSitemapUrl;
 
 	private PageActivityStateFragment stateFragment;
+
+	@Inject
+	HABSweetiePreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,6 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			pagerAdapter = new OpenHABPagePagerAdapter(this,
 					getSupportFragmentManager());
 			pager.setAdapter(pagerAdapter);
-			stateFragment = new PageActivityStateFragment();
 		} else {
 			pagerAdapter = new OpenHABPagePagerAdapter(this,
 					getSupportFragmentManager(),
@@ -74,24 +78,39 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		Log.d(TAG, "Resuming PageActivity");
 		baseUrl = getPreferenceStringValue(R.string.pref_url_key);
 		Log.d(TAG, "Using base url " + baseUrl);
-		String pageUrl = getPreferenceStringValue(R.string.pref_default_sitemap_url_key);
-		if (pageUrl != null && baseUrl != null && !pageUrl.startsWith(baseUrl)) {
-			pageUrl = null;
-		}
-		if ((pageUrl != null && baseUrl != null) || selectedSitemapUrl != null) {
-			loadSubPage(pageUrl);
-		} else if (baseUrl != null) {
-			loadAvailableSitemaps();
+		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
+				.findFragmentByTag(PageActivityStateFragment.TAG);
+		if (stateFragment != null) {
+			pagerAdapter = new OpenHABPagePagerAdapter(getApplication(),
+					getSupportFragmentManager(),
+					stateFragment.getAvailablePageFragments());
+			pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
 		} else {
-			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
+			String pageUrl = prefs.getDefaultSitemapUrl();
+			if (pageUrl != null && baseUrl != null
+					&& !pageUrl.startsWith(baseUrl)) {
+				pageUrl = null;
+			}
+			if ((pageUrl != null && baseUrl != null)
+					|| selectedSitemapUrl != null) {
+				loadSubPage(pageUrl);
+			} else if (baseUrl != null) {
+				loadAvailableSitemaps();
+			} else {
+				makeCrouton(R.string.please_configure_this_app, Style.ALERT);
+			}
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		stateFragment = new PageActivityStateFragment();
 		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
 		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.add(stateFragment, PageActivityStateFragment.TAG);
+		ft.commit();
 	}
 
 	public void loadingIndicatorTrue() {
@@ -119,13 +138,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 						loadingIndicatorFalse();
 						if (result.getSitemap() != null
 								&& result.getSitemap().size() == 1) {
-							Editor edit = PreferenceManager
-									.getDefaultSharedPreferences(
-											PageActivity.this).edit();
-							edit.putString(
-									getString(R.string.pref_default_sitemap_url_key),
-									result.getSitemap().get(0).homepage.link);
-							edit.commit();
+							prefs.setDefaultSitemapUrl(result.getSitemap().get(
+									0).homepage.link);
 							loadSubPage(result.getSitemap().get(0).homepage.link);
 						} else if (result.getSitemap() != null
 								&& result.getSitemap().size() > 1) {
