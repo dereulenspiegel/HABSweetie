@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -51,19 +52,9 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
 		setContentView(R.layout.page_activity);
 		pager = findView(R.id.pager);
-		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
-				.findFragmentByTag(PageActivityStateFragment.TAG);
-		if (stateFragment == null) {
-			pagerAdapter = new OpenHABPagePagerAdapter(this,
-					getSupportFragmentManager());
-			pager.setAdapter(pagerAdapter);
-		} else {
-			pagerAdapter = new OpenHABPagePagerAdapter(this,
-					getSupportFragmentManager(),
-					stateFragment.getAvailablePageFragments());
-			pager.setAdapter(pagerAdapter);
-			pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
-		}
+		pagerAdapter = new OpenHABPagePagerAdapter(this,
+				getSupportFragmentManager());
+		pager.setAdapter(pagerAdapter);
 		pager.setOnPageChangeListener(pagerAdapter);
 		pager.setOffscreenPageLimit(0);
 
@@ -76,15 +67,21 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "Resuming PageActivity");
-		baseUrl = getPreferenceStringValue(R.string.pref_url_key);
+		baseUrl = prefs.getBaseUrl();
 		Log.d(TAG, "Using base url " + baseUrl);
 		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageActivityStateFragment.TAG);
 		if (stateFragment != null) {
-			pagerAdapter = new OpenHABPagePagerAdapter(getApplication(),
+			Log.d(TAG, "We have "
+					+ stateFragment.getAvailablePageFragments().size()
+					+ " Fragments saved");
+			pagerAdapter = new OpenHABPagePagerAdapter(this,
 					getSupportFragmentManager(),
 					stateFragment.getAvailablePageFragments());
+			pagerAdapter.setFragmentCache(stateFragment.getFragmentCache());
+			pager.setAdapter(pagerAdapter);
 			pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
+			pager.invalidate();
 		} else {
 			String pageUrl = prefs.getDefaultSitemapUrl();
 			if (pageUrl != null && baseUrl != null
@@ -100,17 +97,24 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 				makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 			}
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
 		stateFragment = new PageActivityStateFragment();
-		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
-		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(
+				PageActivityStateFragment.TAG);
+		if (oldFragment != null) {
+			ft.remove(oldFragment);
+		}
 		ft.add(stateFragment, PageActivityStateFragment.TAG);
 		ft.commit();
+	}
+	
+	@Override
+	protected void onStop() {
+		stateFragment.setRemovedFragments(pagerAdapter.getRemovedFragments());
+		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
+		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
+		stateFragment.setFragmentCache(pagerAdapter.getFragmentCache());
+		super.onStop();
 	}
 
 	public void loadingIndicatorTrue() {

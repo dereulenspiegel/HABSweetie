@@ -34,4 +34,8 @@
 	<string name="error_auth_failed">Can\'t authenticate with openHAB, please configure valid username and password</string>
 	<string name="error_connect">Can\'t connect to the openHAB host? Is openHAB running?</string>
 	<string name="error_timeout">The connection to openHAB timed out</string>
+	<string name="message_loading_page">Loading openHAB page</string>
+	<string name="pref_use_websockets_key">pref_use_websockets</string>
+	<string name="pref_use_websockets_title">Use WebSockets</string>
+	<string name="pref_use_websockets_summary">Try to use WebSockets to receive realtime updates of openHAB items?</string>
 </resources>

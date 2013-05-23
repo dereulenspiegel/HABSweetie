@@ -4,6 +4,7 @@
     <CheckBoxPreference android:title="@string/pref_authenticate_title" android:summary="@string/pref_authenticate_summary" android:key="@string/pref_authenticate_key"/>
     <EditTextPreference android:summary="@string/pref_username_summary" android:key="@string/pref_username_key" android:title="@string/pref_username_title" android:dependency="@string/pref_authenticate_key" />
     <EditTextPreference android:summary="@string/pref_password_summary" android:title="@string/pref_password_title" android:key="@string/pref_password_key" android:dependency="@string/pref_authenticate_key" android:inputType="textPassword"/>
+    <CheckBoxPreference android:summary="@string/pref_use_websockets_summary" android:key="@string/pref_use_websockets_key" android:title="@string/pref_use_websockets_title"/>
     
 
 </PreferenceScreen>

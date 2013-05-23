@@ -12,6 +12,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import de.akuz.android.openhab.R;
@@ -42,6 +43,11 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 		if (loadedFragments != null) {
 			fragmentList.addAll(loadedFragments);
 		}
+		FragmentTransaction ft = fm.beginTransaction();
+		for (PageFragment pf : fragmentList) {
+			ft.remove(pf);
+		}
+		ft.commit();
 	}
 
 	public OpenHABPagePagerAdapter(Context ctx, FragmentManager fm) {
@@ -55,6 +61,15 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 
 	public List<PageFragment> getFragmentList() {
 		return Collections.unmodifiableList(fragmentList);
+	}
+
+	public Set<PageFragment> getRemovedFragments() {
+		return Collections.unmodifiableSet(removedFragments);
+	}
+
+	public void setRemovedFragments(Set<PageFragment> fragments) {
+		this.removedFragments.addAll(fragments);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -184,6 +199,16 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 	@Override
 	public CharSequence getPageTitle(int position) {
 		return fragmentList.get(position).getPage().getTitle();
+	}
+
+	public Map<String, PageFragment> getFragmentCache() {
+		return fragmentCache;
+	}
+
+	public void setFragmentCache(Map<String, PageFragment> fragmentCache) {
+		if (fragmentCache != null) {
+			this.fragmentCache = fragmentCache;
+		}
 	}
 
 }

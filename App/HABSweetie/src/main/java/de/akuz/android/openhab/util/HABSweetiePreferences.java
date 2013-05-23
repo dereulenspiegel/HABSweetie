@@ -44,6 +44,11 @@ public class HABSweetiePreferences {
 				getString(R.string.pref_default_sitemap_url_key), null);
 	}
 
+	public boolean useWebSockets() {
+		return prefs.getBoolean(getString(R.string.pref_use_websockets_key),
+				false);
+	}
+
 	public void setDefaultSitemapUrl(String url) {
 		Editor edit = prefs.edit();
 		edit.putString(getString(R.string.pref_default_sitemap_url_key), url);

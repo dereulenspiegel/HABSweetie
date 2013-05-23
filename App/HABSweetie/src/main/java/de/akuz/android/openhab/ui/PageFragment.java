@@ -47,6 +47,8 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	private PageActivity pageActivity;
 
+	private ProgressDialogFragment progressDialog;
+
 	@Inject
 	PageConnectionInterface pageConnection;
 
@@ -61,7 +63,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
-//		((BaseActivity) getActivity()).inject(pageConnection);
+		// ((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
 		loadCompletePage();
@@ -73,6 +75,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	}
 
 	private void loadCompletePage() {
+		progressDialog = ProgressDialogFragment
+				.build(getString(R.string.message_loading_page));
+		progressDialog.show(getFragmentManager(), "progressDialog");
 		pageConnection.loadCompletePage();
 	}
 
@@ -175,6 +180,10 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	public void pageUpdateReceived(Page page) {
 		// Ugly workaround for cases where widget updates are parsed as page
 		// updates
+		if (progressDialog != null) {
+			progressDialog.dismissAllowingStateLoss();
+			progressDialog = null;
+		}
 		if (page.getId() != null) {
 			Log.d(TAG, "Received Page update");
 			updatePage(page);

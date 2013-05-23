@@ -42,7 +42,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 	public void widgetUpdated(Widget widget) {
 		super.widgetUpdated(widget);
 		List<Mapping> mappings = widget.getMapping();
-		if (mappings.size() > 0) {
+		if (mappings != null && mappings.size() > 0) {
 			Log.d(TAG, "Updating selection mappings");
 			selectionAdapter.clear();
 			selectionAdapter.addAll(mappings);

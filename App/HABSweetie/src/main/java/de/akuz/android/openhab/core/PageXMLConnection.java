@@ -33,6 +33,7 @@ import de.akuz.android.openhab.core.requests.ItemCommandRequest;
 import de.akuz.android.openhab.core.requests.ItemRequest;
 import de.akuz.android.openhab.core.requests.PageRequest;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class PageXMLConnection implements PageConnectionInterface,
 		RequestListener<Page> {
@@ -43,6 +44,9 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	@Inject
 	SpiceManager spiceManager;
+
+	@Inject
+	HABSweetiePreferences prefs;
 
 	private String baseUrl;
 	private String pageUrl;
@@ -108,6 +112,9 @@ public class PageXMLConnection implements PageConnectionInterface,
 		if (OpenHABAuthManager.hasCredentials()) {
 			builder.header("Authorization",
 					"Basic " + OpenHABAuthManager.getEncodedCredentials());
+		}
+		if (prefs.useWebSockets()) {
+			builder.transport(TRANSPORT.WEBSOCKET);
 		}
 		Request pageRequest = builder
 				.method(METHOD.GET)
