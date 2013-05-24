@@ -14,6 +14,9 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 
 	private Switch switchWidget;
 
+	private String mappingOn = "ON";
+	private String mappingOff = "OFF";
+
 	public SwitchWidget(Context context, Widget widget) {
 		super(context, widget);
 	}
@@ -27,10 +30,10 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 			String on = null;
 			String off = null;
 			for (Mapping m : widget.getMapping()) {
-				if (m.getCommand().equals("ON")) {
+				if (m.getCommand().equals(mappingOn)) {
 					on = m.getLabel();
 				}
-				if (m.getCommand().equals("OFF")) {
+				if (m.getCommand().equals(mappingOff)) {
 					off = m.getLabel();
 				}
 			}
@@ -50,7 +53,7 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 		}
 		String state = item.state;
 		switchWidget.setOnCheckedChangeListener(null);
-		if ("ON".equals(state)) {
+		if (mappingOn.equals(state)) {
 			switchWidget.setChecked(true);
 		} else {
 			switchWidget.setChecked(false);
@@ -68,16 +71,26 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if (isChecked) {
-			sendCommand("ON");
-		} else {
-			sendCommand("OFF");
-		}
+		sendCommand(getCommand(isChecked));
 
+	}
+
+	private String getCommand(boolean onOff) {
+		// FIXME: Somewhat hackish. We should be able to map from itemtype to
+		// available commands
+		if (onOff) {
+			return mappingOn;
+		} else {
+			return mappingOff;
+		}
 	}
 
 	@Override
 	public void updateItem(Item item) {
+		if ("RollershutterItem".equals(item.type)) {
+			mappingOff = "0";
+			mappingOn = "100";
+		}
 		updateActionView(item);
 
 	}

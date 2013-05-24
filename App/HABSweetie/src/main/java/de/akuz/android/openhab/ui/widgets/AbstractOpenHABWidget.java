@@ -15,7 +15,7 @@ import de.akuz.android.openhab.core.objects.Widget;
 public abstract class AbstractOpenHABWidget extends LinearLayout implements
 		OnClickListener, ItemUpdateListener {
 
-	private final static String TAG = AbstractOpenHABWidget.class
+	protected final static String TAG = AbstractOpenHABWidget.class
 			.getSimpleName();
 
 	protected Widget widget;

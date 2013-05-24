@@ -54,7 +54,9 @@ public class OpenHABWidgetFactory {
 
 				return openHABWidget;
 			} catch (Exception e) {
-				Log.e(TAG, "Exception while building widget", e);
+				Log.e(TAG,
+						"Exception while building widget of type "
+								+ widget.getType(), e);
 			}
 		}
 		if (returnDefault) {

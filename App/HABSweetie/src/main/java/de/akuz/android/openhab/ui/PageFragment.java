@@ -52,8 +52,6 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Inject
 	PageConnectionInterface pageConnection;
 
-	private OpenHABPagePagerAdapter pageAdapter;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,15 +61,12 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
+		inject(listAdapter);
 		// ((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
 		loadCompletePage();
 
-	}
-
-	private void setPageAdapter(OpenHABPagePagerAdapter pagerAdapter) {
-		this.pageAdapter = pagerAdapter;
 	}
 
 	private void loadCompletePage() {
@@ -99,13 +94,11 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	}
 
-	public static PageFragment build(String pageUrl,
-			OpenHABPagePagerAdapter adapter) {
+	public static PageFragment build(String pageUrl) {
 		Bundle args = new Bundle();
 		args.putString(PAGE_URL_ARG, pageUrl);
 		PageFragment fragment = new PageFragment();
 		fragment.setArguments(args);
-		fragment.setPageAdapter(adapter);
 		return fragment;
 	}
 

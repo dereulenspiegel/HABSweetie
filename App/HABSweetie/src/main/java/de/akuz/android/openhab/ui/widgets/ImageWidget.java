@@ -3,10 +3,13 @@ package de.akuz.android.openhab.ui.widgets;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import android.content.Context;
-import android.widget.ImageView;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
@@ -25,13 +28,17 @@ public class ImageWidget extends BasicOpenHABWidget {
 	protected void buildUi() {
 		setView(R.layout.image_widget);
 		super.buildUi();
-		findView(R.id.imageView);
+		imageView = findView(R.id.imageView);
 	}
 
 	@Override
 	public void widgetUpdated(Widget widget) {
 		super.widgetUpdated(widget);
-		ImageLoader.getInstance().displayImage(widget.getUrl(), imageView);
+		if (widget.getIcon() == null && widget.getLabel() == null) {
+			widgetBase.setVisibility(View.GONE);
+		}
+		Log.d(TAG, "Loading image from URL " + widget.getFullUrl());
+		ImageLoader.getInstance().displayImage(widget.getFullUrl(), imageView);
 		if (widget.getRefresh() != null) {
 			startRefreshTimer();
 		}
@@ -53,7 +60,7 @@ public class ImageWidget extends BasicOpenHABWidget {
 
 			@Override
 			public void run() {
-				ImageLoader.getInstance().displayImage(widget.getUrl(),
+				ImageLoader.getInstance().displayImage(widget.getFullUrl(),
 						imageView);
 			}
 		}, widget.getRefresh(), widget.getRefresh());

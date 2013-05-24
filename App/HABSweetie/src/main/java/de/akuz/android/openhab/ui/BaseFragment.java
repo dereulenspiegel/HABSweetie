@@ -68,4 +68,8 @@ public abstract class BaseFragment extends Fragment {
 		}
 	}
 
+	public void inject(Object o) {
+		((BaseActivity) getActivity()).inject(o);
+	}
+
 }

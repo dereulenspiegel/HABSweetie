@@ -16,6 +16,7 @@ public class SliderWidget extends BasicOpenHABWidget implements
 	private SeekBar slider;
 
 	private float minValue = 0;
+	private float maxValue = 100.0f;
 
 	public SliderWidget(Context context, Widget widget) {
 		super(context, widget);
@@ -28,32 +29,33 @@ public class SliderWidget extends BasicOpenHABWidget implements
 		if (widget.getMinValue() != null) {
 			minValue = widget.getMinValue();
 		}
+		if (widget.getMaxValue() != null) {
+			maxValue = widget.getMaxValue();
+		}
 		super.buildUi();
 		slider.setOnSeekBarChangeListener(this);
 	}
 
 	private int getMaxValue() {
-		float max = 100.0f;
 		if (widget.getMaxValue() != null) {
-			max = widget.getMaxValue();
+			maxValue = widget.getMaxValue();
 		}
-		float min = 0.0f;
 		if (widget.getMinValue() != null) {
-			min = widget.getMinValue();
+			minValue = widget.getMinValue();
 		}
 		float step = 0.1f;
 		if (widget.getStep() != null) {
 			step = widget.getStep();
 		}
-		max = ((max - min) * step);
-		return (int) max;
+		maxValue = ((maxValue - minValue) * (1 / step));
+		return (int) maxValue;
 	}
 
 	@Override
 	public void onProgressChanged(SeekBar seekbar, int progress,
 			boolean fromUser) {
 		if (fromUser) {
-			float userValue = getUserValue();
+			float userValue = getUserValue(progress);
 			String command = null;
 			if (userValue == 0.0f) {
 				command = "OFF";
@@ -80,8 +82,7 @@ public class SliderWidget extends BasicOpenHABWidget implements
 
 	}
 
-	private float getUserValue() {
-		int progress = slider.getProgress();
+	private float getUserValue(int progress) {
 		if (progress == 0) {
 			return minValue;
 		}
@@ -93,7 +94,18 @@ public class SliderWidget extends BasicOpenHABWidget implements
 		if (widget.getMinValue() != null) {
 			min = widget.getMinValue();
 		}
-		return (min + (progress / step));
+		return (min + (progress / (1 / step)));
+	}
+
+	private int getProgress(float state) {
+		float step = 0.1f;
+		if (widget.getStep() != null) {
+			step = widget.getStep();
+		}
+		if(widget.getMinValue() != null){
+			minValue = widget.getMinValue();
+		}
+		return (int) ((state-minValue) * (1 / step));
 	}
 
 	@Override
@@ -105,7 +117,7 @@ public class SliderWidget extends BasicOpenHABWidget implements
 			state = 0.0f;
 		}
 		slider.setMax(getMaxValue());
-		slider.setProgress((int) state);
+		slider.setProgress(getProgress(state));
 
 	}
 }

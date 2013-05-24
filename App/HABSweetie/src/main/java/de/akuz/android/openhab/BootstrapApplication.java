@@ -2,6 +2,8 @@ package de.akuz.android.openhab;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import roboguice.util.temp.Ln;
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -20,6 +22,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
 import de.akuz.android.openhab.ui.widgets.FrameWidget;
+import de.akuz.android.openhab.ui.widgets.ImageWidget;
 import de.akuz.android.openhab.ui.widgets.OpenHABWidgetFactory;
 import de.akuz.android.openhab.ui.widgets.SelectionWidget;
 import de.akuz.android.openhab.ui.widgets.SetpointWidget;
@@ -41,12 +44,16 @@ public class BootstrapApplication extends Application {
 
 	private ObjectGraph objectGraph;
 
+	@Inject
+	OpenHABWidgetFactory widgetFactory;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
 
 		objectGraph = ObjectGraph.create(new AndroidModule(this));
+		objectGraph.inject(this);
 
 		// register MemorizingTrustManager for HTTPS
 		try {
@@ -57,20 +64,17 @@ public class BootstrapApplication extends Application {
 					e);
 		}
 
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Switch",
-				SwitchWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Frame",
-				FrameWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Text",
-				TextWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Slider",
-				SliderWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Setpoint",
-				SetpointWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Colorpicker",
-				ColorpickerWidget.class);
-		OpenHABWidgetFactory.getInstance().registerWidgetType("Selection",
-				SelectionWidget.class);
+		widgetFactory.registerWidgetType("Switch", SwitchWidget.class);
+		widgetFactory.registerWidgetType("Frame", FrameWidget.class);
+		widgetFactory.registerWidgetType("Text", TextWidget.class);
+		widgetFactory.registerWidgetType("Slider", SliderWidget.class);
+		widgetFactory.registerWidgetType("Setpoint", SetpointWidget.class);
+		widgetFactory
+				.registerWidgetType("Colorpicker", ColorpickerWidget.class);
+		widgetFactory.registerWidgetType("Selection", SelectionWidget.class);
+		widgetFactory.registerWidgetType("Image", ImageWidget.class);
+//		widgetFactory.registerWidgetType("Video", null);
+//		widgetFactory.registerWidgetType("Webview", null);
 
 		initializeImageLoader();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);

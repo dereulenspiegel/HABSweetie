@@ -104,7 +104,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 		if (fragmentCache.containsKey(pageUrl)) {
 			fragment = fragmentCache.get(pageUrl);
 		} else {
-			fragment = PageFragment.build(pageUrl, this);
+			fragment = PageFragment.build(pageUrl);
 			fragmentCache.put(pageUrl, fragment);
 		}
 		return fragment;

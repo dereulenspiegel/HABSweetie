@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,8 @@ public class WidgetListAdapter extends BaseAdapter {
 
 	private List<Widget> widgetList = new ArrayList<Widget>();
 
-	private OpenHABWidgetFactory widgetFactory = OpenHABWidgetFactory
-			.getInstance();
+	@Inject
+	OpenHABWidgetFactory widgetFactory;
 
 	private ItemCommandInterface commandInterface;
 

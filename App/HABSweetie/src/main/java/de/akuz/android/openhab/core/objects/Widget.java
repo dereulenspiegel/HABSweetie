@@ -214,6 +214,10 @@ public class Widget extends AbstractOpenHABObject {
 		return url;
 	}
 
+	public String getFullUrl() {
+		return baseUrl + "/" + url;
+	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}

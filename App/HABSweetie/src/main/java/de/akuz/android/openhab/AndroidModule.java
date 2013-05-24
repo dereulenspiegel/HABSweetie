@@ -7,8 +7,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
+import de.akuz.android.openhab.ui.WidgetListAdapter;
+import de.akuz.android.openhab.ui.widgets.OpenHABWidgetFactory;
 
-@Module(library = true)
+@Module(library = true, injects={BootstrapApplication.class, WidgetListAdapter.class})
 public class AndroidModule {
 
 	private final BootstrapApplication app;
@@ -27,6 +29,12 @@ public class AndroidModule {
 	@Singleton
 	public ImageLoader provideImageLoader() {
 		return ImageLoader.getInstance();
+	}
+
+	@Provides
+	@Singleton
+	public OpenHABWidgetFactory provideWidgetFactory() {
+		return OpenHABWidgetFactory.getInstance();
 	}
 
 }

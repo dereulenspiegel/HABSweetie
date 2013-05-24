@@ -18,6 +18,7 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 
 	protected TextView widgetText;
 	protected ImageView widgetImage;
+	protected View widgetBase;
 
 	protected final static String decimalPattern = "#,###,##0.0";
 	protected final static DecimalFormat df;
@@ -40,6 +41,7 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 	protected void buildUi() {
 		widgetText = findView(R.id.widgetText);
 		widgetImage = findView(R.id.widgetIcon);
+		widgetBase = findView(R.id.widgetBase);
 	}
 
 	@Override
