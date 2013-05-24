@@ -23,7 +23,7 @@ public class ColorpickerWidget extends BasicOpenHABWidget implements
 	protected void buildUi() {
 		setView(R.layout.rgb_widget);
 		super.buildUi();
-
+		colorView = findView(R.id.imageButton);
 		colorView.setOnClickListener(this);
 	}
 
@@ -31,9 +31,9 @@ public class ColorpickerWidget extends BasicOpenHABWidget implements
 	public void updateItem(Item item) {
 		String colorState = item.state;
 		String[] hsvStrings = colorState.split(",");
-		int[] hsv = new int[3];
+		float[] hsv = new float[3];
 		for (int i = 0; i < hsvStrings.length; i++) {
-			hsv[i] = Integer.parseInt(hsvStrings[i]);
+			hsv[i] = Float.parseFloat(hsvStrings[i]);
 		}
 		int color = Color.HSVToColor(new float[] { hsv[0], hsv[1] / 100,
 				hsv[2] / 100 });
