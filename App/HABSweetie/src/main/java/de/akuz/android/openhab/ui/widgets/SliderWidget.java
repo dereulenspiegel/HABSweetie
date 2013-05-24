@@ -83,6 +83,9 @@ public class SliderWidget extends BasicOpenHABWidget implements
 	}
 
 	private float getUserValue(int progress) {
+		if (widget.getMinValue() != null) {
+			minValue = widget.getMinValue();
+		}
 		if (progress == 0) {
 			return minValue;
 		}
@@ -90,11 +93,7 @@ public class SliderWidget extends BasicOpenHABWidget implements
 		if (widget.getStep() != null) {
 			step = widget.getStep();
 		}
-		float min = 0.0f;
-		if (widget.getMinValue() != null) {
-			min = widget.getMinValue();
-		}
-		return (min + (progress / (1 / step)));
+		return (minValue + (progress / (1 / step)));
 	}
 
 	private int getProgress(float state) {

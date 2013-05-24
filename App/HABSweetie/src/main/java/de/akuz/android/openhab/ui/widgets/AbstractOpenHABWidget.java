@@ -106,13 +106,15 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 	}
 
 	protected void sendCommandDelayed(String command) {
-		if (sendingDelayer != null && sendingDelayer.isAlive()) {
-			sendingDelayer.interrupt();
-		}
 		lastCommandSend = System.currentTimeMillis();
-		sendingDelayer = new SendingDelayer(widget.getItem(), commandInterface,
-				this);
-		sendingDelayer.send(command);
+		if (sendingDelayer != null && sendingDelayer.isAlive()) {
+			sendingDelayer.updateLastTriggerTimeAndCommand(
+					System.currentTimeMillis(), command);
+		} else {
+			sendingDelayer = new SendingDelayer(widget.getItem(),
+					commandInterface, this);
+			sendingDelayer.send(command);
+		}
 	}
 
 	public static interface ItemCommandInterface {
@@ -164,6 +166,11 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 			this.item = item;
 			this.commandInterface = commandInterface;
 			this.updateListener = updateListener;
+		}
+
+		public void updateLastTriggerTimeAndCommand(long millis, String command) {
+			this.lastTriggerTime = millis;
+			this.lastCommand = command;
 		}
 
 		@Override
