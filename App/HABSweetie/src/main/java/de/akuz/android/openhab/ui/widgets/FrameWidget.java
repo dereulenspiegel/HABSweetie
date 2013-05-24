@@ -31,7 +31,7 @@ public class FrameWidget extends AbstractOpenHABWidget {
 		widgetImage = findView(R.id.widgetLogo);
 		widgetListContainer.setScrollContainer(false);
 		fragmentHeaderContainer = findView(R.id.frameWidgetHeaderContainer);
-		updateWidget(widget);
+//		updateWidget(widget);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class FrameWidget extends AbstractOpenHABWidget {
 		widgetListContainer.removeAllViews();
 		if (widget.getWidget() != null) {
 			for (Widget w : widget.getWidget()) {
-				AbstractOpenHABWidget openHABWidget = OpenHABWidgetFactory
-						.getInstance().getFromWidget(getContext(), w, true);
+				AbstractOpenHABWidget openHABWidget = widgetFactory
+						.getFromWidget(getContext(), w, true);
 				openHABWidget.setItemCommandInterface(commandInterface);
 				openHABWidget.updateWidget(w);
 				widgetListContainer.addView(openHABWidget);

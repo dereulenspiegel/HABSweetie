@@ -1,5 +1,7 @@
 package de.akuz.android.openhab.ui.widgets;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -8,9 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import de.akuz.android.openhab.core.objects.Item;
-import de.akuz.android.openhab.core.objects.LinkedPage;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public abstract class AbstractOpenHABWidget extends LinearLayout implements
 		OnClickListener, ItemUpdateListener {
@@ -29,6 +31,12 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 	private SendingDelayer sendingDelayer;
 
 	private long lastCommandSend = 0;
+
+	@Inject
+	OpenHABWidgetFactory widgetFactory;
+
+	@Inject
+	HABSweetiePreferences prefs;
 
 	public AbstractOpenHABWidget(Context context, Widget widget) {
 		super(context);
@@ -149,7 +157,7 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 
 	private class SendingDelayer extends Thread {
 
-		private final static int sendDelay = 1000;
+		private long sendDelay = prefs.getCommandSendingDelay();
 
 		private long lastTriggerTime;
 

@@ -3,6 +3,8 @@ package de.akuz.android.openhab.ui.widgets;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,9 @@ public class ImageWidget extends BasicOpenHABWidget {
 	private ImageView imageView;
 
 	private Timer refreshTimer;
+	
+	@Inject
+	ImageLoader imageLoader;
 
 	public ImageWidget(Context context, Widget widget) {
 		super(context, widget);
@@ -38,7 +43,7 @@ public class ImageWidget extends BasicOpenHABWidget {
 			widgetBase.setVisibility(View.GONE);
 		}
 		Log.d(TAG, "Loading image from URL " + widget.getFullUrl());
-		ImageLoader.getInstance().displayImage(widget.getFullUrl(), imageView);
+		imageLoader.displayImage(widget.getFullUrl(), imageView);
 		if (widget.getRefresh() != null) {
 			startRefreshTimer();
 		}

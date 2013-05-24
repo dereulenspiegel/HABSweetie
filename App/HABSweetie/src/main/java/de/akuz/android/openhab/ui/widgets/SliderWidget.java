@@ -17,6 +17,7 @@ public class SliderWidget extends BasicOpenHABWidget implements
 
 	private float minValue = 0;
 	private float maxValue = 100.0f;
+	private float step = 1.0f;
 
 	public SliderWidget(Context context, Widget widget) {
 		super(context, widget);
@@ -36,19 +37,9 @@ public class SliderWidget extends BasicOpenHABWidget implements
 		slider.setOnSeekBarChangeListener(this);
 	}
 
-	private int getMaxValue() {
-		if (widget.getMaxValue() != null) {
-			maxValue = widget.getMaxValue();
-		}
-		if (widget.getMinValue() != null) {
-			minValue = widget.getMinValue();
-		}
-		float step = 0.1f;
-		if (widget.getStep() != null) {
-			step = widget.getStep();
-		}
-		maxValue = ((maxValue - minValue) * (1 / step));
-		return (int) maxValue;
+	private int getMaxProgress() {
+		int maxProgress = (int) ((maxValue - minValue) * (1 / step));
+		return maxProgress;
 	}
 
 	@Override
@@ -83,28 +74,11 @@ public class SliderWidget extends BasicOpenHABWidget implements
 	}
 
 	private float getUserValue(int progress) {
-		if (widget.getMinValue() != null) {
-			minValue = widget.getMinValue();
-		}
-		if (progress == 0) {
-			return minValue;
-		}
-		float step = 0.1f;
-		if (widget.getStep() != null) {
-			step = widget.getStep();
-		}
 		return (minValue + (progress / (1 / step)));
 	}
 
 	private int getProgress(float state) {
-		float step = 0.1f;
-		if (widget.getStep() != null) {
-			step = widget.getStep();
-		}
-		if(widget.getMinValue() != null){
-			minValue = widget.getMinValue();
-		}
-		return (int) ((state-minValue) * (1 / step));
+		return (int) ((state - minValue) * (1 / step));
 	}
 
 	@Override
@@ -115,8 +89,22 @@ public class SliderWidget extends BasicOpenHABWidget implements
 		} catch (NumberFormatException e) {
 			state = 0.0f;
 		}
-		slider.setMax(getMaxValue());
+		slider.setMax(getMaxProgress());
 		slider.setProgress(getProgress(state));
 
+	}
+
+	@Override
+	protected void widgetUpdated(Widget widget) {
+		super.widgetUpdated(widget);
+		if (widget.getStep() != null) {
+			step = widget.getStep();
+		}
+		if (widget.getMinValue() != null) {
+			minValue = widget.getMinValue();
+		}
+		if (widget.getMaxValue() != null) {
+			maxValue = widget.getMaxValue();
+		}
 	}
 }

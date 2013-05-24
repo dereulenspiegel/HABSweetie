@@ -5,16 +5,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.util.Log;
+import dagger.ObjectGraph;
 import de.akuz.android.openhab.core.objects.Widget;
 
 public class OpenHABWidgetFactory {
 
 	private final static String TAG = OpenHABWidgetFactory.class
 			.getSimpleName();
-
-	private static OpenHABWidgetFactory instance = new OpenHABWidgetFactory();
 
 	private final static String PACKAGE_BASE = "de.akuz.android.openhab.ui.widgets";
 	private final static String WIDGET_CLASS_SUFFIX = "Widget";
@@ -24,13 +25,16 @@ public class OpenHABWidgetFactory {
 	private final static Class<?>[] constructorParams = { Context.class,
 			Widget.class };
 
-	private OpenHABWidgetFactory() {
+	private ObjectGraph objectGraph;
 
+	@Inject
+	public OpenHABWidgetFactory(ObjectGraph objectGraph) {
+		this.objectGraph = objectGraph;
 	}
 
-	public static OpenHABWidgetFactory getInstance() {
-		return instance;
-	}
+	// public static OpenHABWidgetFactory getInstance() {
+	// return instance;
+	// }
 
 	public AbstractOpenHABWidget getFromWidget(Context ctx, Widget widget,
 			boolean returnDefault) {
@@ -51,7 +55,8 @@ public class OpenHABWidgetFactory {
 
 				AbstractOpenHABWidget openHABWidget = widgetConstrucor
 						.newInstance(ctx, widget);
-
+				openHABWidget = objectGraph.inject(openHABWidget);
+				openHABWidget.updateWidget(widget);
 				return openHABWidget;
 			} catch (Exception e) {
 				Log.e(TAG,
@@ -60,7 +65,9 @@ public class OpenHABWidgetFactory {
 			}
 		}
 		if (returnDefault) {
-			return new TextWidget(ctx, widget);
+			TextWidget textWidget = new TextWidget(ctx, widget);
+			textWidget = objectGraph.inject(textWidget);
+			return textWidget;
 		}
 		return null;
 

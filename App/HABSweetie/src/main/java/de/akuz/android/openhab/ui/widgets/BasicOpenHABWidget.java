@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,6 +35,9 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 		}
 	}
 
+	@Inject
+	ImageLoader imageLoader;
+
 	public BasicOpenHABWidget(Context context, Widget widget) {
 		super(context, widget);
 	}
@@ -49,8 +54,7 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 		widgetText.setText(widget.getLabel());
 		widgetText.setVisibility(View.VISIBLE);
 		if (widget.getImageUrl() != null) {
-			ImageLoader.getInstance().displayImage(widget.getImageUrl(),
-					widgetImage);
+			imageLoader.displayImage(widget.getImageUrl(), widgetImage);
 		}
 	}
 

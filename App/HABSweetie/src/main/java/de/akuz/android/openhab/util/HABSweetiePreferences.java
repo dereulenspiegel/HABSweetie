@@ -55,6 +55,10 @@ public class HABSweetiePreferences {
 		edit.commit();
 	}
 
+	public long getCommandSendingDelay() {
+		return 1000;
+	}
+
 	private String getString(int resId) {
 		return ctx.getString(resId);
 	}
