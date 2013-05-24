@@ -197,6 +197,10 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	@Override
 	public void exceptionOccured(Throwable t) {
+		if (progressDialog != null) {
+			progressDialog.dismissAllowingStateLoss();
+			progressDialog = null;
+		}
 		pageActivity.loadingIndicatorFalse();
 		if (Utils.hasCause(t, IOException.class)
 				&& t.getMessage().equals("Invalid handshake response")) {

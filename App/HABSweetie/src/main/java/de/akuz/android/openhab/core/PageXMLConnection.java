@@ -135,8 +135,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 				.decoder(
 						new BasicJackson2XmlDecoder<Widgets>(baseUrl,
 								Widgets.class)) //
-				// .transport(TRANSPORT.WEBSOCKET) // FIXME Investigate
-				// WebSocket issues
 				.transport(TRANSPORT.LONG_POLLING) //
 				.transport(TRANSPORT.STREAMING) //
 				.build(); //

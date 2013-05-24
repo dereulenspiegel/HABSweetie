@@ -10,7 +10,6 @@ import com.octo.android.robospice.SpiceManager;
 
 import dagger.Module;
 import dagger.Provides;
-import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.ui.BaseActivity;
 import de.akuz.android.openhab.ui.BaseFragment;
 import de.akuz.android.openhab.ui.PageActivity;
