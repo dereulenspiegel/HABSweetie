@@ -21,12 +21,14 @@ import de.akuz.android.openhab.ui.widgets.SetpointWidget;
 import de.akuz.android.openhab.ui.widgets.SliderWidget;
 import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
+import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 
 @Module(library = true, injects = { BootstrapApplication.class,
 		WidgetListAdapter.class, OpenHABWidgetFactory.class, FrameWidget.class,
 		TextWidget.class, AbstractOpenHABWidget.class, ImageWidget.class,
 		SliderWidget.class, SwitchWidget.class, SelectionWidget.class,
-		ColorpickerWidget.class, BasicOpenHABWidget.class, SetpointWidget.class })
+		ColorpickerWidget.class, BasicOpenHABWidget.class,
+		SetpointWidget.class, WebviewWidget.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;

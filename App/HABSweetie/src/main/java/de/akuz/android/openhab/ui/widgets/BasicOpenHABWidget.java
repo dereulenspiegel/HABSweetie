@@ -53,8 +53,25 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 	protected void widgetUpdated(Widget widget) {
 		widgetText.setText(widget.getLabel());
 		widgetText.setVisibility(View.VISIBLE);
+		if (widget.getLabel() == null && widget.getIcon() == null) {
+			hideHeader(true);
+		} else {
+			hideHeader(false);
+		}
 		if (widget.getImageUrl() != null) {
 			imageLoader.displayImage(widget.getImageUrl(), widgetImage);
+		}
+	}
+
+	public void hideHeader(boolean hide) {
+		if (hide) {
+			widgetImage.setVisibility(View.GONE);
+			widgetText.setVisibility(View.GONE);
+//			widgetBase.setVisibility(View.GONE);
+		} else {
+			widgetImage.setVisibility(View.VISIBLE);
+			widgetText.setVisibility(View.VISIBLE);
+//			widgetBase.setVisibility(View.VISIBLE);
 		}
 	}
 

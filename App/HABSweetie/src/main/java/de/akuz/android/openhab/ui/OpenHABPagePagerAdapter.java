@@ -30,7 +30,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 
 	private float pageWidth;
 
-	private List<PageFragment> fragmentList;
+	private List<PageFragment> fragmentList = new ArrayList<PageFragment>(0);
 
 	private Set<PageFragment> removedFragments = new HashSet<PageFragment>();
 

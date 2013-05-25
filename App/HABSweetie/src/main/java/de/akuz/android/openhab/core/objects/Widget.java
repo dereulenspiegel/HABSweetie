@@ -215,7 +215,10 @@ public class Widget extends AbstractOpenHABObject {
 	}
 
 	public String getFullUrl() {
-		return baseUrl + "/" + url;
+		if (!url.startsWith("http")) {
+			return baseUrl + "/" + url;
+		}
+		return url;
 	}
 
 	public void setUrl(String url) {
