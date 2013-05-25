@@ -22,7 +22,7 @@ public class ItemRequest extends AbstractOpenHABRequest<Item> {
 	@Override
 	protected Item executeRequest() throws Exception {
 		HttpRequest request = getRequest(item.link);
-		return request.execute().parseAs(Item.class);
+		return parseInputStream(request.execute().getContent());
 	}
 
 }

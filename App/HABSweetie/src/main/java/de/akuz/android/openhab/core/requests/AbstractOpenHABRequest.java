@@ -1,5 +1,9 @@
 package de.akuz.android.openhab.core.requests;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 import android.util.Log;
 
 import com.google.api.client.http.GenericUrl;
@@ -21,9 +25,12 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 
 	protected String baseUrl;
 
+	protected Class<RESULT> resultClass;
+
 	public AbstractOpenHABRequest(Class<RESULT> clazz, String baseUrl) {
 		super(clazz);
 		this.baseUrl = baseUrl;
+		resultClass = clazz;
 	}
 
 	public abstract void setParameters(String... params);
@@ -60,6 +67,11 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		dictionary.set("", "");
 		XmlObjectParser parser = new XmlObjectParser(dictionary);
 		return parser;
+	}
+
+	protected RESULT parseInputStream(InputStream in) throws IOException {
+		ObjectParser parser = getObjectParser();
+		return parser.parseAndClose(in, Charset.forName("utf-8"), resultClass);
 	}
 
 	protected abstract RESULT executeRequest() throws Exception;

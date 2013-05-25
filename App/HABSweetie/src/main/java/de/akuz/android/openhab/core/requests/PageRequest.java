@@ -1,6 +1,8 @@
 package de.akuz.android.openhab.core.requests;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import java.nio.charset.Charset;
+
+import android.util.Log;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
@@ -9,7 +11,8 @@ import de.akuz.android.openhab.core.objects.Page;
 
 public class PageRequest extends AbstractOpenHABRequest<Page> {
 
-	ObjectMapper mapper = new ObjectMapper();
+	private final static String TAG = PageRequest.class.getSimpleName();
+
 	private String pageUrl;
 
 	public PageRequest(String baseUrl, String pageUrl) {
@@ -27,7 +30,17 @@ public class PageRequest extends AbstractOpenHABRequest<Page> {
 	protected Page executeRequest() throws Exception {
 		HttpRequest request = getRequest(pageUrl);
 		HttpResponse response = request.execute();
-		Page result = response.parseAs(Page.class);
+		Log.d(TAG,
+				"Got content encoding in response "
+						+ response.getContentEncoding());
+		Log.d(TAG,
+				"Got character encoding in response "
+						+ response.getContentCharset());
+		Log.d(TAG, "Got content type in response " + response.getContentType());
+
+		Page result = null;
+		result = getObjectParser().parseAndClose(response.getContent(),
+				Charset.forName("utf-8"), Page.class);
 		result.setReceivedAt(System.currentTimeMillis());
 		return result;
 	}

@@ -2,12 +2,11 @@ package de.akuz.android.openhab.util;
 
 import javax.inject.Inject;
 
-import de.akuz.android.openhab.R;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import de.akuz.android.openhab.R;
 
 public class HABSweetiePreferences {
 

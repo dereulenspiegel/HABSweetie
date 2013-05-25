@@ -1,7 +1,6 @@
 package de.akuz.android.openhab.ui.widgets;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

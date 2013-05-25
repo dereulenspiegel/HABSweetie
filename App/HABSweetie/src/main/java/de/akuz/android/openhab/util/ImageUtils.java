@@ -1,10 +1,15 @@
-package de.akuz.android.openhab.core;
+package de.akuz.android.openhab.util;
 
 
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static android.graphics.Color.WHITE;
 import static android.graphics.PorterDuff.Mode.DST_IN;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,10 +19,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 
 /**
  * Image utilities

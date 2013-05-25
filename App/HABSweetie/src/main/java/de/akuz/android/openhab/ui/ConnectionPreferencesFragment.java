@@ -1,9 +1,9 @@
 package de.akuz.android.openhab.ui;
 
-import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.OpenHABAuthManager;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.OpenHABAuthManager;
 
 public class ConnectionPreferencesFragment extends PreferenceFragment {
 

@@ -9,9 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import dagger.ObjectGraph;
 import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.CommunicationModule;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 

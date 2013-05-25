@@ -1,13 +1,17 @@
 package de.akuz.android.openhab.util;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 /**
  * Originally from RoboGuice: https://github.com/roboguice/roboguice/blob/master/roboguice/src/main/java/roboguice/util/SafeAsyncTask.java

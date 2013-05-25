@@ -19,6 +19,6 @@ public class ItemsRequest extends AbstractOpenHABRequest<ItemsResult> {
 	@Override
 	protected ItemsResult executeRequest() throws Exception {
 		HttpRequest request = getRequest(baseUrl + "/rest/items");
-		return request.execute().parseAs(ItemsResult.class);
+		return parseInputStream(request.execute().getContent());
 	}
 }

@@ -19,7 +19,7 @@ public class SitemapsRequest extends AbstractOpenHABRequest<SitemapsResult> {
 	@Override
 	protected SitemapsResult executeRequest() throws Exception {
 		HttpRequest request = getRequest(baseUrl + "/rest/sitemaps");
-		return request.execute().parseAs(SitemapsResult.class);
+		return parseInputStream(request.execute().getContent());
 	}
 
 }

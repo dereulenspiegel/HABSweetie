@@ -1,8 +1,8 @@
 package de.akuz.android.openhab.ui;
 
-import de.akuz.android.openhab.R;
 import android.app.Activity;
 import android.os.Bundle;
+import de.akuz.android.openhab.R;
 
 public class SettingsActivity extends Activity {
 
