@@ -183,6 +183,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 			pageActivity.loadingIndicatorFalse();
 		} else {
 			Log.d(TAG, "Received widget update");
+			if (this.page != null) {
+				this.page.batchUpdateWidgets(page.getWidget());
+			}
 			listAdapter.batchAddOrUpdateWidgets(page.getWidget());
 		}
 

@@ -6,8 +6,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
+import de.akuz.android.openhab.core.objects.Mapping;
 import de.akuz.android.openhab.core.objects.Widget;
-import de.akuz.android.openhab.core.objects.Widget.Mapping;
 
 public class SwitchWidget extends BasicOpenHABWidget implements
 		OnCheckedChangeListener {

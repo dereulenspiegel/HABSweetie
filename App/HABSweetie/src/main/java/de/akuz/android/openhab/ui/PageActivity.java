@@ -2,6 +2,8 @@ package de.akuz.android.openhab.ui;
 
 import javax.inject.Inject;
 
+import roboguice.util.temp.Strings;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -69,33 +71,27 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		Log.d(TAG, "Resuming PageActivity");
 		baseUrl = prefs.getBaseUrl();
 		Log.d(TAG, "Using base url " + baseUrl);
+		// Trying to load a previous state from a configuration change;
 		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageActivityStateFragment.TAG);
-		if (stateFragment != null) {
-			Log.d(TAG, "We have "
-					+ stateFragment.getAvailablePageFragments().size()
-					+ " Fragments saved");
-			pagerAdapter = new OpenHABPagePagerAdapter(this,
-					getSupportFragmentManager(),
-					stateFragment.getAvailablePageFragments());
-			pagerAdapter.setFragmentCache(stateFragment.getFragmentCache());
-			pager.setAdapter(pagerAdapter);
-			pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
-			pager.invalidate();
-		} else {
+		// If we have fragments to restore restore them, but only if the config
+		// hasn't changed
+		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
+				&& stateFragment.getAvailablePageFragments() != null) {
+			Log.d(TAG, "Restoring previous state after config change");
+			restorePreviousStateAfterConfigurationChange();
+		} else if (hasBaseUrlChanged() && isAppConfigured()) {
+			Log.d(TAG, "Base url has changed");
+			loadAvailableSitemaps();
+		} else if (isAppConfigured()) {
 			String pageUrl = prefs.getDefaultSitemapUrl();
-			if (pageUrl != null && baseUrl != null
-					&& !pageUrl.startsWith(baseUrl)) {
-				pageUrl = null;
-			}
-			if ((pageUrl != null && baseUrl != null)
-					|| selectedSitemapUrl != null) {
+			if (!Strings.isEmpty(pageUrl)) {
 				loadSubPage(pageUrl);
-			} else if (baseUrl != null) {
-				loadAvailableSitemaps();
 			} else {
-				makeCrouton(R.string.please_configure_this_app, Style.ALERT);
+				loadAvailableSitemaps();
 			}
+		} else {
+			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 		}
 		stateFragment = new PageActivityStateFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -106,6 +102,32 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		}
 		ft.add(stateFragment, PageActivityStateFragment.TAG);
 		ft.commit();
+	}
+
+	private boolean isAppConfigured() {
+		return prefs.getBaseUrl() != null;
+	}
+
+	private boolean hasBaseUrlChanged() {
+		String defaultSitemapUrl = prefs.getDefaultSitemapUrl();
+		String currentBaseUrl = prefs.getBaseUrl();
+		if (defaultSitemapUrl == null) {
+			return true;
+		}
+		return !defaultSitemapUrl.startsWith(currentBaseUrl);
+	}
+
+	private void restorePreviousStateAfterConfigurationChange() {
+		Log.d(TAG, "We have "
+				+ stateFragment.getAvailablePageFragments().size()
+				+ " Fragments saved");
+		pagerAdapter = new OpenHABPagePagerAdapter(this,
+				getSupportFragmentManager(),
+				stateFragment.getAvailablePageFragments());
+		pagerAdapter.setFragmentCache(stateFragment.getFragmentCache());
+		pager.setAdapter(pagerAdapter);
+		pager.setCurrentItem(stateFragment.getCurrentViewPagerPage());
+		pager.invalidate();
 	}
 
 	@Override

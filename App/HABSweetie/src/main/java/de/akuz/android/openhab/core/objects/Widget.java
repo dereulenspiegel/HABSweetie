@@ -21,7 +21,7 @@ public class Widget extends AbstractOpenHABObject {
 	protected String url;
 	@Key
 	protected Item item;
-	@Key
+	@Key("mapping")
 	protected ArrayList<Mapping> mapping;
 	@Key
 	protected Page linkedPage;
@@ -48,7 +48,7 @@ public class Widget extends AbstractOpenHABObject {
 	 * Frame childs
 	 */
 	@Key
-	private ArrayList<Widget> widget;
+	protected ArrayList<Widget> widget;
 
 	public String getWidgetId() {
 		return widgetId;
@@ -142,34 +142,6 @@ public class Widget extends AbstractOpenHABObject {
 	public void setWidget(ArrayList<Widget> widget) {
 		this.widget = widget;
 
-	}
-
-	public static class Mapping {
-		@Key
-		private String command;
-		@Key
-		private String label;
-
-		public String getCommand() {
-			return command;
-		}
-
-		public void setCommand(String command) {
-			this.command = command;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public void setLabel(String label) {
-			this.label = label;
-		}
-
-		@Override
-		public String toString() {
-			return label;
-		}
 	}
 
 	public Boolean isSwitchSupport() {

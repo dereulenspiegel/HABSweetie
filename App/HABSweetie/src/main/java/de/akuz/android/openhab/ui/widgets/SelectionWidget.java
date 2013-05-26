@@ -11,8 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
+import de.akuz.android.openhab.core.objects.Mapping;
 import de.akuz.android.openhab.core.objects.Widget;
-import de.akuz.android.openhab.core.objects.Widget.Mapping;
 
 public class SelectionWidget extends BasicOpenHABWidget implements
 		OnItemSelectedListener {
@@ -32,7 +32,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		setView(R.layout.selection_widget);
 		super.buildUi();
 		selection = findView(R.id.selection);
-		selectionAdapter = new ArrayAdapter<Widget.Mapping>(getContext(),
+		selectionAdapter = new ArrayAdapter<Mapping>(getContext(),
 				android.R.layout.simple_spinner_item, widget.getMapping());
 		selection.setOnItemSelectedListener(this);
 		selection.setAdapter(selectionAdapter);

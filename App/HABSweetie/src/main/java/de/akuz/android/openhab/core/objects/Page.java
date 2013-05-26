@@ -1,6 +1,7 @@
 package de.akuz.android.openhab.core.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonRootName;
 
@@ -113,6 +114,24 @@ public class Page extends AbstractOpenHABObject {
 			}
 		}
 		return false;
+	}
+
+	public void updateWidget(Widget widget) {
+		for (Widget w : this.widget) {
+			if (w.getWidgetId().equals(w.getWidgetId())) {
+				int index = this.widget.indexOf(w);
+				this.widget.add(index, widget);
+				return;
+			} else if (w.updateSubWidget(widget)) {
+				return;
+			}
+		}
+	}
+
+	public void batchUpdateWidgets(List<Widget> widgets) {
+		for (Widget w : widgets) {
+			updateWidget(w);
+		}
 	}
 
 }
