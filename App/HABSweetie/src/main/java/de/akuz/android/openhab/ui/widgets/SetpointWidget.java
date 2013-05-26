@@ -42,20 +42,22 @@ public class SetpointWidget extends BasicOpenHABWidget {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				value = Float.parseFloat(s.toString());
-				if (value > max) {
-					value = max;
+				try {
+					value = Float.parseFloat(s.toString());
+					if (value > max) {
+						value = max;
+
+					}
+					if (value < min) {
+						value = min;
+					}
 					valueText.removeTextChangedListener(valueWatcher);
 					s.replace(0, s.length() - 1, df.format(value));
 					valueText.addTextChangedListener(valueWatcher);
+					sendCommandDelayed(df.format(value));
+				} catch (NumberFormatException e) {
+					// Ignore
 				}
-				if (value < min) {
-					value = min;
-					valueText.removeTextChangedListener(valueWatcher);
-					s.replace(0, s.length() - 1, df.format(value));
-					valueText.addTextChangedListener(valueWatcher);
-				}
-				sendCommandDelayed(df.format(value));
 			}
 		};
 	}
@@ -86,7 +88,7 @@ public class SetpointWidget extends BasicOpenHABWidget {
 			@Override
 			public void onClick(View v) {
 				valueText.removeTextChangedListener(valueWatcher);
-				if ((value - min) >= min) {
+				if ((value - step) >= min) {
 					value -= step;
 					updateValue();
 				}
@@ -100,7 +102,7 @@ public class SetpointWidget extends BasicOpenHABWidget {
 		valueText.setText(state);
 		sendCommandDelayed(state);
 	}
-	
+
 	@Override
 	public void updateItem(Item item) {
 		if (item == null) {
