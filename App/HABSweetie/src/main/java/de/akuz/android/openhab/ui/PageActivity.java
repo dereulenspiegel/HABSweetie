@@ -107,7 +107,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		ft.add(stateFragment, PageActivityStateFragment.TAG);
 		ft.commit();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		stateFragment.setRemovedFragments(pagerAdapter.getRemovedFragments());
@@ -215,6 +215,15 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			getActionBar().setIcon(icon);
 		} else {
 			getActionBar().setIcon(R.drawable.ic_launcher);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (pager.getCurrentItem() > 0) {
+			pagerAdapter.goOnePageUp();
+		} else {
+			super.onBackPressed();
 		}
 	}
 }
