@@ -11,7 +11,7 @@
     <properties>
         <platform.version>4.1.1.4</platform.version>
 		<robospice-google-http-client.version>1.4.0</robospice-google-http-client.version>
-		<google.http.client.version>1.14.1-beta</google.http.client.version>
+		<google.http.client.version>1.15.0-rc</google.http.client.version>
 		<commons.logging.version>1.1.1</commons.logging.version>
 		<dagger.version>1.0.0</dagger.version>
     </properties>
@@ -37,10 +37,22 @@
 					<groupId>xpp3</groupId>
 					<artifactId>xpp3</artifactId>
 				</exclusion>
-				<exclusion>
+				<!--  <exclusion>
 					<groupId>stax</groupId>
 					<artifactId>stax-api</artifactId>
-				</exclusion>
+				</exclusion> -->
+				<exclusion>
+          			<artifactId>httpclient</artifactId>
+          			<groupId>org.apache.httpcomponents</groupId>
+        		</exclusion>
+        		<exclusion>
+          			<artifactId>junit</artifactId>
+          			<groupId>junit</groupId>
+        		</exclusion>
+        		<exclusion>
+          			<artifactId>android</artifactId>
+          			<groupId>com.google.android</groupId>
+        		</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

@@ -50,11 +50,6 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 		}
 
 		@Override
-		public String getEncoding() {
-			return "UTF-8";
-		}
-
-		@Override
 		public String getType() {
 			return "text/plain";
 		}
