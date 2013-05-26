@@ -55,7 +55,9 @@ public class HABSweetiePreferences {
 	}
 
 	public long getCommandSendingDelay() {
-		return 1000;
+		int seconds = Integer.parseInt(prefs.getString(
+				getString(R.string.pref_send_delay_key), "1"));
+		return (seconds * 1000);
 	}
 
 	private String getString(int resId) {

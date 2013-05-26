@@ -38,4 +38,7 @@
 	<string name="pref_use_websockets_key">pref_use_websockets</string>
 	<string name="pref_use_websockets_title">Use WebSockets</string>
 	<string name="pref_use_websockets_summary">Try to use WebSockets to receive realtime updates of openHAB items?</string>
+	<string name="pref_send_delay_key">pref_send_delay_key</string>
+	<string name="pref_send_delay_title">Command send delay in seconds</string>
+	<string name="pref_send_delay_summary">Some widgets like Setpoint or Slider can cause many commands to be send in a very short time frame. Especially on my mobile networks this can become quite problem. This lets you configure a delay for sending commands. Only the last command after the delay has passed will be send.</string>
 </resources>
