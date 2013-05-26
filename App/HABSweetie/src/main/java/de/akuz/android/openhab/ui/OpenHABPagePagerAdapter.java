@@ -171,6 +171,9 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 					.getLink());
 			fragmentList.add(0, parent);
 		} else if (fragmentList.size() > 1) {
+			PageFragment removedFragment = fragmentList
+					.get(fragmentList.size() - 1);
+			removedFragments.add(removedFragment);
 			fragmentList.remove(fragmentList.size() - 1);
 			notifyDataSetChanged();
 		}
