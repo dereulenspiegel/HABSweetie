@@ -33,6 +33,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 	private List<PageFragment> fragmentList = new ArrayList<PageFragment>(0);
 
 	private Set<PageFragment> removedFragments = new HashSet<PageFragment>();
+	private Set<PageFragment> changedFragments = new HashSet<PageFragment>();
 
 	private int pageCount;
 
@@ -94,6 +95,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 			Log.w(TAG, "Reinitializing PageAdapter");
 		}
 		PageFragment fragment = getPageFragment(pageUrl);
+		changedFragments.add(fragment);
 		fragmentList.clear();
 		fragmentList.add(fragment);
 		notifyDataSetChanged();
@@ -116,8 +118,12 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 			removedFragments.remove(object);
 			return POSITION_NONE;
 		}
-		int index = fragmentList.indexOf(object);
-		return index;
+		if (changedFragments.contains(object)) {
+			int index = fragmentList.indexOf(object);
+			changedFragments.remove(object);
+			return index;
+		}
+		return POSITION_UNCHANGED;
 	}
 
 	public int showPage(Page page) {
@@ -157,7 +163,7 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 		}
 		Log.d(TAG, "Inserting new page at position " + position);
 		PageFragment newFragment = getPageFragment(page.getLink());
-		removedFragments.add(newFragment);
+		changedFragments.add(newFragment);
 		fragmentList.add(position, newFragment);
 		notifyDataSetChanged();
 		return position;
