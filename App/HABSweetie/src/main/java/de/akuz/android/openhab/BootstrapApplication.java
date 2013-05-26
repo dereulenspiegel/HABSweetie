@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import dagger.ObjectGraph;
+import de.akuz.android.openhab.ui.widgets.ChartWidget;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
 import de.akuz.android.openhab.ui.widgets.FrameWidget;
 import de.akuz.android.openhab.ui.widgets.ImageWidget;
@@ -29,6 +30,7 @@ import de.akuz.android.openhab.ui.widgets.SetpointWidget;
 import de.akuz.android.openhab.ui.widgets.SliderWidget;
 import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
+import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 import de.duenndns.ssl.MemorizingTrustManager;
@@ -74,8 +76,9 @@ public class BootstrapApplication extends Application {
 				.registerWidgetType("Colorpicker", ColorpickerWidget.class);
 		widgetFactory.registerWidgetType("Selection", SelectionWidget.class);
 		widgetFactory.registerWidgetType("Image", ImageWidget.class);
-		// widgetFactory.registerWidgetType("Video", null);
+		widgetFactory.registerWidgetType("Video", VideoWidget.class);
 		widgetFactory.registerWidgetType("Webview", WebviewWidget.class);
+		widgetFactory.registerWidgetType("Chart", ChartWidget.class);
 
 		initializeImageLoader();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);

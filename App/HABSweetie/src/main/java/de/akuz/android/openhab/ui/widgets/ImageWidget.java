@@ -45,10 +45,14 @@ public class ImageWidget extends BasicOpenHABWidget {
 			hideHeader(false);
 		}
 		Log.d(TAG, "Loading image from URL " + widget.getFullUrl());
-		imageLoader.displayImage(widget.getFullUrl(), imageView);
+		imageLoader.displayImage(getImageUrl(), imageView);
 		if (widget.getRefresh() != null) {
 			startRefreshTimer();
 		}
+	}
+
+	protected String getImageUrl() {
+		return widget.getFullUrl();
 	}
 
 	private void stopRefreshTimer() {
@@ -67,8 +71,15 @@ public class ImageWidget extends BasicOpenHABWidget {
 
 			@Override
 			public void run() {
-				ImageLoader.getInstance().displayImage(widget.getFullUrl(),
-						imageView);
+				imageView.post(new Runnable() {
+
+					@Override
+					public void run() {
+						imageLoader.displayImage(getImageUrl(), imageView);
+					}
+
+				});
+
 			}
 		}, widget.getRefresh(), widget.getRefresh());
 	}

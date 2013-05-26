@@ -42,6 +42,8 @@ public class Widget extends AbstractOpenHABObject {
 	@Key
 	@JsonString
 	protected Integer refresh;
+	@Key
+	protected String period;
 	/**
 	 * Frame childs
 	 */
@@ -215,7 +217,7 @@ public class Widget extends AbstractOpenHABObject {
 	}
 
 	public String getFullUrl() {
-		if (!url.startsWith("http")) {
+		if (url != null && !url.startsWith("http")) {
 			return baseUrl + "/" + url;
 		}
 		return url;
@@ -300,5 +302,13 @@ public class Widget extends AbstractOpenHABObject {
 
 		}
 		return false;
+	}
+
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 }

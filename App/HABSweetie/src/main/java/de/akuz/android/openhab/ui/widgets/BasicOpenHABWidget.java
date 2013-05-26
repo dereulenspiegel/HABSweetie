@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.Strings;
 
 public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 
@@ -52,13 +53,18 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 	@Override
 	protected void widgetUpdated(Widget widget) {
 		widgetText.setText(widget.getLabel());
-		widgetText.setVisibility(View.VISIBLE);
-		if (widget.getLabel() == null && widget.getIcon() == null) {
-			hideHeader(true);
+		if (Strings.isEmpty(widget.getIcon())) {
+			widgetImage.setVisibility(View.GONE);
 		} else {
-			hideHeader(false);
+			widgetImage.setVisibility(View.VISIBLE);
 		}
-		if (widget.getImageUrl() != null) {
+		if (Strings.isEmpty(widget.getLabel())) {
+			widgetText.setVisibility(View.GONE);
+		} else {
+			widgetText.setVisibility(View.VISIBLE);
+		}
+
+		if (!Strings.isEmpty(widget.getImageUrl())) {
 			imageLoader.displayImage(widget.getImageUrl(), widgetImage);
 		}
 	}
@@ -67,11 +73,11 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 		if (hide) {
 			widgetImage.setVisibility(View.GONE);
 			widgetText.setVisibility(View.GONE);
-//			widgetBase.setVisibility(View.GONE);
+			// widgetBase.setVisibility(View.GONE);
 		} else {
 			widgetImage.setVisibility(View.VISIBLE);
 			widgetText.setVisibility(View.VISIBLE);
-//			widgetBase.setVisibility(View.VISIBLE);
+			// widgetBase.setVisibility(View.VISIBLE);
 		}
 	}
 

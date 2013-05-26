@@ -12,6 +12,7 @@ import dagger.Provides;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
 import de.akuz.android.openhab.ui.widgets.BasicOpenHABWidget;
+import de.akuz.android.openhab.ui.widgets.ChartWidget;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
 import de.akuz.android.openhab.ui.widgets.FrameWidget;
 import de.akuz.android.openhab.ui.widgets.ImageWidget;
@@ -21,6 +22,7 @@ import de.akuz.android.openhab.ui.widgets.SetpointWidget;
 import de.akuz.android.openhab.ui.widgets.SliderWidget;
 import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
+import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 
 @Module(library = true, injects = { BootstrapApplication.class,
@@ -28,7 +30,8 @@ import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 		TextWidget.class, AbstractOpenHABWidget.class, ImageWidget.class,
 		SliderWidget.class, SwitchWidget.class, SelectionWidget.class,
 		ColorpickerWidget.class, BasicOpenHABWidget.class,
-		SetpointWidget.class, WebviewWidget.class })
+		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
+		ChartWidget.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;
