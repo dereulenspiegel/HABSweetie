@@ -19,6 +19,8 @@
          android:layout_height="wrap_content"
          android:layout_alignParentRight="true"
          android:layout_centerVertical="true"
+         android:minHeight="45dp"
+         android:minWidth="45dp"
          android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>
