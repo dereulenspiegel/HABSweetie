@@ -39,11 +39,6 @@ public class ImageWidget extends BasicOpenHABWidget {
 	@Override
 	public void widgetUpdated(Widget widget) {
 		super.widgetUpdated(widget);
-		if (widget.getIcon() == null && widget.getLabel() == null) {
-			hideHeader(true);
-		} else {
-			hideHeader(false);
-		}
 		Log.d(TAG, "Loading image from URL " + widget.getFullUrl());
 		imageLoader.displayImage(getImageUrl(), imageView);
 		if (widget.getRefresh() != null) {
