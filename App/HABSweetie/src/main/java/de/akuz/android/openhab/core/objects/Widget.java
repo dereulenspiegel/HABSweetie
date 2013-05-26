@@ -1,6 +1,8 @@
 package de.akuz.android.openhab.core.objects;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -22,7 +24,7 @@ public class Widget extends AbstractOpenHABObject {
 	@Key
 	protected Item item;
 	@Key("mapping")
-	protected ArrayList<Mapping> mapping;
+	protected ArrayList<Mapping> mappings;
 	@Key
 	protected Page linkedPage;
 	@Key
@@ -90,12 +92,12 @@ public class Widget extends AbstractOpenHABObject {
 		this.item = item;
 	}
 
-	public ArrayList<Mapping> getMapping() {
-		return mapping;
+	public List<Mapping> getMappings() {
+		return mappings;
 	}
 
-	public void setMapping(ArrayList<Mapping> mapping) {
-		this.mapping = mapping;
+	public void setMappings(ArrayList<Mapping> mapping) {
+		this.mappings = mapping;
 	}
 
 	public Page getLinkedPage() {

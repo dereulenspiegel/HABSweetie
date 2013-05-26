@@ -26,10 +26,10 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 		setView(R.layout.switch_widget);
 		super.buildUi();
 		switchWidget = findView(R.id.switch1);
-		if (widget.getMapping() != null) {
+		if (widget.getMappings() != null) {
 			String on = null;
 			String off = null;
-			for (Mapping m : widget.getMapping()) {
+			for (Mapping m : widget.getMappings()) {
 				if (m.getCommand().equals(mappingOn)) {
 					on = m.getLabel();
 				}

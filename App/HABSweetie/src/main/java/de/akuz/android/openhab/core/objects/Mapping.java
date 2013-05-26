@@ -3,10 +3,10 @@ package de.akuz.android.openhab.core.objects;
 import com.google.api.client.util.Key;
 
 public class Mapping {
-	
-	@Key
+
+	@Key("command")
 	protected String command;
-	@Key
+	@Key("label")
 	protected String label;
 
 	public String getCommand() {

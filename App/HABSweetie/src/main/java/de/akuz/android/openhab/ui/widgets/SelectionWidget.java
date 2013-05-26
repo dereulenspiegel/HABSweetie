@@ -1,5 +1,6 @@
 package de.akuz.android.openhab.ui.widgets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -32,8 +33,15 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		setView(R.layout.selection_widget);
 		super.buildUi();
 		selection = findView(R.id.selection);
+		List<Mapping> mappings = widget.getMappings();
+		if (mappings == null) {
+			mappings = new ArrayList<Mapping>(0);
+		} else {
+			mappings = new ArrayList<Mapping>(mappings.size());
+			mappings.addAll(widget.getMappings());
+		}
 		selectionAdapter = new ArrayAdapter<Mapping>(getContext(),
-				android.R.layout.simple_spinner_item, widget.getMapping());
+				android.R.layout.simple_spinner_item, mappings);
 		selection.setOnItemSelectedListener(this);
 		selection.setAdapter(selectionAdapter);
 	}
@@ -41,7 +49,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 	@Override
 	public void widgetUpdated(Widget widget) {
 		super.widgetUpdated(widget);
-		List<Mapping> mappings = widget.getMapping();
+		List<Mapping> mappings = widget.getMappings();
 		if (mappings != null && mappings.size() > 0) {
 			Log.d(TAG, "Updating selection mappings");
 			selectionAdapter.clear();
@@ -53,7 +61,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 
 	@Override
 	public void updateItem(Item item) {
-		List<Mapping> mappings = widget.getMapping();
+		List<Mapping> mappings = widget.getMappings();
 		if (mappings == null) {
 			return;
 		}
