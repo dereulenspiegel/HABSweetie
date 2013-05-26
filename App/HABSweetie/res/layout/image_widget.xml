@@ -2,23 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
-    
-    <include
-        android:id="@+id/widgetBase"
+
+    <LinearLayout
+        android:id="@+id/baseContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="false"
-        android:layout_centerVertical="true"
-        layout="@layout/basic_openhab_widget" />
+        android:layout_centerVertical="false" >
+
+	    <include
+	        android:id="@+id/widgetBase"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        layout="@layout/basic_openhab_widget" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
-        android:layout_below="@+id/widgetBase"
+        android:layout_below="@id/baseContainer"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_launcher" />
 
