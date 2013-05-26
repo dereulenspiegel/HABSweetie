@@ -23,6 +23,13 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 	private final static String TAG = AbstractOpenHABRequest.class
 			.getSimpleName();
 
+	private static XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
+	private static XmlObjectParser parser;
+	static {
+		dictionary.set("", "");
+		parser = new XmlObjectParser(dictionary);
+	}
+
 	protected String baseUrl;
 
 	protected Class<RESULT> resultClass;
@@ -63,15 +70,15 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 	}
 
 	protected ObjectParser getObjectParser() {
-		XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
-		dictionary.set("", "");
-		XmlObjectParser parser = new XmlObjectParser(dictionary);
 		return parser;
 	}
 
 	protected RESULT parseInputStream(InputStream in) throws IOException {
 		ObjectParser parser = getObjectParser();
-		return parser.parseAndClose(in, Charset.forName("utf-8"), resultClass);
+		RESULT result = parser.parseAndClose(in, Charset.forName("utf-8"),
+				resultClass);
+		result.setReceivedAt(System.currentTimeMillis());
+		return result;
 	}
 
 	protected abstract RESULT executeRequest() throws Exception;
