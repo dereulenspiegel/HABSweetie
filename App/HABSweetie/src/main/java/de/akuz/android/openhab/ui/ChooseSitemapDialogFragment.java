@@ -107,6 +107,7 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 		if (listener != null) {
 			listener.sitemapSelected(sitemap);
 		}
+		dismiss();
 
 	}
 
