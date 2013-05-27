@@ -153,6 +153,10 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 
 	}
 
+	protected View getWidgetRootView() {
+		return rootView;
+	}
+
 	public abstract void updateItem(Item item);
 
 	private class SendingDelayer extends Thread {
