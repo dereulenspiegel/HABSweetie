@@ -30,9 +30,11 @@ public class VideoWidget extends BasicOpenHABWidget {
 		super.widgetUpdated(widget);
 		Log.d(TAG, "Starting videoplayback for widget " + widget.getFullUrl());
 		if (!this.widget.getFullUrl().equals(widget.getFullUrl())) {
+			Log.d(TAG, "Stopping playback");
 			videoView.stopPlayback();
 		}
 		if (!videoView.isPlaying()) {
+			Log.d(TAG, "Setting video uri and starting playback");
 			videoView.setVideoURI(Uri.parse(widget.getFullUrl()));
 			videoView.start();
 		}
