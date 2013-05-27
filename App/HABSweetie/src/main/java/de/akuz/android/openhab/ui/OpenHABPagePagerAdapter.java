@@ -170,7 +170,8 @@ public class OpenHABPagePagerAdapter extends FragmentStatePagerAdapter
 	}
 
 	public void goOnePageUp() {
-		if (fragmentList.size() == 1
+		// FIXME normally every fragment should have a non null Page object
+		if (fragmentList.size() == 1 && fragmentList.get(0).getPage() != null
 				&& fragmentList.get(0).getPage().getParent() != null) {
 			PageFragment child = fragmentList.get(0);
 			PageFragment parent = getPageFragment(child.getPage().getParent()
