@@ -2,6 +2,9 @@ package de.akuz.android.openhab.ui;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -21,11 +24,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Sitemap;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class ChooseSitemapDialogFragment extends DialogFragment implements
 		OnClickListener, OnCheckedChangeListener, OnItemClickListener {
-
-	private SharedPreferences preferences;
 
 	private List<Sitemap> sitemapList;
 
@@ -38,11 +40,12 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 
 	private SelectSitemapListener listener;
 
-	public static ChooseSitemapDialogFragment build(List<Sitemap> sitemaps,
-			SelectSitemapListener listener) {
+	@Inject
+	HABSweetiePreferences prefs;
+
+	public static ChooseSitemapDialogFragment build(List<Sitemap> sitemaps) {
 		ChooseSitemapDialogFragment fragment = new ChooseSitemapDialogFragment();
 		fragment.setSitemaps(sitemaps);
-		fragment.setListener(listener);
 		return fragment;
 	}
 
@@ -55,10 +58,15 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		listener = (SelectSitemapListener) activity;
+		super.onAttach(activity);
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		preferences = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
+		setRetainInstance(true);
 		sitemapAdapter = new ArrayAdapter<Sitemap>(getActivity(),
 				android.R.layout.simple_list_item_1, sitemapList);
 	}
@@ -99,10 +107,7 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 			int position, long id) {
 		Sitemap sitemap = sitemapAdapter.getItem(position);
 		if (useAsDefault) {
-			Editor edit = preferences.edit();
-			edit.putString(getString(R.string.pref_default_sitemap_url_key),
-					sitemap.link);
-			edit.commit();
+			prefs.setDefaultSitemapUrl(sitemap.link);
 		}
 		if (listener != null) {
 			listener.sitemapSelected(sitemap);

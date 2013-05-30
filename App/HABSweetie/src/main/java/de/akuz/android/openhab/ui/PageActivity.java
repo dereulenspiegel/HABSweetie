@@ -170,8 +170,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 						} else if (result.getSitemap() != null
 								&& result.getSitemap().size() > 1) {
 							ChooseSitemapDialogFragment fragment = ChooseSitemapDialogFragment
-									.build(result.getSitemap(),
-											PageActivity.this);
+									.build(result.getSitemap());
+							inject(fragment);
 							fragment.show(getFragmentManager(), "chooseSitemap");
 						} else {
 							makeCrouton(R.string.error_no_sitemaps_found,
