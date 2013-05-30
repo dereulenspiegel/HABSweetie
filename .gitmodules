@@ -1,0 +1,6 @@
+[submodule "dependencies/MMT"]
+	path = dependencies/MMT
+	url = git://github.com/dereulenspiegel/MemorizingTrustManager.git
+[submodule "dependencies/colorpicker"]
+	path = dependencies/colorpicker
+	url = git://github.com/LarsWerkman/HoloColorPicker.git
