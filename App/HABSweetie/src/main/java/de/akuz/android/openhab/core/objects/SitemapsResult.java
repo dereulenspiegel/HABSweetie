@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.api.client.util.Key;
-
 public class SitemapsResult extends AbstractSitemapsResult {
 
-	@Key
 	private ArrayList<Sitemap> sitemap;
 
 	public void setSitemap(ArrayList<Sitemap> sitemaps) {

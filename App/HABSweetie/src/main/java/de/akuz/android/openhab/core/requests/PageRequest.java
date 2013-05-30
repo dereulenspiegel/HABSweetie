@@ -1,35 +1,30 @@
 package de.akuz.android.openhab.core.requests;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-
 import de.akuz.android.openhab.core.objects.Page;
 
 public class PageRequest extends AbstractOpenHABRequest<Page> {
 
 	private final static String TAG = PageRequest.class.getSimpleName();
 
-	private String pageUrl;
+	private String pageId;
+	private String sitemapId;
 
-	public PageRequest(String baseUrl, String pageUrl) {
+	public PageRequest(String baseUrl, String sitemapId, String pageId) {
 		super(Page.class, baseUrl);
-		this.pageUrl = pageUrl;
+		this.pageId = pageId;
+		this.sitemapId = sitemapId;
 	}
 
 	@Override
 	public void setParameters(String... params) {
-		// TODO Auto-generated method stub
+		// Ignore
 
 	}
 
 	@Override
 	protected Page executeRequest() throws Exception {
-		HttpRequest request = getRequest(pageUrl);
-		HttpResponse response = request.execute();
-
-		Page result = parseInputStream(response.getContent());
-		result.setReceivedAt(System.currentTimeMillis());
-		return result;
+		Page page = getRestAdapter().getPage(sitemapId, pageId);
+		page.setReceivedAt(System.currentTimeMillis());
+		return page;
 	}
-
 }

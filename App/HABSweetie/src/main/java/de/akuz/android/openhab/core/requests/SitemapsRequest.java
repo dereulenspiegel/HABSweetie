@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.core.requests;
 
-import com.google.api.client.http.HttpRequest;
-
 import de.akuz.android.openhab.core.objects.SitemapsResult;
 
 public class SitemapsRequest extends AbstractOpenHABRequest<SitemapsResult> {
@@ -18,8 +16,7 @@ public class SitemapsRequest extends AbstractOpenHABRequest<SitemapsResult> {
 
 	@Override
 	protected SitemapsResult executeRequest() throws Exception {
-		HttpRequest request = getRequest(baseUrl + "/rest/sitemaps");
-		return parseInputStream(request.execute().getContent());
+		return getRestAdapter().getAllSitemaps();
 	}
 
 }

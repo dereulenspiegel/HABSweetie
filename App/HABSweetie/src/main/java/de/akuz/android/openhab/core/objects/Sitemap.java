@@ -1,20 +1,16 @@
 package de.akuz.android.openhab.core.objects;
 
-import com.google.api.client.util.Key;
 
 public class Sitemap extends AbstractOpenHABObject {
 
-	@Key
 	public String name;
 
-	@Key
 	public String link;
 
-	@Key
 	public Homepage homepage;
 
 	public static class Homepage {
-		@Key
+
 		public String link;
 
 		public String getLink() {

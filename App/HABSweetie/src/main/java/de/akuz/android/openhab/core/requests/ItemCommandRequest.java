@@ -1,70 +1,37 @@
 package de.akuz.android.openhab.core.requests;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import de.akuz.android.openhab.core.OpenHABRestInterface;
+import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
+import de.akuz.android.openhab.core.objects.Item;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+public class ItemCommandRequest extends AbstractOpenHABRequest<AbstractOpenHABObject> {
 
-import de.akuz.android.openhab.core.OpenHABAuthManager;
-
-public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
-
-	private String itemUrl;
+	private Item item;
 	private String command;
 
-	public ItemCommandRequest(String itemUrl, String command) {
-		super(Void.class);
-		this.itemUrl = itemUrl;
+	public ItemCommandRequest(Item item, String command) {
+		super(AbstractOpenHABObject.class, null);
+		this.item = item;
 		this.command = command;
 	}
 
 	@Override
-	public Void loadDataFromNetwork() throws Exception {
-		HttpContent content = new StringHttpContent(command);
-		HttpRequest request = getHttpRequestFactory().buildPostRequest(
-				new GenericUrl(itemUrl), content);
-		if (OpenHABAuthManager.hasCredentials()) {
-			HttpHeaders headers = request.getHeaders();
-			headers.setBasicAuthentication(OpenHABAuthManager.getUsername(),
-					OpenHABAuthManager.getPassword());
-		}
-		request.execute();
+	public AbstractOpenHABObject loadDataFromNetwork() throws Exception {
+		OpenHABRestInterface rest = getRestAdapter();
+		rest.sendItemCommand(item.name, command);
 		return null;
 	}
 
-	private static class StringHttpContent implements HttpContent {
+	@Override
+	public void setParameters(String... params) {
+		// Ignore
 
-		private String content;
+	}
 
-		public StringHttpContent(String content) {
-			this.content = content;
-		}
-
-		@Override
-		public long getLength() throws IOException {
-			return content.length();
-		}
-
-		@Override
-		public String getType() {
-			return "text/plain";
-		}
-
-		@Override
-		public void writeTo(OutputStream out) throws IOException {
-			out.write(content.getBytes());
-
-		}
-
-		@Override
-		public boolean retrySupported() {
-			return true;
-		}
-
+	@Override
+	protected AbstractOpenHABObject executeRequest() throws Exception {
+		// Ignore
+		return null;
 	}
 
 }

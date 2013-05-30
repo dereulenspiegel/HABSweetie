@@ -1,16 +1,13 @@
 package de.akuz.android.openhab.core;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+
+import javax.inject.Inject;
 
 import org.atmosphere.wasync.Decoder;
 import org.atmosphere.wasync.Transport.EVENT_TYPE;
 
-import android.util.Log;
-
-import com.google.api.client.xml.XmlNamespaceDictionary;
-import com.google.api.client.xml.XmlObjectParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 
@@ -20,12 +17,12 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 	private final static String TAG = BasicJackson2XmlDecoder.class
 			.getSimpleName();
 
-	private final static XmlObjectParser parser = new XmlObjectParser(
-			new XmlNamespaceDictionary().set("", ""));
-
 	private Class<T> resultClass;
 
 	private String baseUrl;
+
+	@Inject
+	ObjectMapper mapper;
 
 	public BasicJackson2XmlDecoder(String baseUrl, Class<T> resultClass) {
 		this.resultClass = resultClass;
@@ -37,11 +34,9 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 		if (EVENT_TYPE.MESSAGE == e) {
 			// Log.d(TAG, resultClass.getSimpleName() + " Decoding message " +
 			// s);
-			long receivedAt = System.currentTimeMillis();
-			ByteArrayInputStream is = new ByteArrayInputStream(s.getBytes());
 			try {
-				T object = parser.parseAndClose(is, Charset.forName("UTF-8"),
-						resultClass);
+				long receivedAt = System.currentTimeMillis();
+				T object = mapper.readValue(s, resultClass);
 				object.setReceivedAt(receivedAt);
 				object.setBaseUrl(baseUrl);
 				return object;

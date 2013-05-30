@@ -1,28 +1,35 @@
 package de.akuz.android.openhab.core;
 
+import retrofit.RestAdapter;
+import retrofit.RestAdapter.Builder;
 import android.app.Application;
 
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.octo.android.robospice.GoogleHttpClientSpiceService;
 import com.octo.android.robospice.persistence.CacheManager;
-import com.octo.android.robospice.persistence.googlehttpclient.json.Jackson2ObjectPersisterFactory;
+import com.octo.android.robospice.persistence.retrofit.RetrofitObjectPersisterFactory;
+import com.octo.android.robospice.retrofit.RetrofitSpiceService;
 
-public class OpenHABRestService extends GoogleHttpClientSpiceService {
+import de.akuz.android.openhab.AndroidModule;
+
+public class OpenHABRestService extends RetrofitSpiceService {
+
+	private JacksonConverter converter;
 
 	@Override
 	public CacheManager createCacheManager(Application application) {
 		CacheManager cacheManager = new CacheManager();
-		Jackson2ObjectPersisterFactory factory = new Jackson2ObjectPersisterFactory(application);
+		converter = new JacksonConverter();
+		// FIXME Bad hack because I don't know how to inject here
+		converter
+				.setObjectMapper(new AndroidModule(null).provideObjectMapper());
+		RetrofitObjectPersisterFactory factory = new RetrofitObjectPersisterFactory(
+				application, converter);
 
 		cacheManager.addPersister(factory);
 		return cacheManager;
 	}
 
 	@Override
-	public HttpRequestFactory createRequestFactory() {
-		NetHttpTransport transport = new NetHttpTransport();
-		HttpRequestFactory factory = transport.createRequestFactory();
-		return factory;
+	public Builder createRestAdapterBuilder() {
+		return new RestAdapter.Builder();
 	}
 }

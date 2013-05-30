@@ -2,8 +2,9 @@ package de.akuz.android.openhab.ui;
 
 import javax.inject.Inject;
 
-import roboguice.util.temp.Strings;
+import org.apache.http.client.HttpResponseException;
 
+import roboguice.util.temp.Strings;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 
-import com.google.api.client.http.HttpResponseException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -217,6 +217,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	private void handleException(Throwable t) {
 		loadingIndicatorFalse();
+		// FIXME determine correct Retrofit exceptions
 		if (t instanceof HttpResponseException) {
 			HttpResponseException e = (HttpResponseException) t;
 			if (e.getStatusCode() == 401) {

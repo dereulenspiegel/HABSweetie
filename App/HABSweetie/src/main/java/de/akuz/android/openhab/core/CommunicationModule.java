@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.octo.android.robospice.SpiceManager;
+import com.squareup.okhttp.OkHttpClient;
 
 import dagger.Module;
 import dagger.Provides;
@@ -41,6 +42,12 @@ public class CommunicationModule {
 	@Provides
 	public PageConnectionInterface providePageConnection(PageXMLConnection con) {
 		return con;
+	}
+
+	@Provides
+	@Singleton
+	public OkHttpClient provideOkHttpClient() {
+		return new OkHttpClient();
 	}
 
 }

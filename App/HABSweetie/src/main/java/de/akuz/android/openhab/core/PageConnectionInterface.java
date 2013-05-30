@@ -11,12 +11,13 @@ public interface PageConnectionInterface {
 
 	public void unregisterUpdateListener(PageUpdateListener listener);
 
-	public void open(String baseUrl, String pageUrl);
+	public void open(String baseUrl, String sitemapId, String pageUrl);
 
 	public void close();
 
-	public void sendCommand(Item item, String command, ItemUpdateListener listener);
-	
+	public void sendCommand(Item item, String command,
+			ItemUpdateListener listener);
+
 	public boolean isServerPushEnabled();
 
 }

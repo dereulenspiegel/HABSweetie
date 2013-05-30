@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.core.requests;
 
-import com.google.api.client.http.HttpRequest;
-
 import de.akuz.android.openhab.core.objects.ItemsResult;
 
 public class ItemsRequest extends AbstractOpenHABRequest<ItemsResult> {
@@ -18,7 +16,6 @@ public class ItemsRequest extends AbstractOpenHABRequest<ItemsResult> {
 
 	@Override
 	protected ItemsResult executeRequest() throws Exception {
-		HttpRequest request = getRequest(baseUrl + "/rest/items");
-		return parseInputStream(request.execute().getContent());
+		return getRestAdapter().getAllItems();
 	}
 }

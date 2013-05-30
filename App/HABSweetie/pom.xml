@@ -10,11 +10,18 @@
 
     <properties>
         <platform.version>4.1.1.4</platform.version>
-		<robospice-google-http-client.version>1.4.2</robospice-google-http-client.version>
-		<google.http.client.version>1.15.0-rc</google.http.client.version>
+		<robospice.version>1.4.2</robospice.version>
 		<commons.logging.version>1.1.1</commons.logging.version>
 		<dagger.version>1.0.0</dagger.version>
     </properties>
+    
+    <repositories>
+  	<!-- CUTR Android XML libraries Releases -->
+ 		<repository>
+    		<id>cutr-releases</id>
+    		<url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
+  		</repository>      
+	</repositories>
 
     <dependencies>
         <dependency>
@@ -25,35 +32,13 @@
         </dependency>
         <dependency>
 			<groupId>com.octo.android.robospice</groupId>
-			<artifactId>robospice-google-http-client</artifactId>
-			<version>${robospice-google-http-client.version}</version>
+			<artifactId>robospice-retrofit</artifactId>
+			<version>${robospice.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.http-client</groupId>
-			<artifactId>google-http-client-jackson2</artifactId>
-			<version>${google.http.client.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>xpp3</groupId>
-					<artifactId>xpp3</artifactId>
-				</exclusion>
-				<!--  <exclusion>
-					<groupId>stax</groupId>
-					<artifactId>stax-api</artifactId>
-				</exclusion> -->
-				<exclusion>
-          			<artifactId>httpclient</artifactId>
-          			<groupId>org.apache.httpcomponents</groupId>
-        		</exclusion>
-        		<exclusion>
-          			<artifactId>junit</artifactId>
-          			<groupId>junit</groupId>
-        		</exclusion>
-        		<exclusion>
-          			<artifactId>android</artifactId>
-          			<groupId>com.google.android</groupId>
-        		</exclusion>
-			</exclusions>
+  			<groupId>com.squareup.okhttp</groupId>
+  			<artifactId>okhttp</artifactId>
+  			<version>1.0.2</version>
 		</dependency>
 		<dependency>
     		<groupId>com.nostra13.universalimageloader</groupId>
@@ -72,10 +57,41 @@
               <version>1.0.0.RC1</version>
           </dependency>
           <dependency>
-              <groupId>org.codehaus.jackson</groupId>
-              <artifactId>jackson-mapper-asl</artifactId>
-              <version>1.9.12</version>
-          </dependency>
+        	<groupId>com.fasterxml.jackson.core</groupId>
+        	<artifactId>jackson-core</artifactId>
+        	<version>2.1.2</version>
+    	</dependency>
+    	<dependency>
+        	<groupId>com.fasterxml.jackson.core</groupId>
+        	<artifactId>jackson-databind</artifactId>
+        	<version>2.1.2</version>
+    	</dependency>
+
+	    <dependency>
+	        <groupId>com.fasterxml.jackson.core</groupId>
+	        <artifactId>jackson-annotations</artifactId>
+	        <version>2.1.2</version>
+	    </dependency>   
+          <dependency>
+        	<groupId>edu.usf.cutr.android.xml</groupId>
+        	<artifactId>jackson-dataformat-xml-android</artifactId>
+        	<version>2.1.2</version>
+    	</dependency>
+    	<dependency>
+        	<groupId>edu.usf.cutr.android.xml</groupId>
+        	<artifactId>stax2-api-android</artifactId>
+        	<version>3.1.1</version>
+    	</dependency>
+    	<dependency>
+        	<groupId>edu.usf.cutr.android.xml</groupId>
+        	<artifactId>stax-api-android</artifactId>
+        	<version>1.0-2</version>
+    	</dependency>
+    	<dependency>
+            <groupId>edu.usf.cutr.android.xml</groupId>
+            <artifactId>aalto-xml-android</artifactId>
+            <version>0.9.8</version>
+        </dependency>
           <dependency>
               <groupId>de.akuz.android</groupId>
               <artifactId>MemorizingTrustManager</artifactId>

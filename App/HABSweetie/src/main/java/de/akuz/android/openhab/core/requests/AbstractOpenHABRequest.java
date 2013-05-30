@@ -1,34 +1,23 @@
 package de.akuz.android.openhab.core.requests;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.util.Log;
+import retrofit.client.Header;
+import retrofit.client.OkClient;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.util.ObjectParser;
-import com.google.api.client.xml.XmlNamespaceDictionary;
-import com.google.api.client.xml.XmlObjectParser;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
+import de.akuz.android.openhab.core.JacksonConverter;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
+import de.akuz.android.openhab.core.OpenHABRestInterface;
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 
 public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObject>
-		extends GoogleHttpClientSpiceRequest<RESULT> {
+		extends RetrofitSpiceRequest<RESULT> {
 
 	private final static String TAG = AbstractOpenHABRequest.class
 			.getSimpleName();
-
-	private static XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
-	private static XmlObjectParser parser;
-	static {
-		dictionary.set("", "");
-		parser = new XmlObjectParser(dictionary);
-	}
 
 	protected String baseUrl;
 
@@ -43,44 +32,49 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 	public abstract void setParameters(String... params);
 
 	@Override
-	public final RESULT loadDataFromNetwork() throws Exception {
+	public RESULT loadDataFromNetwork() throws Exception {
 		RESULT result = executeRequest();
 		result.setBaseUrl(baseUrl);
 		return result;
 	}
 
-	protected HttpRequest getRequest(String url) throws Exception {
-		Log.d(TAG, "Building request for URL " + url);
-		HttpRequest request = getHttpRequestFactory().buildGetRequest(
-				new GenericUrl(url));
-		request.setFollowRedirects(true);
-		HttpHeaders headers = request.getHeaders();
-		headers.setAccept("application/xml");
+	protected OpenHABRestInterface getRestAdapter() {
+		OpenHABRequestHeaders headers = null;
 		if (OpenHABAuthManager.hasCredentials()) {
-			Log.d(TAG, "Setting basic auth for request");
-			headers = headers.setBasicAuthentication(
-					OpenHABAuthManager.getUsername(),
-					OpenHABAuthManager.getPassword());
+			headers = new OpenHABRequestHeaders(
+					OpenHABAuthManager.getEncodedCredentials());
+		} else {
+			headers = new OpenHABRequestHeaders();
 		}
-		headers.set("Accept-Charset", "utf-8");
-		request.setHeaders(headers);
-		ObjectParser parser = getObjectParser();
-		request.setParser(parser);
-		return request;
-	}
 
-	protected ObjectParser getObjectParser() {
-		return parser;
-	}
-
-	protected RESULT parseInputStream(InputStream in) throws IOException {
-		ObjectParser parser = getObjectParser();
-		RESULT result = parser.parseAndClose(in, Charset.forName("utf-8"),
-				resultClass);
-		result.setReceivedAt(System.currentTimeMillis());
-		return result;
+		return getRestAdapterBuilder().setServer(baseUrl)
+				.setRequestHeaders(headers).setClient(new OkClient())
+				.setConverter(new JacksonConverter()).setDebug(true).build()
+				.create(OpenHABRestInterface.class);
 	}
 
 	protected abstract RESULT executeRequest() throws Exception;
+
+	protected static class OpenHABRequestHeaders implements
+			retrofit.RequestHeaders {
+
+		private List<Header> headerList = new ArrayList<Header>(3);
+
+		public OpenHABRequestHeaders(String authorization) {
+			this();
+			headerList.add(new Header("Authorization", authorization));
+		}
+
+		public OpenHABRequestHeaders() {
+			headerList.add(new Header("Accept", "application/xml"));
+		}
+
+		@Override
+		public List<Header> get() {
+			// TODO Auto-generated method stub
+			return headerList;
+		}
+
+	}
 
 }

@@ -1,19 +1,14 @@
 package de.akuz.android.openhab.core.objects;
 
-import com.google.api.client.util.Key;
 
 public class LinkedPage extends AbstractOpenHABObject {
 
-	@Key
 	private String id;
 
-	@Key
 	private String title;
 
-	@Key
 	private String icon;
 
-	@Key
 	private String link;
 
 	public String getId() {

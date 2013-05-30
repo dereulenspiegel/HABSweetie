@@ -6,6 +6,10 @@ import java.nio.channels.ClosedChannelException;
 
 import javax.inject.Inject;
 
+import org.apache.http.client.HttpResponseException;
+
+import retrofit.RetrofitError;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -14,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.google.api.client.http.HttpResponseException;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
@@ -26,16 +29,20 @@ import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget.ItemCommandInterface;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.akuz.android.openhab.util.Utils;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		PageUpdateListener, ImageLoadingListener {
 
-	public final static String PAGE_URL_ARG = "pageUrl";
+	public final static String PAGE_ID_ARG = "pageId";
+	public final static String SITEMAP_ID_ARG = "sitemapId";
+	public final static String BASE_URL_ARG = "baseUrl";
 
 	private String baseUrl;
-	private String pageUrl;
+	private String pageId;
+	private String sitemapId;
 
 	private ListView widgetList;
 
@@ -52,11 +59,15 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Inject
 	PageConnectionInterface pageConnection;
 
+	@Inject
+	HABSweetiePreferences prefs;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		baseUrl = getPreferenceStringValue(R.string.pref_url_key);
-		pageUrl = getArguments().getString(PAGE_URL_ARG);
+		pageId = getArguments().getString(PAGE_ID_ARG);
+		sitemapId = getArguments().getString(SITEMAP_ID_ARG);
+		baseUrl = getArguments().getString(BASE_URL_ARG);
 		pageActivity = (PageActivity) getActivity();
 		Log.d(TAG, "PageFragment has been created");
 
@@ -64,9 +75,8 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		inject(listAdapter);
 		// ((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
-		pageConnection.open(baseUrl, pageUrl);
+		pageConnection.open(baseUrl, sitemapId, pageId);
 		loadCompletePage();
-
 	}
 
 	private void loadCompletePage() {
@@ -94,12 +104,24 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	}
 
-	public static PageFragment build(String pageUrl) {
+	public static PageFragment build(String baseUrl, String sitemapId,
+			String pageId) {
 		Bundle args = new Bundle();
-		args.putString(PAGE_URL_ARG, pageUrl);
+		args.putString(PAGE_ID_ARG, pageId);
+		args.putString(SITEMAP_ID_ARG, sitemapId);
+		args.putString(BASE_URL_ARG, baseUrl);
 		PageFragment fragment = new PageFragment();
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+	public static PageFragment build(String pageUrl) {
+		String[] parts = pageUrl.split("/");
+		String pageId = parts[parts.length - 1];
+		String sitemapId = parts[parts.length - 2];
+		String baseUrl = pageUrl.substring(0,
+				(pageUrl.length() - (pageId.length() + sitemapId.length())));
+		return build(baseUrl, sitemapId, pageId);
 	}
 
 	private void updateActionBar() {
@@ -198,12 +220,21 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 			progressDialog = null;
 		}
 		pageActivity.loadingIndicatorFalse();
-		if (Utils.hasCause(t, IOException.class)
+		if (t instanceof RetrofitError) {
+			RetrofitError error = (RetrofitError) t;
+			Log.e(TAG, "Receiver retrofit error for call to " + error.getUrl());
+			if (error.isNetworkError()) {
+				Log.e(TAG, "Receiver RetrofitError is a network problem");
+			} else {
+				Log.e(TAG, "RetroFitError reason: "
+						+ error.getResponse().getReason());
+				Log.e(TAG, "RetrofitError " + error.getResponse().getStatus());
+			}
+		} else if (Utils.hasCause(t, IOException.class)
 				&& t.getMessage().equals("Invalid handshake response")) {
 			// TODO: For now we ignore, find a way to handle this properly
 			return;
-		}
-		if (Utils.hasCause(t, ClosedChannelException.class)) {
+		} else if (Utils.hasCause(t, ClosedChannelException.class)) {
 			makeCrouton(R.string.error_generic, Style.ALERT,
 					"WebSocketConnection closed");
 		} else if (t instanceof HttpResponseException) {

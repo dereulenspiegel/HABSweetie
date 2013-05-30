@@ -1,6 +1,6 @@
 package de.akuz.android.openhab.core;
 
-import com.google.api.client.util.Base64;
+import com.squareup.okhttp.internal.Base64;
 
 import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 
@@ -29,7 +29,7 @@ public class OpenHABAuthManager {
 	}
 
 	public static String getEncodedCredentials() {
-		String encoded = Base64.encodeBase64String((username + ":" + password).getBytes());
+		String encoded = Base64.encode((username + ":" + password).getBytes());
 		return encoded;
 	}
 

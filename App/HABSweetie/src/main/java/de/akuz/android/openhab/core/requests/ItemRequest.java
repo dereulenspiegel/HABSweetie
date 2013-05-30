@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.core.requests;
 
-import com.google.api.client.http.HttpRequest;
-
 import de.akuz.android.openhab.core.objects.Item;
 
 public class ItemRequest extends AbstractOpenHABRequest<Item> {
@@ -15,14 +13,13 @@ public class ItemRequest extends AbstractOpenHABRequest<Item> {
 
 	@Override
 	public void setParameters(String... params) {
-		// TODO Auto-generated method stub
+		// Ignore
 
 	}
 
 	@Override
 	protected Item executeRequest() throws Exception {
-		HttpRequest request = getRequest(item.link);
-		return parseInputStream(request.execute().getContent());
+		return getRestAdapter().getItem(item.name);
 	}
 
 }

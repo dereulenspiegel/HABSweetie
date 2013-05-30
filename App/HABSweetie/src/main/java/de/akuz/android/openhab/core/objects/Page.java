@@ -3,24 +3,18 @@ package de.akuz.android.openhab.core.objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.annotate.JsonRootName;
-
-import com.google.api.client.util.Key;
-
-@JsonRootName("page")
 public class Page extends AbstractOpenHABObject {
 
-	@Key
 	private String id;
-	@Key
+
 	private String title;
-	@Key
+
 	private String icon;
-	@Key
+
 	private String link;
-	@Key
+
 	private Page parent;
-	@Key
+
 	private ArrayList<Widget> widget;
 
 	public String getId() {

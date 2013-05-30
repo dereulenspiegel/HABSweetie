@@ -1,55 +1,44 @@
 package de.akuz.android.openhab.core.objects;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.google.api.client.json.JsonString;
-import com.google.api.client.util.Key;
-
 public class Widget extends AbstractOpenHABObject {
 
-	@Key
 	protected String widgetId;
-	@Key
+
 	protected String type;
-	@Key
+
 	protected String label;
-	@Key
+
 	protected String icon;
-	@Key
+
 	protected String url;
-	@Key
+
 	protected Item item;
-	@Key("mapping")
+
 	protected ArrayList<Mapping> mappings;
-	@Key
+
 	protected Page linkedPage;
-	@Key
+
 	protected Boolean switchSupport;
-	@Key
-	@JsonString
+
 	protected Integer sendFrequency;
-	@Key
-	@JsonString
+
 	protected Float minValue;
-	@Key
-	@JsonString
+
 	protected Float maxValue;
-	@Key
-	@JsonString
+
 	protected Float step;
-	@Key
-	@JsonString
+
 	protected Integer refresh;
-	@Key
+
 	protected String period;
 	/**
 	 * Frame childs
 	 */
-	@Key
 	protected ArrayList<Widget> widget;
 
 	public String getWidgetId() {

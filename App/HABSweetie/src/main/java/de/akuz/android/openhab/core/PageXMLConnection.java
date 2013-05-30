@@ -1,6 +1,7 @@
 package de.akuz.android.openhab.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 
 import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
+import org.atmosphere.wasync.Decoder;
 import org.atmosphere.wasync.Function;
 import org.atmosphere.wasync.Request;
 import org.atmosphere.wasync.Request.METHOD;
@@ -25,6 +27,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import dagger.ObjectGraph;
+import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
@@ -34,6 +38,7 @@ import de.akuz.android.openhab.core.requests.ItemRequest;
 import de.akuz.android.openhab.core.requests.PageRequest;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
+import de.akuz.android.openhab.util.UrlUtils;
 
 public class PageXMLConnection implements PageConnectionInterface,
 		RequestListener<Page> {
@@ -48,8 +53,12 @@ public class PageXMLConnection implements PageConnectionInterface,
 	@Inject
 	HABSweetiePreferences prefs;
 
+	@Inject
+	ObjectGraph objectGraph;
+
 	private String baseUrl;
-	private String pageUrl;
+	private String pageId;
+	private String sitemapId;
 
 	private Handler uiHandler;
 
@@ -67,8 +76,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	@Override
 	public void loadCompletePage() {
-		spiceManager.execute(new PageRequest(baseUrl, pageUrl), pageUrl,
-				DurationInMillis.NEVER, this);
+		spiceManager.execute(new PageRequest(baseUrl, sitemapId, pageId),
+				pageId, DurationInMillis.ALWAYS_EXPIRED, this);
 
 	}
 
@@ -81,9 +90,10 @@ public class PageXMLConnection implements PageConnectionInterface,
 	}
 
 	@Override
-	public void open(String baseUrl, String pageUrl) {
+	public void open(String baseUrl, String sitemapId, String pageId) {
 		this.baseUrl = baseUrl;
-		this.pageUrl = pageUrl;
+		this.pageId = pageId;
+		this.sitemapId = sitemapId;
 		new Thread(new Runnable() {
 
 			@Override
@@ -116,9 +126,13 @@ public class PageXMLConnection implements PageConnectionInterface,
 		if (prefs.useWebSockets()) {
 			builder.transport(TRANSPORT.WEBSOCKET);
 		}
-		Request pageRequest = builder
-				.method(METHOD.GET)
-				//
+		for (Decoder<?, ?> d : getDecoders()) {
+			builder.decoder(d);
+		}
+		String pageUrl = UrlUtils.concat(UrlUtils.concat(baseUrl, sitemapId),
+				pageId);
+		Request pageRequest = builder.method(METHOD.GET)
+		//
 				.uri(pageUrl)
 				//
 				.header("Accept", "application/xml")
@@ -127,14 +141,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 				//
 				.header("Accept-Charset", "utf-8")
 				//
-				.decoder(new BasicJackson2XmlDecoder<Page>(baseUrl, Page.class))
-				//
-				.decoder(
-						new BasicJackson2XmlDecoder<Widget>(baseUrl,
-								Widget.class)) //
-				.decoder(
-						new BasicJackson2XmlDecoder<Widgets>(baseUrl,
-								Widgets.class)) //
 				.transport(TRANSPORT.LONG_POLLING) //
 				.transport(TRANSPORT.STREAMING) //
 				.build(); //
@@ -176,6 +182,23 @@ public class PageXMLConnection implements PageConnectionInterface,
 			}
 		});
 		return pageRequest;
+	}
+
+	protected List<Decoder<?, ?>> getDecoders() {
+		ArrayList<Decoder<?, ?>> decoderList = new ArrayList<Decoder<?, ?>>(3);
+		Decoder<?, ?> pageDecoder = new BasicJackson2XmlDecoder<Page>(baseUrl,
+				Page.class);
+		objectGraph.inject(pageDecoder);
+		Decoder<?, ?> widgetDecoder = new BasicJackson2XmlDecoder<Widget>(
+				baseUrl, Widget.class);
+		objectGraph.inject(widgetDecoder);
+		decoderList.add(widgetDecoder);
+		Decoder<?, ?> widgetsDecoder = new BasicJackson2XmlDecoder<Widgets>(
+				baseUrl, Widgets.class);
+		objectGraph.inject(widgetsDecoder);
+		decoderList.add(widgetsDecoder);
+		return decoderList;
+
 	}
 
 	@Override
@@ -257,8 +280,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 	@Override
 	public void sendCommand(final Item item, String command,
 			final ItemUpdateListener listener) {
-		spiceManager.execute(new ItemCommandRequest(item.link, command),
-				new RequestListener<Void>() {
+		spiceManager.execute(new ItemCommandRequest(item, command),
+				new RequestListener<AbstractOpenHABObject>() {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
@@ -267,7 +290,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 					}
 
 					@Override
-					public void onRequestSuccess(Void result) {
+					public void onRequestSuccess(AbstractOpenHABObject result) {
 						if (!isServerPushEnabled() && listener != null) {
 							pollItem(item, listener);
 						}

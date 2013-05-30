@@ -1,10 +1,8 @@
 package de.akuz.android.openhab.core.objects;
 
-import com.google.api.client.util.Key;
 
 public class WidgetsSingleResult extends AbstractOpenHABObject {
 	
-	@Key
 	private Widget widgets;
 
 	public Widget getWidgets() {
