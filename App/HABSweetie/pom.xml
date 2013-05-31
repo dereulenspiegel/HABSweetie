@@ -14,6 +14,7 @@
 		<google.http.client.version>1.15.0-rc</google.http.client.version>
 		<commons.logging.version>1.1.1</commons.logging.version>
 		<dagger.version>1.0.0</dagger.version>
+		<okhttp.version>1.0.2</okhttp.version>
     </properties>
 
     <dependencies>
@@ -27,6 +28,11 @@
 			<groupId>com.octo.android.robospice</groupId>
 			<artifactId>robospice-google-http-client</artifactId>
 			<version>${robospice-google-http-client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.http-client</groupId>

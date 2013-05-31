@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.util.Base64;
 
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.squareup.okhttp.OkHttpClient;
 
 public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
@@ -18,6 +19,8 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
 	private static String username;
 	private static String password;
+
+	private static OkHttpClient okClient = new OkHttpClient();
 
 	@Override
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra)
@@ -36,8 +39,7 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
 	private HttpURLConnection connectTo(String url) throws IOException {
 		String encodedUrl = Uri.encode(url, ALLOWED_URI_CHARS);
-		HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
-				.openConnection();
+		HttpURLConnection conn = okClient.open(new URL(encodedUrl));
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
 		if (username != null && password != null) {
