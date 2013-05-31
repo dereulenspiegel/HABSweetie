@@ -180,7 +180,9 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	@Override
 	public void close() {
-		socket.close();
+		if (socket != null) {
+			socket.close();
+		}
 
 	}
 

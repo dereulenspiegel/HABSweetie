@@ -255,11 +255,10 @@ public class Widget extends AbstractOpenHABObject {
 				this.widget.remove(position);
 				this.widget.add(position, widget);
 				return true;
-			} else {
-				if (w.updateSubWidget(widget)) {
-					return true;
-				}
+			} else if (w.updateSubWidget(widget)) {
+				return true;
 			}
+
 		}
 		return false;
 	}

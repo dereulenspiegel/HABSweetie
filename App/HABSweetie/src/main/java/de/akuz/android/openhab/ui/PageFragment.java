@@ -3,6 +3,7 @@ package de.akuz.android.openhab.ui;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -65,7 +66,11 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		// ((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
 		pageConnection.open(baseUrl, pageUrl);
-		loadCompletePage();
+		if (page == null) {
+			loadCompletePage();
+		} else {
+			pageUpdateReceived(page);
+		}
 
 	}
 
@@ -119,7 +124,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	}
 
 	private void updatePage(final Page page) {
-		if (page.getWidget() != null) {
+		if (this.page == null) {
 			this.page = page;
 		} else {
 			this.page.setIcon(page.getIcon());
@@ -127,6 +132,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		}
 		updateActionBar();
 		if (page.getWidget() != null) {
+			this.page.batchUpdateWidgets(new ArrayList<Widget>(page.getWidget()));
 			listAdapter.batchAddOrUpdateWidgets(page.getWidget());
 		}
 
@@ -165,6 +171,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Override
 	public void widgetUpdateReceived(Widget widget) {
 		Log.d(TAG, "Received widget update");
+		if (page != null) {
+			page.updateWidget(widget);
+		}
 		listAdapter.addWidget(widget);
 
 	}
