@@ -135,10 +135,6 @@ public class Widget extends AbstractOpenHABObject {
 
 	}
 
-	public Boolean isSwitchSupport() {
-		return switchSupport;
-	}
-
 	public void setSwitchSupport(Boolean switchSupport) {
 		this.switchSupport = switchSupport;
 	}

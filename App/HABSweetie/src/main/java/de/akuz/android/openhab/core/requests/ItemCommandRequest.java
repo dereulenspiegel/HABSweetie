@@ -4,15 +4,20 @@ import de.akuz.android.openhab.core.OpenHABRestInterface;
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.core.objects.Item;
 
-public class ItemCommandRequest extends AbstractOpenHABRequest<AbstractOpenHABObject> {
+public class ItemCommandRequest extends
+		AbstractOpenHABRequest<AbstractOpenHABObject> {
 
 	private Item item;
 	private String command;
 
 	public ItemCommandRequest(Item item, String command) {
-		super(AbstractOpenHABObject.class, null);
+		super(AbstractOpenHABObject.class, parseBaseUrlFromItem(item));
 		this.item = item;
 		this.command = command;
+	}
+
+	private static String parseBaseUrlFromItem(Item item) {
+		return item.link.substring(0, (item.name.length() + 11));
 	}
 
 	@Override

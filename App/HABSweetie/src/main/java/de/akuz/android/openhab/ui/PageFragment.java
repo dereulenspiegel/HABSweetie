@@ -118,9 +118,15 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	public static PageFragment build(String pageUrl) {
 		String[] parts = pageUrl.split("/");
 		String pageId = parts[parts.length - 1];
+		Log.d(TAG, "Parsed PageId: " + pageId);
 		String sitemapId = parts[parts.length - 2];
-		String baseUrl = pageUrl.substring(0,
-				(pageUrl.length() - (pageId.length() + sitemapId.length())));
+		Log.d(TAG, "Parsed SitemapId " + sitemapId);
+		String baseUrl = pageUrl
+				.substring(
+						0,
+						(pageUrl.length() - (pageId.length()
+								+ sitemapId.length() + 16)));
+		Log.d(TAG, "Parsed baseUrl " + baseUrl);
 		return build(baseUrl, sitemapId, pageId);
 	}
 
