@@ -3,6 +3,7 @@ package de.akuz.android.openhab.ui.widgets;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
 
 public class SetpointWidget extends BasicOpenHABWidget {
+
+	private final static String TAG = SetpointWidget.class.getSimpleName();
 
 	private Button increaseButton;
 	private Button decreaseButton;
@@ -109,18 +112,29 @@ public class SetpointWidget extends BasicOpenHABWidget {
 			return;
 		}
 		String valueState = item.state;
-		value = Float.parseFloat(valueState);
-		if (widget.getStep() != null) {
-			step = widget.getStep();
-		}
-		if (widget.getMaxValue() != null) {
-			max = widget.getMaxValue();
-		}
-		if (widget.getMinValue() != null) {
-			min = widget.getMinValue();
+		try {
+			if (widget.getStep() != null) {
+				step = widget.getStep();
+			}
+			if (widget.getMaxValue() != null) {
+				max = widget.getMaxValue();
+			}
+			if (widget.getMinValue() != null) {
+				min = widget.getMinValue();
+			}
+			value = Float.parseFloat(valueState);
+
+		} catch (NumberFormatException e) {
+			if ("OFF".equals(valueState)) {
+				value = min;
+			} else if ("ON".equals(valueState)) {
+				value = max;
+			} else {
+				Log.w(TAG, "Received illegal value for SetpointWidget: "
+						+ valueState);
+			}
 		}
 		valueText.setText(df.format(value));
 
 	}
-
 }

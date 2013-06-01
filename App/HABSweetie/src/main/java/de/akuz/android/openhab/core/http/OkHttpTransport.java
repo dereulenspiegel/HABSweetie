@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
 
@@ -15,6 +16,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+
+import android.util.Log;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
@@ -112,6 +115,7 @@ public class OkHttpTransport extends HttpTransport {
 		// SSL settings
 		if (connection instanceof HttpsURLConnection) {
 			HttpsURLConnection secureConnection = (HttpsURLConnection) connection;
+
 			if (hostnameVerifier != null) {
 				secureConnection.setHostnameVerifier(hostnameVerifier);
 			}

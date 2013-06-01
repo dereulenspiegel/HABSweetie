@@ -23,8 +23,9 @@ public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
 	@Override
 	public HttpRequestFactory createRequestFactory() {
-		OkHttpTransport okTransport = new OkHttpTransport();
-		HttpRequestFactory factory = okTransport.createRequestFactory();
+		OkHttpTransport.Builder okTransportBuilder = new OkHttpTransport.Builder();
+		HttpRequestFactory factory = okTransportBuilder.build()
+				.createRequestFactory();
 		return factory;
 	}
 }
