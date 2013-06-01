@@ -118,8 +118,11 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			oldBaseUrl = stateFragment.getBaseUrl();
 		}
 		String currentBaseUrl = prefs.getBaseUrl();
-		if (oldBaseUrl == null) {
+		if (oldBaseUrl == null && currentBaseUrl == null) {
 			return true;
+		}
+		if (oldBaseUrl == null && currentBaseUrl != null) {
+			return false;
 		}
 		return !oldBaseUrl.equals(currentBaseUrl);
 	}

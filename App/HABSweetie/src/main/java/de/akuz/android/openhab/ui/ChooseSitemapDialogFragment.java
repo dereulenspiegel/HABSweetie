@@ -37,6 +37,8 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 
 	private SelectSitemapListener listener;
 
+	private boolean sitemapSelected = false;
+
 	@Inject
 	HABSweetiePreferences prefs;
 
@@ -102,9 +104,10 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
+		sitemapSelected = true;
 		Sitemap sitemap = sitemapAdapter.getItem(position);
 		if (useAsDefault) {
-			prefs.setDefaultSitemapUrl(sitemap.link);
+			prefs.setDefaultSitemapUrl(sitemap.homepage.link);
 		}
 		if (listener != null) {
 			listener.sitemapSelected(sitemap);
@@ -115,7 +118,7 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-		if (listener != null) {
+		if (listener != null && !sitemapSelected) {
 			listener.canceled();
 		}
 		super.onDismiss(dialog);
