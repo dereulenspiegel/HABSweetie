@@ -25,6 +25,13 @@ import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
 import com.squareup.okhttp.OkHttpClient;
 
+/**
+ * I shamelessly copied most if this source code from the NetHttpTransport, but
+ * I just wanted to replace the HttpUrlConnection with OkHttp.
+ * 
+ * @author Till Klocke
+ * 
+ */
 public class OkHttpTransport extends HttpTransport {
 
 	private static OkHttpClient okClient = new OkHttpClient();
@@ -98,7 +105,7 @@ public class OkHttpTransport extends HttpTransport {
 		if (proxy != null) {
 			okClient.setProxy(proxy);
 		}
-//		okClient.setAuthenticator(new OpenHABOkAuthenticator());
+		// okClient.setAuthenticator(new OpenHABOkAuthenticator());
 		URLConnection conn = okClient.open(connUrl);
 		HttpURLConnection connection = (HttpURLConnection) conn;
 		connection.setRequestMethod(method);
