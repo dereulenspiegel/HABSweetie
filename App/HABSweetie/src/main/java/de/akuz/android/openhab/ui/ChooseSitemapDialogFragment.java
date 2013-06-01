@@ -10,10 +10,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -114,6 +111,14 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 		}
 		dismiss();
 
+	}
+
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		if (listener != null) {
+			listener.canceled();
+		}
+		super.onDismiss(dialog);
 	}
 
 	public static interface SelectSitemapListener {

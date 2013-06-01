@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
 import de.akuz.android.openhab.ui.widgets.BasicOpenHABWidget;
@@ -31,7 +32,7 @@ import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 		SliderWidget.class, SwitchWidget.class, SelectionWidget.class,
 		ColorpickerWidget.class, BasicOpenHABWidget.class,
 		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
-		ChartWidget.class })
+		ChartWidget.class, ChooseSitemapDialogFragment.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;

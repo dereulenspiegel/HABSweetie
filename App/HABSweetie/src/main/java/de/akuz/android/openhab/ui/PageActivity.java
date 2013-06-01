@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Sleeper;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -36,8 +37,6 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	private OpenHABPagePagerAdapter pagerAdapter;
 
 	private String baseUrl;
-
-	private String selectedSitemapUrl;
 
 	private PageActivityStateFragment stateFragment;
 
@@ -77,22 +76,27 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		// If we have fragments to restore restore them, but only if the config
 		// hasn't changed
 		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
-				&& stateFragment.getAvailablePageFragments() != null) {
+				&& stateFragment.getAvailablePageFragments() != null
+				&& stateFragment.getAvailablePageFragments().size() > 0) {
 			Log.d(TAG, "Restoring previous state after config change");
 			restorePreviousStateAfterConfigurationChange();
-		} else if (hasBaseUrlChanged() && isAppConfigured()) {
-			Log.d(TAG, "Base url has changed");
+		} else if (isAppConfigured() && hasBaseUrlChanged()) {
+			Log.d(TAG, "App is configured, but baseUrl has changed");
 			loadAvailableSitemaps();
 		} else if (isAppConfigured()) {
+			Log.d(TAG, "App is configured, and baseUrl hasn't changed");
 			String pageUrl = prefs.getDefaultSitemapUrl();
 			if (!Strings.isEmpty(pageUrl)) {
+				Log.d(TAG, "Loading default sitemap from url " + pageUrl);
 				loadSubPage(pageUrl);
 			} else {
 				loadAvailableSitemaps();
 			}
 		} else {
+			Log.d(TAG, "App is not configured, showing crouton");
 			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 		}
+		Log.d(TAG, "Creating state fragment");
 		stateFragment = new PageActivityStateFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(
@@ -109,12 +113,15 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	}
 
 	private boolean hasBaseUrlChanged() {
-		String defaultSitemapUrl = prefs.getDefaultSitemapUrl();
+		String oldBaseUrl = null;
+		if (stateFragment != null) {
+			oldBaseUrl = stateFragment.getBaseUrl();
+		}
 		String currentBaseUrl = prefs.getBaseUrl();
-		if (defaultSitemapUrl == null) {
+		if (oldBaseUrl == null) {
 			return true;
 		}
-		return !defaultSitemapUrl.startsWith(currentBaseUrl);
+		return !oldBaseUrl.equals(currentBaseUrl);
 	}
 
 	private void restorePreviousStateAfterConfigurationChange() {
@@ -136,6 +143,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
 		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
 		stateFragment.setFragmentCache(pagerAdapter.getFragmentCache());
+		stateFragment.setBaseUrl(baseUrl);
+		stateFragment.setHasState(true);
 		super.onStop();
 	}
 
@@ -148,14 +157,16 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	}
 
 	private void loadAvailableSitemaps() {
+		Log.d(TAG, "Loading all available sitemaps");
 		loadingIndicatorTrue();
 		spiceManager.execute(new SitemapsRequest(baseUrl), baseUrl,
-				DurationInMillis.NEVER, new RequestListener<SitemapsResult>() {
+				DurationInMillis.ALWAYS_EXPIRED,
+				new RequestListener<SitemapsResult>() {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
-						Exception cause = (Exception) spiceException.getCause();
 						loadingIndicatorFalse();
+						Exception cause = (Exception) spiceException.getCause();
 						handleException(cause);
 					}
 
@@ -166,9 +177,12 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 								&& result.getSitemap().size() == 1) {
 							prefs.setDefaultSitemapUrl(result.getSitemap().get(
 									0).homepage.link);
+							Log.d(TAG, "Got only one sitemap, loading it");
 							loadSubPage(result.getSitemap().get(0).homepage.link);
 						} else if (result.getSitemap() != null
 								&& result.getSitemap().size() > 1) {
+							Log.d(TAG,
+									"Received multiple sitemaps, showing dialog");
 							ChooseSitemapDialogFragment fragment = ChooseSitemapDialogFragment
 									.build(result.getSitemap());
 							inject(fragment);
@@ -190,12 +204,13 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	public void loadSubPage(String pageUrl) {
 		pagerAdapter.initializeWithFirstPage(pageUrl);
+		pager.setAdapter(pagerAdapter);
 		pager.setCurrentItem(0, true);
 	}
 
 	@Override
 	public void sitemapSelected(Sitemap selectedSitemap) {
-		selectedSitemapUrl = selectedSitemap.link;
+		Log.d(TAG, "Selected sitemap is " + selectedSitemap.name);
 		loadSubPage(selectedSitemap.homepage.link);
 
 	}

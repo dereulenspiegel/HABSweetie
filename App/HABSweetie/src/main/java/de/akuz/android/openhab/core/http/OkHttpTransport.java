@@ -98,7 +98,7 @@ public class OkHttpTransport extends HttpTransport {
 		if (proxy != null) {
 			okClient.setProxy(proxy);
 		}
-		okClient.setAuthenticator(new OpenHABOkAuthenticator());
+//		okClient.setAuthenticator(new OpenHABOkAuthenticator());
 		URLConnection conn = okClient.open(connUrl);
 		HttpURLConnection connection = (HttpURLConnection) conn;
 		connection.setRequestMethod(method);

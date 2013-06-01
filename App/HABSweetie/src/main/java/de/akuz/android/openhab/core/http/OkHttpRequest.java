@@ -18,7 +18,7 @@ public class OkHttpRequest extends LowLevelHttpRequest {
 	 */
 	OkHttpRequest(HttpURLConnection connection) {
 		this.connection = connection;
-		connection.setInstanceFollowRedirects(false);
+//		connection.setInstanceFollowRedirects(false);
 	}
 
 	@Override

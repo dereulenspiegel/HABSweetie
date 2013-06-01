@@ -19,6 +19,10 @@ public class PageActivityStateFragment extends Fragment {
 	private Map<String,PageFragment> fragmentCache;
 
 	private int currentViewPagerPage;
+	
+	private String baseUrl;
+	
+	private boolean hasState = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,22 @@ public class PageActivityStateFragment extends Fragment {
 
 	public void setFragmentCache(Map<String, PageFragment> fragmentCache) {
 		this.fragmentCache = fragmentCache;
+	}
+
+	public String getBaseUrl() {
+		return baseUrl;
+	}
+
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+	public boolean isHasState() {
+		return hasState;
+	}
+
+	public void setHasState(boolean hasState) {
+		this.hasState = hasState;
 	}
 
 }
