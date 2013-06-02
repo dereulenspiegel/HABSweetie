@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.apache.http.client.HttpResponseException;
 
 import retrofit.RetrofitError;
-
+import retrofit.client.Response;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -227,14 +227,30 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		}
 		pageActivity.loadingIndicatorFalse();
 		if (t instanceof RetrofitError) {
+			if (Utils.hasCause(t, NullPointerException.class)) {
+				// Ignore, caused by a bug in retrofit see issue #227 and #229
+				return;
+			}
 			RetrofitError error = (RetrofitError) t;
 			Log.e(TAG, "Receiver retrofit error for call to " + error.getUrl());
 			if (error.isNetworkError()) {
+				makeCrouton(R.string.error_connect, Style.ALERT);
 				Log.e(TAG, "Receiver RetrofitError is a network problem");
 			} else {
-				Log.e(TAG, "RetroFitError reason: "
-						+ error.getResponse().getReason());
-				Log.e(TAG, "RetrofitError " + error.getResponse().getStatus());
+				Response response = error.getResponse();
+				if (response != null) {
+					switch (response.getStatus()) {
+					case 401:
+						makeCrouton(R.string.error_auth_failed, Style.ALERT);
+						break;
+					default:
+						makeCrouton(R.string.error_generic, Style.ALERT,
+								response.getStatus());
+						break;
+					}
+				} else {
+					makeCrouton(R.string.error_generic, Style.ALERT);
+				}
 			}
 		} else if (Utils.hasCause(t, IOException.class)
 				&& t.getMessage().equals("Invalid handshake response")) {

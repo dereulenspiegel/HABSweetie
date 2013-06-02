@@ -1,5 +1,6 @@
 package de.akuz.android.openhab.core;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -29,6 +30,6 @@ public interface OpenHABRestInterface {
 	public Sitemap getSitemap(@Path("id") String id);
 
 	@POST("/rest/items/{id}")
-	public void sendItemCommand(@Path("id") String id, @Body String command);
+	public Response sendItemCommand(@Path("id") String id, @Body String command);
 
 }

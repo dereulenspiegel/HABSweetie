@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
 import retrofit.mime.TypedInput;
@@ -31,9 +32,11 @@ public class JacksonConverter implements Converter {
 	public Object fromBody(TypedInput body, Type type)
 			throws ConversionException {
 		checkAndCreateMapper();
+		if (body.length() == 0) {
+			return new Response(200, null, null, body);
+		}
 		try {
 			if (type instanceof Class<?>) {
-
 				return mapper.readValue(body.in(), (Class<?>) type);
 			} else {
 				throw new IllegalArgumentException("type must be of type class");
@@ -67,14 +70,56 @@ public class JacksonConverter implements Converter {
 
 	@Override
 	public TypedOutput toBody(Object object) {
-		checkAndCreateMapper();
 		try {
+			// Send String as plain text
+			if (object instanceof String) {
+				return new PlainStringOutput(object);
+			}
+			checkAndCreateMapper();
 			return new XmlTypedOutput(mapper.writeValueAsBytes(object));
 		} catch (Exception e) {
 			Log.e(TAG, "Cant't serialize object of class " + object.getClass(),
 					e);
 		}
 		return null;
+	}
+
+	public static class PlainStringOutput implements TypedOutput {
+
+		private byte[] data;
+
+		public PlainStringOutput(Object o) {
+			data = o.toString().getBytes();
+		}
+
+		public PlainStringOutput(String string) {
+			data = string.getBytes();
+		}
+
+		public PlainStringOutput(byte[] data) {
+			this.data = data;
+		}
+
+		@Override
+		public String fileName() {
+			return null;
+		}
+
+		@Override
+		public String mimeType() {
+			return "text/plain; charset=UTF-8";
+		}
+
+		@Override
+		public long length() {
+			return data.length;
+		}
+
+		@Override
+		public void writeTo(OutputStream out) throws IOException {
+			out.write(data);
+		}
+
 	}
 
 	public static class XmlTypedOutput implements TypedOutput {
@@ -105,10 +150,6 @@ public class JacksonConverter implements Converter {
 			out.write(data);
 		}
 
-	}
-
-	public void setObjectMapper(ObjectMapper mapper) {
-		this.mapper = mapper;
 	}
 
 }

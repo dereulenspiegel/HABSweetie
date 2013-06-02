@@ -5,11 +5,14 @@ import java.util.List;
 
 import retrofit.client.Header;
 import retrofit.client.OkClient;
+import android.util.Log;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.squareup.okhttp.OkHttpClient;
 
 import de.akuz.android.openhab.core.JacksonConverter;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
+import de.akuz.android.openhab.core.OpenHABOkAuthenticator;
 import de.akuz.android.openhab.core.OpenHABRestInterface;
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 
@@ -23,8 +26,11 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 
 	protected Class<RESULT> resultClass;
 
+	protected static OkClient okClient;
+
 	public AbstractOpenHABRequest(Class<RESULT> clazz, String baseUrl) {
 		super(clazz);
+		Log.d(TAG, "Using base url " + baseUrl);
 		this.baseUrl = baseUrl;
 		resultClass = clazz;
 	}
@@ -48,9 +54,21 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		}
 
 		return getRestAdapterBuilder().setServer(baseUrl)
-				.setRequestHeaders(headers).setClient(new OkClient())
+				.setRequestHeaders(headers).setClient(getOkClient())
 				.setConverter(new JacksonConverter()).setDebug(true).build()
 				.create(OpenHABRestInterface.class);
+	}
+
+	protected OkClient getOkClient() {
+		if (okClient != null) {
+			return okClient;
+		}
+		OkHttpClient okHttpClient = new OkHttpClient();
+		okHttpClient.setFollowProtocolRedirects(true);
+		okHttpClient.setAuthenticator(new OpenHABOkAuthenticator());
+		OkClient client = new OkClient(okHttpClient);
+		okClient = client;
+		return client;
 	}
 
 	protected abstract RESULT executeRequest() throws Exception;
@@ -71,7 +89,6 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 
 		@Override
 		public List<Header> get() {
-			// TODO Auto-generated method stub
 			return headerList;
 		}
 

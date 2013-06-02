@@ -17,7 +17,8 @@ public class ItemCommandRequest extends
 	}
 
 	private static String parseBaseUrlFromItem(Item item) {
-		return item.link.substring(0, (item.name.length() + 11));
+		return item.link.substring(0,
+				(item.link.length() - (item.name.length() + 12)));
 	}
 
 	@Override

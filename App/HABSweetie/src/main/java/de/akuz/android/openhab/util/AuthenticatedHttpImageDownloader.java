@@ -8,9 +8,11 @@ import java.net.URL;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Base64;
 
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.squareup.okhttp.OkHttpClient;
+
+import de.akuz.android.openhab.core.OpenHABOkAuthenticator;
 
 public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
@@ -18,6 +20,8 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
 	private static String username;
 	private static String password;
+
+	private static OkHttpClient client;
 
 	@Override
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra)
@@ -36,18 +40,28 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
 	private HttpURLConnection connectTo(String url) throws IOException {
 		String encodedUrl = Uri.encode(url, ALLOWED_URI_CHARS);
-		HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
-				.openConnection();
+		OkHttpClient client = getClient();
+		HttpURLConnection conn = client.open(new URL(encodedUrl));
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
-		if (username != null && password != null) {
-			byte[] encoded = Base64.encode(
-					(username + ":" + password).getBytes(), Base64.DEFAULT);
-			conn.setRequestProperty("Authorization", "Basic "
-					+ new String(encoded));
-		}
+//		if (username != null && password != null) {
+//			byte[] encoded = Base64.encode(
+//					(username + ":" + password).getBytes(), Base64.DEFAULT);
+//			conn.setRequestProperty("Authorization", "Basic "
+//					+ new String(encoded));
+//		}
 		conn.connect();
 		return conn;
+	}
+
+	private OkHttpClient getClient() {
+		if (client != null) {
+			return client;
+		}
+		client = new OkHttpClient();
+		client.setAuthenticator(new OpenHABOkAuthenticator());
+		client.setFollowProtocolRedirects(true);
+		return client;
 	}
 
 	public AuthenticatedHttpImageDownloader(Context context) {
