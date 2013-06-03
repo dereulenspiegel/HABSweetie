@@ -3,12 +3,14 @@ package de.akuz.android.openhab;
 import javax.inject.Singleton;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import de.akuz.android.openhab.settings.OpenHABSQLLiteHelper;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
@@ -63,6 +65,11 @@ public class AndroidModule {
 	@Singleton
 	public ObjectGraph provideObjectGraph() {
 		return app.getObjectGraph();
+	}
+
+	@Provides
+	SQLiteOpenHelper provideSQLiteOpenHelper(Context ctx) {
+		return new OpenHABSQLLiteHelper(ctx);
 	}
 
 }
