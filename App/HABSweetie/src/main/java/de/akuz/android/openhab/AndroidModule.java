@@ -6,10 +6,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.okhttp.OkHttpClient;
 
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import de.akuz.android.openhab.core.OpenHABRestService;
+import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.OpenHABSQLLiteHelper;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
@@ -27,6 +30,7 @@ import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
 import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
+import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 
 @Module(library = true, injects = { BootstrapApplication.class,
 		WidgetListAdapter.class, OpenHABWidgetFactory.class, FrameWidget.class,
@@ -34,7 +38,9 @@ import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 		SliderWidget.class, SwitchWidget.class, SelectionWidget.class,
 		ColorpickerWidget.class, BasicOpenHABWidget.class,
 		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
-		ChartWidget.class, ChooseSitemapDialogFragment.class })
+		ChartWidget.class, ChooseSitemapDialogFragment.class,
+		OpenHABRestService.class, OkHttpTransport.class,
+		AuthenticatedHttpImageDownloader.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;
@@ -70,6 +76,14 @@ public class AndroidModule {
 	@Provides
 	SQLiteOpenHelper provideSQLiteOpenHelper(Context ctx) {
 		return new OpenHABSQLLiteHelper(ctx);
+	}
+
+	@Provides
+	@Singleton
+	public OkHttpClient provideOkHttpClient() {
+		OkHttpClient client = new OkHttpClient();
+		client.setFollowProtocolRedirects(true);
+		return client;
 	}
 
 }

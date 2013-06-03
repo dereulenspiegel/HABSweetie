@@ -100,6 +100,9 @@ public class BootstrapApplication extends Application {
 				.cacheOnDisc() //
 				.bitmapConfig(Bitmap.Config.RGB_565).build(); //
 
+		AuthenticatedHttpImageDownloader downloader = new AuthenticatedHttpImageDownloader(
+				getApplicationContext());
+		objectGraph.inject(downloader);
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				getApplicationContext()) //
 				.discCache(new UnlimitedDiscCache(cacheDir)) //
@@ -113,9 +116,7 @@ public class BootstrapApplication extends Application {
 				.discCacheFileCount(100) //
 				.discCacheFileNameGenerator(new HashCodeFileNameGenerator())
 				//
-				.imageDownloader(
-						new AuthenticatedHttpImageDownloader(
-								getApplicationContext())) //
+				.imageDownloader(downloader) //
 				.imageDecoder(new BaseImageDecoder()) //
 				.defaultDisplayImageOptions(displayOptions) //
 				.build(); //

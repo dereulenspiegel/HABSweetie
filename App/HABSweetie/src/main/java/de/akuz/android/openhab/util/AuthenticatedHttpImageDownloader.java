@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.net.Uri;
 import android.util.Base64;
@@ -20,7 +22,8 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 	private static String username;
 	private static String password;
 
-	private static OkHttpClient okClient = new OkHttpClient();
+	@Inject
+	OkHttpClient okClient;
 
 	@Override
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra)

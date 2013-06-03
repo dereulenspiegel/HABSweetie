@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
 
+import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -37,7 +38,8 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public class OkHttpTransport extends HttpTransport {
 
-	private static OkHttpClient okClient = new OkHttpClient();
+	@Inject
+	OkHttpClient okClient;
 
 	/**
 	 * All valid request methods as specified in
