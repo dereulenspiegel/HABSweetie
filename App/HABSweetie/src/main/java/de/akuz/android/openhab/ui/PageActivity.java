@@ -95,8 +95,8 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		ft.add(stateFragment, PageActivityStateFragment.TAG);
 		ft.commit();
 	}
-	
-	public OpenHABInstance getCurrentInstance(){
+
+	public OpenHABInstance getCurrentInstance() {
 		return currentInstance;
 	}
 
@@ -198,15 +198,17 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 
 	private void loadAvailableSitemaps() {
 		Log.d(TAG, "Loading all available sitemaps");
-		loadingIndicatorTrue();
 		String baseUrl = getBaseUrl();
+		final ProgressDialogFragment progressDialog = ProgressDialogFragment
+				.build(getString(R.string.message_loading_sitemaps));
+		progressDialog.show(getSupportFragmentManager(), "sitemapsProgress");
 		spiceManager.execute(new SitemapsRequest(baseUrl), baseUrl,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new RequestListener<SitemapsResult>() {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
-						loadingIndicatorFalse();
+						progressDialog.dismissAllowingStateLoss();
 						Exception cause = (Exception) spiceException.getCause();
 						handleException(cause);
 					}
@@ -214,6 +216,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 					@Override
 					public void onRequestSuccess(SitemapsResult result) {
 						loadingIndicatorFalse();
+						progressDialog.dismissAllowingStateLoss();
 						if (result.getSitemap() != null
 								&& result.getSitemap().size() == 1) {
 							currentInstance.setDefaultSitemapIdFromUrl(result
