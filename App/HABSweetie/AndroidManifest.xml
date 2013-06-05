@@ -15,6 +15,7 @@
     </activity>
     <service android:name=".core.OpenHABRestService"></service>
     <activity android:name=".ui.SettingsActivity"></activity>
+    <activity android:name=".settings.wizard.ConnectionWizardActivity"></activity>
   </application>
 
 </manifest>

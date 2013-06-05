@@ -106,11 +106,8 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 			int position, long id) {
 		sitemapSelected = true;
 		Sitemap sitemap = sitemapAdapter.getItem(position);
-		if (useAsDefault) {
-			prefs.setDefaultSitemapUrl(sitemap.homepage.link);
-		}
 		if (listener != null) {
-			listener.sitemapSelected(sitemap);
+			listener.sitemapSelected(sitemap, useAsDefault);
 		}
 		dismiss();
 
@@ -125,7 +122,7 @@ public class ChooseSitemapDialogFragment extends DialogFragment implements
 	}
 
 	public static interface SelectSitemapListener {
-		public void sitemapSelected(Sitemap selectedSitemap);
+		public void sitemapSelected(Sitemap selectedSitemap, boolean useAsDefault);
 
 		public void canceled();
 	}

@@ -3,8 +3,10 @@ package de.akuz.android.openhab.ui;
 import javax.inject.Inject;
 
 import roboguice.util.temp.Strings;
-
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +16,6 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.util.Sleeper;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -24,6 +25,9 @@ import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
+import de.akuz.android.openhab.settings.OpenHABInstance;
+import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.duenndns.ssl.InteractionReceiver;
@@ -36,9 +40,12 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	private ViewPager pager;
 	private OpenHABPagePagerAdapter pagerAdapter;
 
-	private String baseUrl;
+	private OpenHABInstance currentInstance;
 
 	private PageActivityStateFragment stateFragment;
+
+	@Inject
+	ConnectivityManager conManager;
 
 	@Inject
 	HABSweetiePreferences prefs;
@@ -68,13 +75,29 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "Resuming PageActivity");
-		baseUrl = prefs.getBaseUrl();
-		Log.d(TAG, "Using base url " + baseUrl);
-		// Trying to load a previous state from a configuration change;
+		currentInstance = prefs.getDefaultInstance();
+		Log.d(TAG,
+				"Using base url " + currentInstance == null ? chooseSetting(
+						currentInstance).getBaseUrl() : " none");
 		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageActivityStateFragment.TAG);
 		// If we have fragments to restore restore them, but only if the config
 		// hasn't changed
+		setNewInstance(currentInstance);
+		Log.d(TAG, "Creating state fragment");
+		stateFragment = new PageActivityStateFragment();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(
+				PageActivityStateFragment.TAG);
+		if (oldFragment != null) {
+			ft.remove(oldFragment);
+		}
+		ft.add(stateFragment, PageActivityStateFragment.TAG);
+		ft.commit();
+	}
+
+	public void setNewInstance(OpenHABInstance instance) {
+		currentInstance = instance;
 		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
 				&& stateFragment.getAvailablePageFragments() != null
 				&& stateFragment.getAvailablePageFragments().size() > 0) {
@@ -94,37 +117,43 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			}
 		} else {
 			Log.d(TAG, "App is not configured, showing crouton");
-			makeCrouton(R.string.please_configure_this_app, Style.ALERT);
+			// makeCrouton(R.string.please_configure_this_app, Style.ALERT);
+			Intent i = new Intent(this, ConnectionWizardActivity.class);
+			startActivity(i);
 		}
-		Log.d(TAG, "Creating state fragment");
-		stateFragment = new PageActivityStateFragment();
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(
-				PageActivityStateFragment.TAG);
-		if (oldFragment != null) {
-			ft.remove(oldFragment);
-		}
-		ft.add(stateFragment, PageActivityStateFragment.TAG);
-		ft.commit();
 	}
 
 	private boolean isAppConfigured() {
-		return prefs.getBaseUrl() != null;
+		return currentInstance != null;
 	}
 
 	private boolean hasBaseUrlChanged() {
-		String oldBaseUrl = null;
+		OpenHABInstance oldInstance = null;
 		if (stateFragment != null) {
-			oldBaseUrl = stateFragment.getBaseUrl();
+			oldInstance = stateFragment.getSavedInstance();
 		}
-		String currentBaseUrl = prefs.getBaseUrl();
-		if (oldBaseUrl == null && currentBaseUrl == null) {
+		OpenHABInstance defaultInstance = currentInstance;
+		if (oldInstance == null && defaultInstance == null) {
 			return true;
 		}
-		if (oldBaseUrl == null && currentBaseUrl != null) {
+		if (oldInstance == null && defaultInstance != null) {
 			return false;
 		}
+		String oldBaseUrl = chooseSetting(oldInstance).getBaseUrl();
+		String currentBaseUrl = chooseSetting(defaultInstance).getBaseUrl();
 		return !oldBaseUrl.equals(currentBaseUrl);
+	}
+
+	private OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
+		NetworkInfo currentNetwork = conManager.getActiveNetworkInfo();
+		if (currentNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+			OpenHABConnectionSettings setting = instance.getExternal();
+			if (Strings.isEmpty(setting.getBaseUrl())) {
+				return instance.getInternal();
+			}
+			return instance.getExternal();
+		}
+		return instance.getInternal();
 	}
 
 	private void restorePreviousStateAfterConfigurationChange() {
@@ -146,7 +175,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		stateFragment.setAvailablePageFragments(pagerAdapter.getFragmentList());
 		stateFragment.setCurrentViewPagerPage(pager.getCurrentItem());
 		stateFragment.setFragmentCache(pagerAdapter.getFragmentCache());
-		stateFragment.setBaseUrl(baseUrl);
+		stateFragment.setSavedInstance(currentInstance);
 		stateFragment.setHasState(true);
 		super.onStop();
 	}
@@ -159,9 +188,14 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		setProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
+	private String getBaseUrl() {
+		return chooseSetting(currentInstance).getBaseUrl();
+	}
+
 	private void loadAvailableSitemaps() {
 		Log.d(TAG, "Loading all available sitemaps");
 		loadingIndicatorTrue();
+		String baseUrl = getBaseUrl();
 		spiceManager.execute(new SitemapsRequest(baseUrl), baseUrl,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new RequestListener<SitemapsResult>() {
@@ -178,8 +212,9 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 						loadingIndicatorFalse();
 						if (result.getSitemap() != null
 								&& result.getSitemap().size() == 1) {
-							prefs.setDefaultSitemapUrl(result.getSitemap().get(
-									0).homepage.link);
+							currentInstance.setDefaultSitemapIdFromUrl(result
+									.getSitemap().get(0));
+							prefs.saveInstance(currentInstance);
 							Log.d(TAG, "Got only one sitemap, loading it");
 							loadSubPage(result.getSitemap().get(0).homepage.link);
 						} else if (result.getSitemap() != null
@@ -212,10 +247,11 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	}
 
 	@Override
-	public void sitemapSelected(Sitemap selectedSitemap) {
+	public void sitemapSelected(Sitemap selectedSitemap, boolean useAsDefault) {
 		Log.d(TAG, "Selected sitemap is " + selectedSitemap.name);
+		currentInstance.setDefaultSitemapIdFromUrl(selectedSitemap);
+		prefs.saveInstance(currentInstance);
 		loadSubPage(selectedSitemap.homepage.link);
-
 	}
 
 	@Override

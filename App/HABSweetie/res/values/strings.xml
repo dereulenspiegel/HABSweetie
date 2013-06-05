@@ -42,4 +42,22 @@
 	<string name="pref_send_delay_title">Command send delay in seconds</string>
 	<string name="pref_send_delay_summary">Some widgets like Setpoint or Slider can cause many commands to be send in a very short time frame. Especially on my mobile networks this can become quite problem. This lets you configure a delay for sending commands. Only the last command after the delay has passed will be send.</string>
 	<string name="pref_cat_advanced_title">Advanced settings</string>
+	<string name="pref_default_config_id">pref_default_config_id</string>
+	<string name="connection_wizard_next">Next</string>
+	<string name="connection_wizard_welcome">Welcome to HABSweetie</string>
+	<string name="connection_wizard_welcome_text">This wizard will help you to configure HABSweetie so it can connect to your openHAB instance.</string>
+	<string name="connection_wizard_step_1_introduction">First please choose a name for your openHAB instance. Something like "Home" or "Weekend Flat".</string>
+	<string name="connection_wizard_internal_header">Internal Settings</string>
+	<string name="connection_wizard_internal_introduction">Configure here how HABSweetie should connect if you are connected to your home WiFi.</string>
+	<string name="connection_wizard_internal_help_url">Configure the internal URL of your openHAB instance. This is mostly something like http://openhab:8080 or http://192.168.1.10:8080. It is important to specify a complete URL with protocol prefix without the trailing slash.</string>
+	<string name="connection_wizard_authenticate">Authenticate with openHAB?</string>
+	<string name="connection_wizard_username">Username to use</string>
+	<string name="connection_wizard_password">Password to use</string>
+	<string name="connection_wizard_websocket_help">Some people experienced problems when using WebSockets to communicate with openHAB. If you are sure that WebSockets will work you can activate them here. But HABSweetie will also work well with the other means of communication.</string>
+	<string name="connection_wizard_use_websockets">Use WebSockets</string>
+	<string name="connection_wizard_authenticate_help">Do you need a username and password to connect to openHAB?</string>
+	<string name="connection_wizard_external_header">External Settings</string>
+	<string name="connection_wizard_external_introduction">Configure here how HABSweetie should connect if you are not at home.</string>
+	<string name="connection_wizard_external_help_url">Configure the external URL of your openHAB instance. Most certainly you will enter here a DynDNS address.</string>
+	<string name="main_menu_add_instance">Add openHAB instance</string>
 </resources>

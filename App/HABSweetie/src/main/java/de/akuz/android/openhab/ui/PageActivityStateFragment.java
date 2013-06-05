@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.akuz.android.openhab.settings.OpenHABInstance;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -13,16 +15,18 @@ public class PageActivityStateFragment extends Fragment {
 			.getSimpleName();
 
 	private List<PageFragment> availablePageFragments;
-	
+
 	private Set<PageFragment> removedFragments;
-	
-	private Map<String,PageFragment> fragmentCache;
+
+	private Map<String, PageFragment> fragmentCache;
 
 	private int currentViewPagerPage;
-	
+
 	private String baseUrl;
-	
+
 	private boolean hasState = false;
+
+	private OpenHABInstance savedInstance;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,14 @@ public class PageActivityStateFragment extends Fragment {
 
 	public void setHasState(boolean hasState) {
 		this.hasState = hasState;
+	}
+
+	public OpenHABInstance getSavedInstance() {
+		return savedInstance;
+	}
+
+	public void setSavedInstance(OpenHABInstance savedInstance) {
+		this.savedInstance = savedInstance;
 	}
 
 }

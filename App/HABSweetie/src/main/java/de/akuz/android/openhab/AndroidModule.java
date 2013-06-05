@@ -3,7 +3,7 @@ package de.akuz.android.openhab;
 import javax.inject.Singleton;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.net.ConnectivityManager;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.OkHttpClient;
@@ -13,7 +13,7 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 import de.akuz.android.openhab.core.OpenHABRestService;
 import de.akuz.android.openhab.core.http.OkHttpTransport;
-import de.akuz.android.openhab.settings.OpenHABSQLLiteHelper;
+import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
@@ -40,7 +40,7 @@ import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
 		ChartWidget.class, ChooseSitemapDialogFragment.class,
 		OpenHABRestService.class, OkHttpTransport.class,
-		AuthenticatedHttpImageDownloader.class })
+		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;
@@ -73,10 +73,10 @@ public class AndroidModule {
 		return app.getObjectGraph();
 	}
 
-	@Provides
-	SQLiteOpenHelper provideSQLiteOpenHelper(Context ctx) {
-		return new OpenHABSQLLiteHelper(ctx);
-	}
+	// @Provides
+	// public SQLiteOpenHelper provideSQLiteOpenHelper(Context ctx) {
+	// return new OpenHABSQLLiteHelper(ctx);
+	// }
 
 	@Provides
 	@Singleton
@@ -84,6 +84,12 @@ public class AndroidModule {
 		OkHttpClient client = new OkHttpClient();
 		client.setFollowProtocolRedirects(true);
 		return client;
+	}
+
+	@Provides
+	@Singleton
+	public ConnectivityManager provideConnectivityManager(Context ctx) {
+		return (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 }

@@ -20,6 +20,7 @@ import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
+import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -107,6 +108,11 @@ public class BaseActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.main_settings:
 			loadOptions();
+			result = true;
+			break;
+		case R.id.menu_add_instance:
+			Intent i = new Intent(this, ConnectionWizardActivity.class);
+			startActivity(i);
 			result = true;
 			break;
 		default:

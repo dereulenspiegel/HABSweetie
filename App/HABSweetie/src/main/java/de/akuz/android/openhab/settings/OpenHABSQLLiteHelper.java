@@ -1,6 +1,9 @@
 package de.akuz.android.openhab.settings;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,6 +18,7 @@ public class OpenHABSQLLiteHelper extends SQLiteOpenHelper {
 		cupboard().register(OpenHABInstance.class);
 	}
 
+	@Inject
 	public OpenHABSQLLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 

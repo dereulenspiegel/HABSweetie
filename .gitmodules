@@ -4,3 +4,6 @@
 [submodule "dependencies/colorpicker"]
 	path = dependencies/colorpicker
 	url = git://github.com/LarsWerkman/HoloColorPicker.git
+[submodule "dependencies/WizarDroid"]
+	path = dependencies/WizarDroid
+	url = git://github.com/Nimrodda/WizarDroid.git
