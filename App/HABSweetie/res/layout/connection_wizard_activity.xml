@@ -3,16 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
      <FrameLayout
          android:id="@+id/step_container"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_above="@+id/next_button"
-         android:layout_alignParentLeft="true"
-         android:layout_alignParentRight="true"
-         android:layout_alignParentTop="true" />
-
+         android:layout_height="match_parent" />
+	</ScrollView>
     <!-- Button for signalling the wizard to proceed to the next step -->
 
     <Button
