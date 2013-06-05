@@ -95,6 +95,10 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		ft.add(stateFragment, PageActivityStateFragment.TAG);
 		ft.commit();
 	}
+	
+	public OpenHABInstance getCurrentInstance(){
+		return currentInstance;
+	}
 
 	public void setNewInstance(OpenHABInstance instance) {
 		currentInstance = instance;
@@ -144,7 +148,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		return !oldBaseUrl.equals(currentBaseUrl);
 	}
 
-	private OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
+	public OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
 		NetworkInfo currentNetwork = conManager.getActiveNetworkInfo();
 		if (currentNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
 			OpenHABConnectionSettings setting = instance.getExternal();

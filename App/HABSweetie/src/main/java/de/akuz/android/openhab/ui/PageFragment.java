@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -56,9 +57,10 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		baseUrl = getPreferenceStringValue(R.string.pref_url_key);
 		pageUrl = getArguments().getString(PAGE_URL_ARG);
 		pageActivity = (PageActivity) getActivity();
+		baseUrl = pageActivity.chooseSetting(pageActivity.getCurrentInstance())
+				.getBaseUrl();
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
@@ -118,9 +120,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	}
 
 	@Override
-	public void onResume() {
-		pageActivity = (PageActivity) getActivity();
-		super.onResume();
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		pageActivity = (PageActivity) activity;
 	}
 
 	private void updatePage(final Page page) {
@@ -132,7 +134,8 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		}
 		updateActionBar();
 		if (page.getWidget() != null) {
-			this.page.batchUpdateWidgets(new ArrayList<Widget>(page.getWidget()));
+			this.page
+					.batchUpdateWidgets(new ArrayList<Widget>(page.getWidget()));
 			listAdapter.batchAddOrUpdateWidgets(page.getWidget());
 		}
 
