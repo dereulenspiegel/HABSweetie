@@ -92,6 +92,9 @@ public class HABSweetiePreferences {
 		}
 		OpenHABInstance instance = cupboard().withDatabase(db).get(
 				OpenHABInstance.class, id);
+		if (instance == null) {
+			return null;
+		}
 		OpenHABConnectionSettings internalSettings = cupboard()
 				.withDatabase(db).get(instance.getInternal());
 		instance.setInternal(internalSettings);
@@ -121,6 +124,12 @@ public class HABSweetiePreferences {
 
 	public OpenHABInstance getDefaultInstance() {
 		return loadInstance(getDefaultOpenHABInstanceId());
+	}
+
+	public void removeOpenHABInstance(OpenHABInstance instance) {
+		cupboard().withDatabase(db).delete(instance.getExternal());
+		cupboard().withDatabase(db).delete(instance.getInternal());
+		cupboard().withDatabase(db).delete(instance);
 	}
 
 	public long getCommandSendingDelay() {

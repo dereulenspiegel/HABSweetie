@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.core;
 
-import javax.inject.Inject;
-
 import android.app.Application;
 
 import com.google.api.client.http.HttpRequestFactory;
@@ -15,12 +13,11 @@ import de.akuz.android.openhab.core.http.OkHttpTransport;
 
 public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
-	@Inject
-	ObjectGraph objectGraph;
+	private ObjectGraph objectGraph;
 
 	@Override
 	public CacheManager createCacheManager(Application application) {
-		((BootstrapApplication) application).getObjectGraph().inject(this);
+		objectGraph = ((BootstrapApplication) application).getObjectGraph();
 		CacheManager cacheManager = new CacheManager();
 		Jackson2ObjectPersisterFactory factory = new Jackson2ObjectPersisterFactory(
 				application);

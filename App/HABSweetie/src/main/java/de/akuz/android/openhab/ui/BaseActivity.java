@@ -20,7 +20,6 @@ import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
-import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -28,7 +27,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class BaseActivity extends FragmentActivity {
 
 	@Inject
-	protected SpiceManager spiceManager;
+	SpiceManager spiceManager;
 
 	protected InteractionReceiver sslInteractionReceiver;
 
@@ -106,12 +105,8 @@ public class BaseActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean result = false;
 		switch (item.getItemId()) {
-		case R.id.main_settings:
-			loadOptions();
-			result = true;
-			break;
-		case R.id.menu_add_instance:
-			Intent i = new Intent(this, ConnectionWizardActivity.class);
+		case R.id.menu_manage_instances:
+			Intent i = new Intent(this, ManageInstancesActivity.class);
 			startActivity(i);
 			result = true;
 			break;
@@ -119,12 +114,6 @@ public class BaseActivity extends FragmentActivity {
 			result = super.onOptionsItemSelected(item);
 		}
 		return result;
-	}
-
-	private void loadOptions() {
-
-		Intent i = new Intent(this, SettingsActivity.class);
-		startActivity(i);
 	}
 
 	protected String getPreferenceStringValue(int resId) {

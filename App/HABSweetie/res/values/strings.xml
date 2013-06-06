@@ -59,6 +59,7 @@
 	<string name="connection_wizard_external_header">External Settings</string>
 	<string name="connection_wizard_external_introduction">Configure here how HABSweetie should connect if you are not at home.</string>
 	<string name="connection_wizard_external_help_url">Configure the external URL of your openHAB instance. Most certainly you will enter here a DynDNS address.</string>
-	<string name="main_menu_add_instance">Add openHAB instance</string>
 	<string name="message_loading_sitemaps">Loading sitemaps</string>
+	<string name="menu_add_instance">Add instance</string>
+	<string name="main_menu_manage_instances">Manage instances</string>
 </resources>

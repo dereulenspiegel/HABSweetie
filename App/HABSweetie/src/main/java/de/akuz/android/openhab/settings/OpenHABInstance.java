@@ -84,7 +84,7 @@ public class OpenHABInstance implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(_id);
+		dest.writeLong(_id != null ? _id : 0);
 		dest.writeString(name);
 		dest.writeParcelable(internal, flags);
 		dest.writeParcelable(external, flags);

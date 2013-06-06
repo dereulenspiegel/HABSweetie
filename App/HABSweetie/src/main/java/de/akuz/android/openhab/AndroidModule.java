@@ -89,7 +89,8 @@ public class AndroidModule {
 	@Provides
 	@Singleton
 	public ConnectivityManager provideConnectivityManager(Context ctx) {
-		return (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		return (ConnectivityManager) ctx
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 }
