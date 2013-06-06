@@ -29,8 +29,13 @@ public class OpenHABAuthManager {
 	}
 
 	public static String getEncodedCredentials() {
-		String encoded = Base64.encodeBase64String((username + ":" + password).getBytes());
+		String encoded = Base64.encodeBase64String((username + ":" + password)
+				.getBytes());
 		return encoded;
+	}
+
+	public static String getAuthorizationHeaderValue() {
+		return "basic " + getEncodedCredentials();
 	}
 
 }
