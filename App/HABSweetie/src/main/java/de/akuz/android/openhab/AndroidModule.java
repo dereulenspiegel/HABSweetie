@@ -15,6 +15,7 @@ import de.akuz.android.openhab.core.OpenHABRestService;
 import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
+import de.akuz.android.openhab.ui.ManageInstancesFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
 import de.akuz.android.openhab.ui.widgets.BasicOpenHABWidget;
@@ -40,7 +41,8 @@ import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
 		ChartWidget.class, ChooseSitemapDialogFragment.class,
 		OpenHABRestService.class, OkHttpTransport.class,
-		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class })
+		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class,
+		ManageInstancesFragment.InstanceListAdapter.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;

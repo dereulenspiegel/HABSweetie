@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.akuz.android.openhab.R;
@@ -42,19 +45,23 @@ public class ManageInstancesFragment extends BaseFragment implements
 	protected void buildUi() {
 		setView(R.layout.manage_instances_fragment);
 		instanceListView = findView(R.id.instancesListView);
-		instanceListView.setOnItemLongClickListener(this);		
+		instanceListView.setOnItemLongClickListener(this);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		List<OpenHABInstance> instances = prefs.getAllConfiguredInstances();
 		listAdapter = new InstanceListAdapter(getActivity(), instances);
+		inject(listAdapter);
 		instanceListView.setAdapter(listAdapter);
 	}
 
-	private static class InstanceListAdapter extends
-			ArrayAdapter<OpenHABInstance> {
+	public static class InstanceListAdapter extends
+			ArrayAdapter<OpenHABInstance> implements OnCheckedChangeListener {
+
+		@Inject
+		HABSweetiePreferences prefs;
 
 		public InstanceListAdapter(Context context,
 				List<OpenHABInstance> objects) {
@@ -72,12 +79,38 @@ public class ManageInstancesFragment extends BaseFragment implements
 				layout = LayoutInflater.from(getContext()).inflate(
 						R.layout.instance_list_view_item, parent, false);
 			}
+			String name = instance.getName();
+			CheckBox defaultCheckBox = (CheckBox) layout
+					.findViewById(R.id.checkBoxDefault);
+			defaultCheckBox.setTag(instance);
+			defaultCheckBox.setOnCheckedChangeListener(this);
 			TextView nameTextView = (TextView) layout
 					.findViewById(R.id.instanceNameTextView);
-			nameTextView.setText(instance.getName());
+			if (instance.getId() == prefs.getDefaultOpenHABInstanceId()) {
+				// TODO Replace with translatable text resource
+				name = name + " (default)";
+				defaultCheckBox.setOnCheckedChangeListener(null);
+				defaultCheckBox.setChecked(true);
+				defaultCheckBox.setOnCheckedChangeListener(this);
+			} else {
+				defaultCheckBox.setOnCheckedChangeListener(null);
+				defaultCheckBox.setChecked(false);
+				defaultCheckBox.setOnCheckedChangeListener(this);
+			}
+			nameTextView.setText(name);
 			return layout;
 		}
 
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (isChecked) {
+				prefs.setDefaultOpenHABInstanceId(((OpenHABInstance) buttonView
+						.getTag()).getId());
+			}
+			notifyDataSetChanged();
+
+		}
 	}
 
 	@Override
@@ -112,6 +145,9 @@ public class ManageInstancesFragment extends BaseFragment implements
 
 	private void removeInstance(OpenHABInstance instance) {
 		// TODO ask the user if he really wants to remove the instance
+		if (instance.getId() == prefs.getDefaultOpenHABInstanceId()) {
+			prefs.setDefaultOpenHABInstanceId(-1);
+		}
 		prefs.removeOpenHABInstance(instance);
 		listAdapter.remove(instance);
 	}

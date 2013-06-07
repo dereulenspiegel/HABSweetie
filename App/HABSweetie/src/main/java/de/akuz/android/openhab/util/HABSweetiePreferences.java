@@ -1,25 +1,28 @@
 package de.akuz.android.openhab.util;
 
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import nl.qbusict.cupboard.QueryResultIterable;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.settings.OpenHABSQLLiteHelper;
 
 public class HABSweetiePreferences {
+
+	private final static String TAG = HABSweetiePreferences.class
+			.getSimpleName();
 
 	private SharedPreferences prefs;
 
@@ -28,9 +31,9 @@ public class HABSweetiePreferences {
 	private SQLiteDatabase db;
 
 	@Inject
-	public HABSweetiePreferences(Context ctx, OpenHABSQLLiteHelper sqlHelper) {
+	public HABSweetiePreferences(Context ctx) {
 		this.ctx = ctx;
-		db = sqlHelper.getWritableDatabase();
+		db = new OpenHABSQLLiteHelper(ctx).getWritableDatabase();
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
 	}
@@ -93,6 +96,7 @@ public class HABSweetiePreferences {
 		OpenHABInstance instance = cupboard().withDatabase(db).get(
 				OpenHABInstance.class, id);
 		if (instance == null) {
+			Log.w(TAG, "Tried to load an instance but became NULL! ID: " + id);
 			return null;
 		}
 		OpenHABConnectionSettings internalSettings = cupboard()
@@ -119,6 +123,7 @@ public class HABSweetiePreferences {
 			i = loadInstance(i.getId());
 			instanceList.add(i);
 		}
+		Log.d(TAG, " Currently " + instanceList.size() + " configs in database");
 		return instanceList;
 	}
 
@@ -136,6 +141,13 @@ public class HABSweetiePreferences {
 		int seconds = Integer.parseInt(prefs.getString(
 				getString(R.string.pref_send_delay_key), "1"));
 		return (seconds * 1000);
+	}
+
+	public void close() {
+		if (db != null) {
+			db.close();
+			db = null;
+		}
 	}
 
 	private String getString(int resId) {
