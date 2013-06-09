@@ -16,6 +16,8 @@ import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 public class ConnectionWizardConnectionSettingsStep extends
 		AbstractConnectionWizardStep implements OnCheckedChangeListener {
 
+	public final static String INTERNAL_ARG = "internalArg";
+
 	private boolean internal;
 
 	private TextView header;
@@ -31,9 +33,19 @@ public class ConnectionWizardConnectionSettingsStep extends
 
 	private OpenHABConnectionSettings settings;
 
-	@SuppressLint("ValidFragment")
-	public ConnectionWizardConnectionSettingsStep(boolean internal) {
-		this.internal = internal;
+	public static ConnectionWizardConnectionSettingsStep build(boolean internal) {
+		ConnectionWizardConnectionSettingsStep fragment = new ConnectionWizardConnectionSettingsStep();
+		Bundle args = new Bundle();
+		args.putBoolean(INTERNAL_ARG, internal);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Bundle args = getArguments();
+		internal = args.getBoolean(INTERNAL_ARG);
 	}
 
 	@Override

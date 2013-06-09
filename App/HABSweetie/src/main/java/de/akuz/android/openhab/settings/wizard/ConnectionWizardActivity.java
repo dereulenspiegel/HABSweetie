@@ -41,9 +41,9 @@ public class ConnectionWizardActivity extends WizardActivity {
 		builder.setContainerId(R.id.step_container);
 		builder.setActivity(this);
 		builder.addStep(new ConnectionWizardStepOne(), openHABInstance);
-		builder.addStep(new ConnectionWizardConnectionSettingsStep(true),
+		builder.addStep(ConnectionWizardConnectionSettingsStep.build(true),
 				internalSettings);
-		builder.addStep(new ConnectionWizardConnectionSettingsStep(false),
+		builder.addStep(ConnectionWizardConnectionSettingsStep.build(false),
 				externalSettings);
 		flow = builder.create();
 		super.onSetup(flow);
