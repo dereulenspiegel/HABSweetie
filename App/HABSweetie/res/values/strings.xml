@@ -62,4 +62,10 @@
 	<string name="message_loading_sitemaps">Loading sitemaps</string>
 	<string name="menu_add_instance">Add instance</string>
 	<string name="main_menu_manage_instances">Manage instances</string>
+	<string name="instance_name">Name</string>
+	<string name="instance_internal_url">Internal URL</string>
+	<string name="instance_external_url">External URL</string>
+	<string name="edit">Edit</string>
+	<string name="default_sitemap">Default Sitemap</string>
+	<string name="choose">Choose</string>
 </resources>

@@ -23,7 +23,7 @@
         android:text="@string/connection_wizard_welcome_text" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/interalUrlTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"

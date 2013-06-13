@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import nl.qbusict.cupboard.QueryResultIterable;
 import android.content.Context;
@@ -31,6 +32,7 @@ public class HABSweetiePreferences {
 	private SQLiteDatabase db;
 
 	@Inject
+	@Singleton
 	public HABSweetiePreferences(Context ctx) {
 		this.ctx = ctx;
 		db = new OpenHABSQLLiteHelper(ctx).getWritableDatabase();
@@ -125,6 +127,10 @@ public class HABSweetiePreferences {
 		}
 		Log.d(TAG, " Currently " + instanceList.size() + " configs in database");
 		return instanceList;
+	}
+
+	public void saveConnectionSettings(OpenHABConnectionSettings settings) {
+		cupboard().withDatabase(db).put(settings);
 	}
 
 	public OpenHABInstance getDefaultInstance() {

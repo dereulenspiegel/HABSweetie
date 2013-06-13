@@ -16,6 +16,7 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 
 import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
 public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObject>
 		extends GoogleHttpClientSpiceRequest<RESULT> {
@@ -32,7 +33,17 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 
 	protected String baseUrl;
 
+	protected OpenHABConnectionSettings setting;
+
 	protected Class<RESULT> resultClass;
+
+	public AbstractOpenHABRequest(Class<RESULT> clazz,
+			OpenHABConnectionSettings setting) {
+		super(clazz);
+		this.setting = setting;
+		this.baseUrl = setting.getBaseUrl();
+		resultClass = clazz;
+	}
 
 	public AbstractOpenHABRequest(Class<RESULT> clazz, String baseUrl) {
 		super(clazz);
@@ -56,8 +67,10 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		request.setFollowRedirects(true);
 		HttpHeaders headers = request.getHeaders();
 		headers.setAccept("application/xml");
-		if (OpenHABAuthManager.hasCredentials()) {
-			Log.d(TAG, "Setting basic auth for request");
+		if (setting != null) {
+			headers = headers.setBasicAuthentication(setting.getUsername(),
+					setting.getPassword());
+		} else if (OpenHABAuthManager.hasCredentials()) {
 			headers = headers.setBasicAuthentication(
 					OpenHABAuthManager.getUsername(),
 					OpenHABAuthManager.getPassword());

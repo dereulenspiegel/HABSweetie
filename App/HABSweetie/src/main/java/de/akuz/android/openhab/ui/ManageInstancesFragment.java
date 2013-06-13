@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -27,7 +29,7 @@ import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class ManageInstancesFragment extends BaseFragment implements
-		OnItemLongClickListener {
+		OnItemLongClickListener, OnItemClickListener, OnClickListener {
 
 	@Inject
 	HABSweetiePreferences prefs;
@@ -46,6 +48,7 @@ public class ManageInstancesFragment extends BaseFragment implements
 		setView(R.layout.manage_instances_fragment);
 		instanceListView = findView(R.id.instancesListView);
 		instanceListView.setOnItemLongClickListener(this);
+		instanceListView.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class ManageInstancesFragment extends BaseFragment implements
 		instanceListView.setAdapter(listAdapter);
 	}
 
-	public static class InstanceListAdapter extends
+	public class InstanceListAdapter extends
 			ArrayAdapter<OpenHABInstance> implements OnCheckedChangeListener {
 
 		@Inject
@@ -66,7 +69,6 @@ public class ManageInstancesFragment extends BaseFragment implements
 		public InstanceListAdapter(Context context,
 				List<OpenHABInstance> objects) {
 			super(context, -1, -1, objects);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -78,7 +80,9 @@ public class ManageInstancesFragment extends BaseFragment implements
 			} else {
 				layout = LayoutInflater.from(getContext()).inflate(
 						R.layout.instance_list_view_item, parent, false);
+				layout.setOnClickListener(ManageInstancesFragment.this);
 			}
+			layout.setTag(instance);
 			String name = instance.getName();
 			CheckBox defaultCheckBox = (CheckBox) layout
 					.findViewById(R.id.checkBoxDefault);
@@ -110,6 +114,16 @@ public class ManageInstancesFragment extends BaseFragment implements
 			}
 			notifyDataSetChanged();
 
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return getItem(position).getId();
 		}
 	}
 
@@ -150,6 +164,19 @@ public class ManageInstancesFragment extends BaseFragment implements
 		}
 		prefs.removeOpenHABInstance(instance);
 		listAdapter.remove(instance);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view,
+			int position, long id) {
+		OpenHABInstance instance = listAdapter.getItem(position);
+		((ManageInstancesActivity) getActivity()).showInstanceDetails(instance);
+	}
+
+	@Override
+	public void onClick(View v) {
+		OpenHABInstance instance = (OpenHABInstance) v.getTag();
+		((ManageInstancesActivity) getActivity()).showInstanceDetails(instance);
 	}
 
 }

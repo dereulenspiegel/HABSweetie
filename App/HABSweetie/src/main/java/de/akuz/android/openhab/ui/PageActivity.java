@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.ExpandableListView;
 
 import com.google.api.client.http.HttpResponseException;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -21,6 +22,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
@@ -29,6 +31,7 @@ import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
+import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -50,21 +53,32 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	@Inject
 	HABSweetiePreferences prefs;
 
+	@Inject
+	OpenHABInstanceUtil instanceUtil;
+
+	private ExpandableListView instanceList;
+	private ExpandableInstanceListAdapter instanceListAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "PageActivity has been created");
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		Log.d(TAG, "Registering receiver for SSL Decision");
 		sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
+		
 		setContentView(R.layout.page_activity);
+		
+		instanceList = findView(R.id.instanceList);
 		pager = findView(R.id.pager);
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
 				getSupportFragmentManager());
 		pager.setAdapter(pagerAdapter);
 		pager.setOnPageChangeListener(pagerAdapter);
 		pager.setOffscreenPageLimit(0);
+		instanceListAdapter = new ExpandableInstanceListAdapter(this,
+				prefs.getAllConfiguredInstances());
+		inject(instanceListAdapter);
+		instanceList.setAdapter(instanceListAdapter);
 
 		getActionBar().setTitle("HABSweetie");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,6 +98,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		// If we have fragments to restore restore them, but only if the config
 		// hasn't changed
 		setNewInstance(currentInstance);
+		OpenHABAuthManager.updateCredentuals(chooseSetting(currentInstance));
 		Log.d(TAG, "Creating state fragment");
 		stateFragment = new PageActivityStateFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -149,21 +164,14 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 	}
 
 	public OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
-		NetworkInfo currentNetwork = conManager.getActiveNetworkInfo();
-		if (currentNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-			OpenHABConnectionSettings setting = instance.getExternal();
-			if (Strings.isEmpty(setting.getBaseUrl())) {
-				return instance.getInternal();
-			}
-			return instance.getExternal();
-		}
-		return instance.getInternal();
+		return instanceUtil.chooseSetting(instance);
 	}
 
 	private void restorePreviousStateAfterConfigurationChange() {
 		Log.d(TAG, "We have "
 				+ stateFragment.getAvailablePageFragments().size()
 				+ " Fragments saved");
+		currentInstance = stateFragment.getSavedInstance();
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
 				getSupportFragmentManager(),
 				stateFragment.getAvailablePageFragments());

@@ -77,6 +77,9 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	}
 
 	private void loadCompletePage() {
+		if (progressDialog != null) {
+			progressDialog.dismissAllowingStateLoss();
+		}
 		progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_page));
 		progressDialog.show(getFragmentManager(), "progressDialog");

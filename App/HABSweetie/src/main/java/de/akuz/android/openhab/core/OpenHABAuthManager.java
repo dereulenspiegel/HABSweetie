@@ -2,6 +2,7 @@ package de.akuz.android.openhab.core;
 
 import com.google.api.client.util.Base64;
 
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 
 public class OpenHABAuthManager {
@@ -14,6 +15,10 @@ public class OpenHABAuthManager {
 		OpenHABAuthManager.password = password;
 		AuthenticatedHttpImageDownloader.setPassword(password);
 		AuthenticatedHttpImageDownloader.setUsername(username);
+	}
+
+	public static void updateCredentuals(OpenHABConnectionSettings settings) {
+		updateCredentials(settings.getUsername(), settings.getPassword());
 	}
 
 	public static boolean hasCredentials() {

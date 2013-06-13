@@ -1,7 +1,8 @@
 package de.akuz.android.openhab.settings.wizard.steps;
 
+import javax.inject.Inject;
+
 import roboguice.util.temp.Strings;
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.CheckBox;
@@ -11,12 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
-@SuppressLint("ValidFragment")
 public class ConnectionWizardConnectionSettingsStep extends
 		AbstractConnectionWizardStep implements OnCheckedChangeListener {
 
 	public final static String INTERNAL_ARG = "internalArg";
+	public final static String SETTINGS_ARG = "settings";
 
 	private boolean internal;
 
@@ -33,6 +35,14 @@ public class ConnectionWizardConnectionSettingsStep extends
 
 	private OpenHABConnectionSettings settings;
 
+	@Inject
+	HABSweetiePreferences prefs;
+
+	public static interface ConnectionSettingsEditFinished {
+
+		public void editingFinished(OpenHABConnectionSettings settings);
+	}
+
 	public static ConnectionWizardConnectionSettingsStep build(boolean internal) {
 		ConnectionWizardConnectionSettingsStep fragment = new ConnectionWizardConnectionSettingsStep();
 		Bundle args = new Bundle();
@@ -41,11 +51,27 @@ public class ConnectionWizardConnectionSettingsStep extends
 		return fragment;
 	}
 
+	public static ConnectionWizardConnectionSettingsStep build(
+			boolean internal, OpenHABConnectionSettings conSettings) {
+		ConnectionWizardConnectionSettingsStep fragment = build(internal);
+		Bundle args = fragment.getArguments();
+		args.putParcelable(SETTINGS_ARG, conSettings);
+		fragment.setArguments(args);
+		return fragment;
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		internal = args.getBoolean(INTERNAL_ARG);
+		OpenHABConnectionSettings receivedSettings = args
+				.getParcelable(SETTINGS_ARG);
+		if (receivedSettings != null) {
+			isWizardStep = false;
+			settings = receivedSettings;
+		}
 	}
 
 	@Override
@@ -74,6 +100,30 @@ public class ConnectionWizardConnectionSettingsStep extends
 		authenticateCheckBox = findView(R.id.useAuthnticationCheckBox);
 		authenticateCheckBox.setOnCheckedChangeListener(this);
 		useWebsocketsCheckBox = findView(R.id.useWebSocketsCheckBox);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (settings != null) {
+			editUrl.setText(settings.getBaseUrl());
+			String username, password;
+			username = settings.getUsername();
+			password = settings.getPassword();
+			if (!Strings.isEmpty(username) && !Strings.isEmpty(password)) {
+				authenticateCheckBox.setChecked(true);
+				editUsername.setText(username);
+				editPassword.setText(password);
+			}
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		if (prefs != null && settings != null) {
+			prefs.saveConnectionSettings(settings);
+		}
+		super.onDetach();
 	}
 
 	@Override

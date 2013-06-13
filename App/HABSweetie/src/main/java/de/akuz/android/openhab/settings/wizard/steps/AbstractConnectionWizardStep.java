@@ -22,13 +22,17 @@ public abstract class AbstractConnectionWizardStep extends WizardStep implements
 	protected final String key = String.format("%s#WizardStepModel", getClass()
 			.getName());
 
+	protected boolean isWizardStep = true;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		layoutInflater = inflater;
 		containerView = container;
-		nextButton = (Button) getActivity().findViewById(R.id.next_button);
-		nextButton.setOnClickListener(this);
+		if (isWizardStep) {
+			nextButton = (Button) getActivity().findViewById(R.id.next_button);
+			nextButton.setOnClickListener(this);
+		}
 		buildUi(savedInstanceState);
 		return rootView;
 	}
@@ -50,7 +54,7 @@ public abstract class AbstractConnectionWizardStep extends WizardStep implements
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == nextButton.getId() && isValid()) {
+		if (v.getId() == nextButton.getId() && isValid() && isWizardStep) {
 			collectValues();
 			done();
 		}

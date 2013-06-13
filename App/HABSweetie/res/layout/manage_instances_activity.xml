@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/fragment1"
-        android:name="de.akuz.android.openhab.ui.ManageInstancesFragment"
+    <LinearLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/manage_instances_fragment" />
+        android:orientation="vertical" >
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -15,6 +15,8 @@ import de.akuz.android.openhab.core.OpenHABRestService;
 import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
+import de.akuz.android.openhab.ui.EditInstanceFragment;
+import de.akuz.android.openhab.ui.ExpandableInstanceListAdapter;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;
 import de.akuz.android.openhab.ui.WidgetListAdapter;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
@@ -42,7 +44,8 @@ import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 		ChartWidget.class, ChooseSitemapDialogFragment.class,
 		OpenHABRestService.class, OkHttpTransport.class,
 		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class,
-		ManageInstancesFragment.InstanceListAdapter.class })
+		ManageInstancesFragment.InstanceListAdapter.class,
+		EditInstanceFragment.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;
@@ -74,11 +77,6 @@ public class AndroidModule {
 	public ObjectGraph provideObjectGraph() {
 		return app.getObjectGraph();
 	}
-
-	// @Provides
-	// public SQLiteOpenHelper provideSQLiteOpenHelper(Context ctx) {
-	// return new OpenHABSQLLiteHelper(ctx);
-	// }
 
 	@Provides
 	@Singleton
