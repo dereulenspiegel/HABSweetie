@@ -59,6 +59,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private UUID atmosphereId;
 
+	private boolean shouldBeClosed = false;
+
 	@Inject
 	public PageXMLConnection() {
 		uiHandler = new Handler();
@@ -84,6 +86,10 @@ public class PageXMLConnection implements PageConnectionInterface,
 	public void open(String baseUrl, String pageUrl) {
 		this.baseUrl = baseUrl;
 		this.pageUrl = pageUrl;
+		establishConnection();
+	}
+
+	private void establishConnection() {
 		new Thread(new Runnable() {
 
 			@Override
@@ -173,6 +179,10 @@ public class PageXMLConnection implements PageConnectionInterface,
 			public void on(Object t) {
 				Log.d(TAG, "WebSocket closed");
 				wssConnectionEnabled = false;
+				if (!shouldBeClosed) {
+					Log.d(TAG, "Conenction closed, reestablishing connection");
+					establishConnection();
+				}
 			}
 		});
 		return pageRequest;
@@ -180,6 +190,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	@Override
 	public void close() {
+		shouldBeClosed = true;
 		if (socket != null) {
 			socket.close();
 		}
