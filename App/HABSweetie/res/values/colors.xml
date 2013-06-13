@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="side_menu_instance_background">#C0C0C0</color>
+    <color name="drawer_background">#111</color>
+    <color name="white">#ffffff</color>
     
 </resources>
