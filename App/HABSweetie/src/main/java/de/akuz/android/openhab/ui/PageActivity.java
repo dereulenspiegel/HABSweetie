@@ -13,8 +13,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.google.api.client.http.HttpResponseException;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -36,7 +38,8 @@ import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class PageActivity extends BaseActivity implements SelectSitemapListener {
+public class PageActivity extends BaseActivity implements
+		SelectSitemapListener, OnChildClickListener {
 
 	private final static String TAG = PageActivity.class.getSimpleName();
 
@@ -65,9 +68,9 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "Registering receiver for SSL Decision");
 		sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
-		
+
 		setContentView(R.layout.page_activity);
-		
+
 		instanceList = findView(R.id.instanceList);
 		pager = findView(R.id.pager);
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
@@ -79,6 +82,7 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 				prefs.getAllConfiguredInstances());
 		inject(instanceListAdapter);
 		instanceList.setAdapter(instanceListAdapter);
+		instanceList.setOnChildClickListener(this);
 
 		getActionBar().setTitle("HABSweetie");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,8 +131,9 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			loadAvailableSitemaps();
 		} else if (isAppConfigured()) {
 			Log.d(TAG, "App is configured, and baseUrl hasn't changed");
-			String pageUrl = prefs.getDefaultSitemapUrl();
-			if (!Strings.isEmpty(pageUrl)) {
+			String pageUrl = currentInstance
+					.getDefaultSitemapUrl(chooseSetting(currentInstance));
+			if (!Strings.isEmpty(pageUrl) && pageUrl.startsWith("http")) {
 				Log.d(TAG, "Loading default sitemap from url " + pageUrl);
 				loadSubPage(pageUrl);
 			} else {
@@ -140,6 +145,11 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 			Intent i = new Intent(this, ConnectionWizardActivity.class);
 			startActivity(i);
 		}
+	}
+
+	public void setNewInstance(OpenHABInstance instance, Sitemap sitemap) {
+		currentInstance = instance;
+		loadSubPage(sitemap.homepage.link);
 	}
 
 	private boolean isAppConfigured() {
@@ -316,5 +326,16 @@ public class PageActivity extends BaseActivity implements SelectSitemapListener 
 		} else {
 			super.onBackPressed();
 		}
+	}
+
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		OpenHABInstance instance = (OpenHABInstance) instanceListAdapter
+				.getGroup(groupPosition);
+		Sitemap sitemap = (Sitemap) instanceListAdapter.getChild(groupPosition,
+				childPosition);
+		setNewInstance(instance, sitemap);
+		return true;
 	}
 }

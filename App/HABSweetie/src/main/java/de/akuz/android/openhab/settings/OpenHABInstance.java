@@ -102,4 +102,8 @@ public class OpenHABInstance implements Parcelable {
 				+ parts[parts.length - 1];
 	}
 
+	public String getDefaultSitemapUrl(OpenHABConnectionSettings setting) {
+		return setting.getBaseUrl() + "/sitemaps/" + defaultSitemapId;
+	}
+
 }
