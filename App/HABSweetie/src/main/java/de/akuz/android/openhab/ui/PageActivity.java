@@ -86,8 +86,8 @@ public class PageActivity extends BaseActivity implements
 		instanceList.setAdapter(instanceListAdapter);
 		instanceList.setOnChildClickListener(this);
 
-		getActionBar().setTitle("HABSweetie");
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle("HABSweetie");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Log.d(TAG, "onCreate of PageActivity complete");
 	}
 
@@ -108,7 +108,6 @@ public class PageActivity extends BaseActivity implements
 			currentInstance = stateFragment.getSavedInstance();
 		}
 		setNewInstance(currentInstance);
-		OpenHABAuthManager.updateCredentuals(chooseSetting(currentInstance));
 		Log.d(TAG, "Creating state fragment");
 		stateFragment = new PageActivityStateFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -127,6 +126,10 @@ public class PageActivity extends BaseActivity implements
 
 	public void setNewInstance(OpenHABInstance instance) {
 		currentInstance = instance;
+		if (currentInstance != null) {
+			OpenHABAuthManager
+					.updateCredentuals(chooseSetting(currentInstance));
+		}
 		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
 				&& stateFragment.getAvailablePageFragments() != null
 				&& stateFragment.getAvailablePageFragments().size() > 0) {
@@ -323,14 +326,14 @@ public class PageActivity extends BaseActivity implements
 
 	public void updateTitleAndIcon(String title, Drawable icon) {
 		if (title != null) {
-			getActionBar().setTitle(title);
+			getSupportActionBar().setTitle(title);
 		} else {
-			getActionBar().setTitle(R.string.app_name);
+			getSupportActionBar().setTitle(R.string.app_name);
 		}
 		if (icon != null) {
-			getActionBar().setIcon(icon);
+			getSupportActionBar().setIcon(icon);
 		} else {
-			getActionBar().setIcon(R.drawable.ic_launcher);
+			getSupportActionBar().setIcon(R.drawable.ic_launcher);
 		}
 	}
 

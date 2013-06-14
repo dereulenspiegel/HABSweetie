@@ -106,9 +106,7 @@ public class BootstrapApplication extends Application {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				getApplicationContext()) //
 				.discCache(new UnlimitedDiscCache(cacheDir)) //
-				.taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR) //
 				.threadPoolSize(3) //
-				.taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR) //
 				.threadPriority(Thread.NORM_PRIORITY - 1) //
 				.memoryCache(new LruMemoryCache(2 * 1024 * 1024)) //
 				.memoryCacheSize(2 * 1024 * 1024) //

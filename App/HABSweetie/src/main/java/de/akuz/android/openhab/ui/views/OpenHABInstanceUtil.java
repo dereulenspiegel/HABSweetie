@@ -21,10 +21,13 @@ public class OpenHABInstanceUtil {
 	}
 
 	public OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
+		if (instance == null) {
+			return null;
+		}
 		NetworkInfo currentNetwork = conManager.getActiveNetworkInfo();
 		if (currentNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
 			OpenHABConnectionSettings setting = instance.getExternal();
-			if (Strings.isEmpty(setting.getBaseUrl())) {
+			if (setting != null && Strings.isEmpty(setting.getBaseUrl())) {
 				return instance.getInternal();
 			}
 			return instance.getExternal();
