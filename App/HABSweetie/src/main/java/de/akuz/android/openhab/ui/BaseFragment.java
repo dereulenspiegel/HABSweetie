@@ -4,16 +4,18 @@ import java.text.MessageFormat;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.actionbarsherlock.app.SherlockFragment;
+
 import de.akuz.android.openhab.R;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends SherlockFragment {
 
 	private LayoutInflater inflater;
 	private View rootView;

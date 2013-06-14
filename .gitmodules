@@ -7,3 +7,6 @@
 [submodule "dependencies/WizarDroid"]
 	path = dependencies/WizarDroid
 	url = git://github.com/Nimrodda/WizarDroid.git
+[submodule "dependencies/actionbarsherlock"]
+	path = dependencies/actionbarsherlock
+	url = git://github.com/JakeWharton/ActionBarSherlock.git

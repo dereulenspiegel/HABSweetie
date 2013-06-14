@@ -7,12 +7,12 @@ import javax.inject.Inject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.octo.android.robospice.SpiceManager;
 
 import dagger.ObjectGraph;
@@ -24,7 +24,7 @@ import de.duenndns.ssl.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends SherlockFragmentActivity {
 
 	@Inject
 	SpiceManager spiceManager;
