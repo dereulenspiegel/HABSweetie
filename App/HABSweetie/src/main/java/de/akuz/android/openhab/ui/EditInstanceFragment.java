@@ -103,6 +103,7 @@ public class EditInstanceFragment extends BaseFragment implements
 
 	@Override
 	public void onDetach() {
+		instance.setName(editName.getText().toString());
 		prefs.saveInstance(instance);
 		super.onDetach();
 	}
@@ -116,7 +117,7 @@ public class EditInstanceFragment extends BaseFragment implements
 			break;
 		case R.id.editExternalUrlButton:
 			((ManageInstancesActivity) getActivity()).showConnectionSettings(
-					false, instance.getInternal());
+					false, instance.getExternal());
 			break;
 
 		case R.id.editDefaultSitemapButton:

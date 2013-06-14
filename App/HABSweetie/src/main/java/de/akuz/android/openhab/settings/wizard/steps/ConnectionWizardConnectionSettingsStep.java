@@ -119,11 +119,12 @@ public class ConnectionWizardConnectionSettingsStep extends
 	}
 
 	@Override
-	public void onDetach() {
-		if (prefs != null && settings != null) {
+	public void onPause() {
+		if (prefs != null && settings != null && isValid()) {
+			collectValues();
 			prefs.saveConnectionSettings(settings);
 		}
-		super.onDetach();
+		super.onPause();
 	}
 
 	@Override

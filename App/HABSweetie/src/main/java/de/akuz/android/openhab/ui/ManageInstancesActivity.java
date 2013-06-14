@@ -29,7 +29,7 @@ public class ManageInstancesActivity extends BaseActivity implements
 		manageInstanceFragment = new ManageInstancesFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.fragmentContainer, manageInstanceFragment);
-		ft.addToBackStack(null);
+//		ft.addToBackStack(null);
 		ft.commit();
 
 	}
