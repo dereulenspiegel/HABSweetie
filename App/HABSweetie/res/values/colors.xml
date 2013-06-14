@@ -3,5 +3,9 @@
     <color name="side_menu_instance_background">#C0C0C0</color>
     <color name="drawer_background">#111</color>
     <color name="white">#ffffff</color>
+    <color name="highlight_blue">#33B5E5</color>
+    <color name="dark_grey">#313131</color>
+    <color name="middle_grey">#D0D0D0</color>
+    <color name="light_grey">#F0F0F0</color>
     
 </resources>
