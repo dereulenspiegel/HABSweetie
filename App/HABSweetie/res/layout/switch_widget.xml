@@ -13,7 +13,7 @@
         android:layout_toLeftOf="@+id/switch1"
         layout="@layout/basic_openhab_widget" />
 
-    <Switch
+    <de.ankri.views.Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

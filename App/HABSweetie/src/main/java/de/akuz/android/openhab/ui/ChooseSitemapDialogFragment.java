@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,7 +25,7 @@ import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
-public class ChooseSitemapDialogFragment extends DialogFragment implements
+public class ChooseSitemapDialogFragment extends SherlockDialogFragment implements
 		OnClickListener, OnCheckedChangeListener, OnItemClickListener {
 
 	private List<Sitemap> sitemapList;

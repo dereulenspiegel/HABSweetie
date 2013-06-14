@@ -10,3 +10,6 @@
 [submodule "dependencies/actionbarsherlock"]
 	path = dependencies/actionbarsherlock
 	url = git://github.com/JakeWharton/ActionBarSherlock.git
+[submodule "dependencies/SwitchCompat"]
+	path = dependencies/SwitchCompat
+	url = git://github.com/ankri/SwitchCompatLibrary.git

@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.os.Bundle;
+
+import com.actionbarsherlock.app.SherlockFragment;
+
 import de.akuz.android.openhab.settings.OpenHABInstance;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-
-public class PageActivityStateFragment extends Fragment {
+public class PageActivityStateFragment extends SherlockFragment {
 
 	public final static String TAG = PageActivityStateFragment.class
 			.getSimpleName();

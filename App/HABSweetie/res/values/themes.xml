@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.HABSweetie" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="switchStyle">@style/switch_light</item>
+    	<item name="textAppearance">@style/TextAppearance</item>
     </style>
 </resources>
