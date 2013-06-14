@@ -1,5 +1,8 @@
 package de.akuz.android.openhab.settings;
 
+import com.google.api.client.util.Base64;
+
+import de.akuz.android.openhab.util.Strings;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,9 +27,9 @@ public class OpenHABConnectionSettings implements Parcelable {
 	private String username;
 	private String password;
 	private boolean useWebSockets;
-	
-	public OpenHABConnectionSettings(){
-		
+
+	public OpenHABConnectionSettings() {
+
 	}
 
 	public OpenHABConnectionSettings(Parcel source) {
@@ -95,6 +98,16 @@ public class OpenHABConnectionSettings implements Parcelable {
 
 	public void setUseWebSockets(boolean useWebSockets) {
 		this.useWebSockets = useWebSockets;
+	}
+
+	public boolean hasCredentials() {
+		return !Strings.isEmpty(username) && !Strings.isEmpty(password);
+	}
+
+	public String getAuthorizationHeaderValue() {
+		String encoded = Base64.encodeBase64String((username + ":" + password)
+				.getBytes());
+		return "Basic " + encoded;
 	}
 
 }

@@ -10,8 +10,10 @@ import com.octo.android.robospice.SpiceManager;
 
 import dagger.Module;
 import dagger.Provides;
+import de.akuz.android.openhab.settings.wizard.steps.ConnectionWizardConnectionSettingsStep;
 import de.akuz.android.openhab.ui.BaseActivity;
 import de.akuz.android.openhab.ui.BaseFragment;
+import de.akuz.android.openhab.ui.EditInstanceFragment;
 import de.akuz.android.openhab.ui.ExpandableInstanceListAdapter;
 import de.akuz.android.openhab.ui.ManageInstancesActivity;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;
@@ -21,7 +23,8 @@ import de.akuz.android.openhab.ui.PageFragment;
 @Module(injects = { BaseActivity.class, BaseFragment.class, PageFragment.class,
 		PageXMLConnection.class, PageActivity.class,
 		ManageInstancesActivity.class, ManageInstancesFragment.class,
-		ExpandableInstanceListAdapter.class }, complete = false, library = true)
+		ExpandableInstanceListAdapter.class, EditInstanceFragment.class,
+		ConnectionWizardConnectionSettingsStep.class }, complete = false, library = true)
 public class CommunicationModule {
 
 	private Activity context;

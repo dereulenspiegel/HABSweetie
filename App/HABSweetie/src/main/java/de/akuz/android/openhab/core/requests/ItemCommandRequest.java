@@ -3,18 +3,27 @@ package de.akuz.android.openhab.core.requests;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
 import de.akuz.android.openhab.core.OpenHABAuthManager;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
 public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 
 	private String itemUrl;
 	private String command;
+
+	private OpenHABConnectionSettings setting;
+
+	public ItemCommandRequest(OpenHABConnectionSettings setting,
+			String itemUrl, String command) {
+		this(itemUrl, command);
+		this.setting = setting;
+	}
 
 	public ItemCommandRequest(String itemUrl, String command) {
 		super(Void.class);
@@ -27,10 +36,15 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 		HttpContent content = new StringHttpContent(command);
 		HttpRequest request = getHttpRequestFactory().buildPostRequest(
 				new GenericUrl(itemUrl), content);
-		if (OpenHABAuthManager.hasCredentials()) {
-			HttpHeaders headers = request.getHeaders();
-			headers.setBasicAuthentication(OpenHABAuthManager.getUsername(),
+		if (setting != null && setting.hasCredentials()) {
+			BasicAuthentication auth = new BasicAuthentication(
+					setting.getUsername(), setting.getPassword());
+			request.setInterceptor(auth);
+		} else if (OpenHABAuthManager.hasCredentials()) {
+			BasicAuthentication auth = new BasicAuthentication(
+					OpenHABAuthManager.getUsername(),
 					OpenHABAuthManager.getPassword());
+			request.setInterceptor(auth);
 		}
 		request.execute();
 		return null;

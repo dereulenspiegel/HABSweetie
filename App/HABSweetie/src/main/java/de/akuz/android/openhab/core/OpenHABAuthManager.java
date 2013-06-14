@@ -40,7 +40,7 @@ public class OpenHABAuthManager {
 	}
 
 	public static String getAuthorizationHeaderValue() {
-		return "basic " + getEncodedCredentials();
+		return "Basic " + getEncodedCredentials();
 	}
 
 }

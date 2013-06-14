@@ -1,5 +1,6 @@
 package de.akuz.android.openhab.ui.views;
 
+import de.akuz.android.openhab.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ public abstract class BaseListView<O> extends LinearLayout {
 
 	public BaseListView(Context context) {
 		super(context);
+		setBackgroundResource(R.color.transparent);
 		buildUi();
 		addView(rootView);
 	}

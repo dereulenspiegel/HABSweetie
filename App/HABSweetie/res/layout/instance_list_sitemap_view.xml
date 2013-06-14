@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="10dp"
-    android:background="@color/white"
+    android:background="@drawable/openhab_item_bg"
     android:minHeight="@dimen/min_openhab_widget_height" >
 
     <TextView

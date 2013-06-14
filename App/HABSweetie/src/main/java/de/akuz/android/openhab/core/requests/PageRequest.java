@@ -28,7 +28,6 @@ public class PageRequest extends AbstractOpenHABRequest<Page> {
 		HttpResponse response = request.execute();
 
 		Page result = parseInputStream(response.getContent());
-		result.setReceivedAt(System.currentTimeMillis());
 		return result;
 	}
 

@@ -3,9 +3,12 @@ package de.akuz.android.openhab.core.requests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.util.Log;
 
+import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
@@ -64,16 +67,32 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		Log.d(TAG, "Building request for URL " + url);
 		HttpRequest request = getHttpRequestFactory().buildGetRequest(
 				new GenericUrl(url));
+		request.setCurlLoggingEnabled(false);
+		request.setLoggingEnabled(false);
 		request.setFollowRedirects(true);
 		HttpHeaders headers = request.getHeaders();
 		headers.setAccept("application/xml");
-		if (setting != null) {
-			headers = headers.setBasicAuthentication(setting.getUsername(),
-					setting.getPassword());
+
+		if (setting != null && setting.hasCredentials()) {
+			Log.d(TAG,
+					"Setting Authorization from supplied connection settings");
+			BasicAuthentication auth = new BasicAuthentication(
+					setting.getUsername(), setting.getPassword());
+			request.setInterceptor(auth);
+			// headers =
+			// headers.setBasicAuthentication(setting.getUsername(),
+			// setting.getPassword());
 		} else if (OpenHABAuthManager.hasCredentials()) {
-			headers = headers.setBasicAuthentication(
+			Log.d(TAG, "Setting Authorization from auth manager");
+			BasicAuthentication auth = new BasicAuthentication(
 					OpenHABAuthManager.getUsername(),
 					OpenHABAuthManager.getPassword());
+			request.setInterceptor(auth);
+			// headers = headers.setBasicAuthentication(
+			// OpenHABAuthManager.getUsername(),
+			// OpenHABAuthManager.getPassword());
+		} else {
+			Log.w(TAG, "Failed to set Authorization");
 		}
 		headers.set("Accept-Charset", "utf-8");
 		request.setHeaders(headers);

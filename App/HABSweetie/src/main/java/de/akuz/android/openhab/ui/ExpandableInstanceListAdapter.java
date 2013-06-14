@@ -2,12 +2,13 @@ package de.akuz.android.openhab.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import android.content.Context;
 import android.database.DataSetObserver;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
@@ -26,9 +28,11 @@ import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.ui.views.InstanceListSitemapView;
 import de.akuz.android.openhab.ui.views.InstanceListTopView;
+import de.akuz.android.openhab.ui.views.InstanceSitemapsLoadingFailedView;
 import de.akuz.android.openhab.ui.views.LoadingSitemapsView;
 import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 
@@ -45,17 +49,17 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 	OpenHABInstanceUtil instanceUtil;
 
 	private List<OpenHABInstance> instances;
-
 	private Map<OpenHABInstance, List<Sitemap>> sitemapMap = new HashMap<OpenHABInstance, List<Sitemap>>();
+	private Set<OpenHABInstance> loadingFailedInstances = new HashSet<OpenHABInstance>();
 
 	private DataSetObserver observer;
 
-	private Context ctx;
+	private BaseActivity activity;
 
-	public ExpandableInstanceListAdapter(Context ctx,
+	public ExpandableInstanceListAdapter(BaseActivity ctx,
 			List<OpenHABInstance> instances) {
 		this.instances = instances;
-		this.ctx = ctx;
+		this.activity = ctx;
 	}
 
 	@Override
@@ -83,24 +87,31 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		OpenHABInstance instance = instances.get(groupPosition);
 		List<Sitemap> sitemaps = sitemapMap.get(instance);
-		if (sitemaps == null || sitemaps.size() == 0) {
+		if (loadingFailedInstances.contains(instance)) {
+			if (convertView instanceof InstanceSitemapsLoadingFailedView) {
+				return convertView;
+			} else {
+				return new InstanceSitemapsLoadingFailedView(activity);
+			}
+		} else if (sitemaps == null || sitemaps.size() == 0) {
 			if (convertView != null
 					&& convertView instanceof LoadingSitemapsView) {
 				return convertView;
 			} else if (convertView == null) {
-				return new LoadingSitemapsView(ctx);
+				return new LoadingSitemapsView(activity);
 			} else {
 				Log.w(TAG,
-						"Shoudl return LoadingSitemapView, but convertView is of type "
+						"Should return LoadingSitemapView, but convertView is of type "
 								+ convertView.getClass().getName());
-				return new LoadingSitemapsView(ctx);
+				return new LoadingSitemapsView(activity);
 			}
 		}
 		InstanceListSitemapView view = null;
-		if (convertView != null && convertView instanceof InstanceListSitemapView) {
+		if (convertView != null
+				&& convertView instanceof InstanceListSitemapView) {
 			view = (InstanceListSitemapView) convertView;
 		} else {
-			view = new InstanceListSitemapView(ctx);
+			view = new InstanceListSitemapView(activity);
 		}
 		view.updateObject(sitemaps.get(childPosition));
 		return view;
@@ -148,7 +159,7 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 		if (convertView != null) {
 			view = (InstanceListTopView) convertView;
 		} else {
-			view = new InstanceListTopView(ctx);
+			view = new InstanceListTopView(activity);
 		}
 		view.updateObject(instance);
 		return view;
@@ -186,7 +197,8 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 		OpenHABConnectionSettings setting = instanceUtil
 				.chooseSetting(instance);
 		final List<Sitemap> sitemapList = new ArrayList<Sitemap>(5);
-
+		loadingFailedInstances.remove(instance);
+		notifyDataSetChanged();
 		SitemapsRequest request = new SitemapsRequest(setting);
 		spiceManager.execute(request, setting.getBaseUrl(),
 				DurationInMillis.ALWAYS_EXPIRED,
@@ -194,8 +206,11 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
-						// TODO show error message
-
+						loadingFailedInstances.add(instance);
+						activity.makeCrouton(R.string.error_loading_sitemaps,
+								Style.ALERT, spiceException.getCause()
+										.getMessage());
+						notifyDataSetChanged();
 					}
 
 					@Override

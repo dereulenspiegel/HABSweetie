@@ -8,17 +8,33 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.objects.Sitemap;
+import de.akuz.android.openhab.core.objects.SitemapsResult;
+import de.akuz.android.openhab.core.requests.SitemapsRequest;
 import de.akuz.android.openhab.settings.OpenHABInstance;
+import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
+import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class EditInstanceFragment extends BaseFragment implements
-		OnClickListener {
+		OnClickListener, SelectSitemapListener {
 
 	public final static String INSTANCE_ID_ARG = "instanceId";
 
 	@Inject
 	HABSweetiePreferences prefs;
+
+	@Inject
+	OpenHABInstanceUtil instanceUtil;
+
+	@Inject
+	SpiceManager spiceManager;
 
 	private long instanceId;
 
@@ -111,6 +127,41 @@ public class EditInstanceFragment extends BaseFragment implements
 	}
 
 	private void selectDefaultSitemap() {
+		final ProgressDialogFragment progressDialog = ProgressDialogFragment
+				.build(getString(R.string.message_loading_sitemaps));
+		progressDialog.show(getFragmentManager(), "dialog");
+		SitemapsRequest request = new SitemapsRequest(
+				instanceUtil.chooseSetting(instance));
+		spiceManager.execute(request, new RequestListener<SitemapsResult>() {
+
+			@Override
+			public void onRequestFailure(SpiceException spiceException) {
+				progressDialog.dismissAllowingStateLoss();
+
+			}
+
+			@Override
+			public void onRequestSuccess(SitemapsResult result) {
+				progressDialog.dismissAllowingStateLoss();
+				ChooseSitemapDialogFragment dialog = ChooseSitemapDialogFragment
+						.build(result.getSitemap());
+				dialog.show(EditInstanceFragment.this.getFragmentManager(),
+						"chooseSitemap");
+
+			}
+		});
+	}
+
+	@Override
+	public void sitemapSelected(Sitemap selectedSitemap, boolean useAsDefault) {
+		instance.setDefaultSitemapIdFromUrl(selectedSitemap);
+		prefs.saveInstance(instance);
+		defaultSitemapTextView.setText(instance.getDefaultSitemapId());
+	}
+
+	@Override
+	public void canceled() {
+		// Ignore
 
 	}
 

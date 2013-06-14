@@ -6,15 +6,14 @@ import roboguice.util.temp.Strings;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
@@ -62,6 +61,8 @@ public class PageActivity extends BaseActivity implements
 	private ExpandableListView instanceList;
 	private ExpandableInstanceListAdapter instanceListAdapter;
 
+	private DrawerLayout drawerLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "PageActivity has been created");
@@ -71,6 +72,7 @@ public class PageActivity extends BaseActivity implements
 
 		setContentView(R.layout.page_activity);
 
+		drawerLayout = findView(R.id.drawer_layout);
 		instanceList = findView(R.id.instanceList);
 		pager = findView(R.id.pager);
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
@@ -93,6 +95,7 @@ public class PageActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "Resuming PageActivity");
+		instanceListAdapter.reloadInstances();
 		currentInstance = prefs.getDefaultInstance();
 		Log.d(TAG,
 				"Using base url " + currentInstance == null ? chooseSetting(
@@ -149,6 +152,10 @@ public class PageActivity extends BaseActivity implements
 
 	public void setNewInstance(OpenHABInstance instance, Sitemap sitemap) {
 		currentInstance = instance;
+		OpenHABConnectionSettings settings = instanceUtil
+				.chooseSetting(currentInstance);
+		OpenHABAuthManager.updateCredentials(settings.getUsername(),
+				settings.getPassword());
 		loadSubPage(sitemap.homepage.link);
 	}
 
@@ -182,6 +189,10 @@ public class PageActivity extends BaseActivity implements
 				+ stateFragment.getAvailablePageFragments().size()
 				+ " Fragments saved");
 		currentInstance = stateFragment.getSavedInstance();
+		OpenHABConnectionSettings settings = instanceUtil
+				.chooseSetting(currentInstance);
+		OpenHABAuthManager.updateCredentials(settings.getUsername(),
+				settings.getPassword());
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
 				getSupportFragmentManager(),
 				stateFragment.getAvailablePageFragments());
@@ -249,7 +260,8 @@ public class PageActivity extends BaseActivity implements
 							ChooseSitemapDialogFragment fragment = ChooseSitemapDialogFragment
 									.build(result.getSitemap());
 							inject(fragment);
-							fragment.show(getFragmentManager(), "chooseSitemap");
+							fragment.show(getSupportFragmentManager(),
+									"chooseSitemap");
 						} else {
 							makeCrouton(R.string.error_no_sitemaps_found,
 									Style.ALERT);
@@ -336,6 +348,7 @@ public class PageActivity extends BaseActivity implements
 		Sitemap sitemap = (Sitemap) instanceListAdapter.getChild(groupPosition,
 				childPosition);
 		setNewInstance(instance, sitemap);
+		drawerLayout.closeDrawers();
 		return true;
 	}
 }

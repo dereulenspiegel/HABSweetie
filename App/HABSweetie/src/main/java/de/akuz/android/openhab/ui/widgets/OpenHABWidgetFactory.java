@@ -86,8 +86,8 @@ public class OpenHABWidgetFactory {
 					.forName(buf.toString());
 			return widgetClass;
 		} catch (ClassNotFoundException e) {
-			Log.w(TAG, "Can't locate widget class for widget type "
-					+ widgetName);
+//			Log.w(TAG, "Can't locate widget class for widget type "
+//					+ widgetName);
 		}
 
 		return null;
