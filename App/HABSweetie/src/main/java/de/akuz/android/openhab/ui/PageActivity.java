@@ -104,6 +104,9 @@ public class PageActivity extends BaseActivity implements
 				.findFragmentByTag(PageActivityStateFragment.TAG);
 		// If we have fragments to restore restore them, but only if the config
 		// hasn't changed
+		if (stateFragment != null && stateFragment.isHasState()) {
+			currentInstance = stateFragment.getSavedInstance();
+		}
 		setNewInstance(currentInstance);
 		OpenHABAuthManager.updateCredentuals(chooseSetting(currentInstance));
 		Log.d(TAG, "Creating state fragment");
@@ -143,7 +146,7 @@ public class PageActivity extends BaseActivity implements
 				loadAvailableSitemaps();
 			}
 		} else {
-			Log.d(TAG, "App is not configured, showing crouton");
+			Log.d(TAG, "App is not configured, starting wizard");
 			// makeCrouton(R.string.please_configure_this_app, Style.ALERT);
 			Intent i = new Intent(this, ConnectionWizardActivity.class);
 			startActivity(i);
