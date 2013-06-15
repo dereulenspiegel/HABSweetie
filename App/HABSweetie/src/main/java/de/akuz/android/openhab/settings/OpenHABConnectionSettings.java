@@ -84,7 +84,7 @@ public class OpenHABConnectionSettings implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(_id);
+		dest.writeLong(_id != null ? _id : -1);
 		dest.writeString(baseUrl);
 		dest.writeString(password);
 		dest.writeString(username);
