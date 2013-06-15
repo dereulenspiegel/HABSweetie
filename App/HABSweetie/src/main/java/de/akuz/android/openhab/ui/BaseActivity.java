@@ -20,7 +20,7 @@ import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
-import de.duenndns.ssl.InteractionReceiver;
+import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 

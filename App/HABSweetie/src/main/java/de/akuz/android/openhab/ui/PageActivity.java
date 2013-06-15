@@ -34,7 +34,7 @@ import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
 import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
-import de.duenndns.ssl.InteractionReceiver;
+import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class PageActivity extends BaseActivity implements
