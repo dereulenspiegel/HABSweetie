@@ -192,7 +192,11 @@ public class PageXMLConnection implements PageConnectionInterface,
 	public void close() {
 		shouldBeClosed = true;
 		if (socket != null) {
-			socket.close();
+			try {
+				socket.close();
+			} catch (Exception e) {
+				Log.e(TAG,"An exception occured while closing the connection",e);
+			}
 		}
 
 	}
