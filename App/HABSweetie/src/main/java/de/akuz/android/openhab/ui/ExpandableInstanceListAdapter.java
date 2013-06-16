@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import android.database.DataSetObserver;
+import android.net.ConnectivityManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,6 @@ import de.akuz.android.openhab.ui.views.InstanceListSitemapView;
 import de.akuz.android.openhab.ui.views.InstanceListTopView;
 import de.akuz.android.openhab.ui.views.InstanceSitemapsLoadingFailedView;
 import de.akuz.android.openhab.ui.views.LoadingSitemapsView;
-import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -46,7 +46,7 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 	SpiceManager spiceManager;
 
 	@Inject
-	OpenHABInstanceUtil instanceUtil;
+	ConnectivityManager conManager;
 
 	private List<OpenHABInstance> instances;
 	private Map<OpenHABInstance, List<Sitemap>> sitemapMap = new HashMap<OpenHABInstance, List<Sitemap>>();
@@ -194,8 +194,8 @@ public class ExpandableInstanceListAdapter implements ExpandableListAdapter {
 	@Override
 	public void onGroupExpanded(int groupPosition) {
 		final OpenHABInstance instance = (OpenHABInstance) getGroup(groupPosition);
-		OpenHABConnectionSettings setting = instanceUtil
-				.chooseSetting(instance);
+		OpenHABConnectionSettings setting = instance
+				.getSettingForCurrentNetwork(conManager);
 		final List<Sitemap> sitemapList = new ArrayList<Sitemap>(5);
 		loadingFailedInstances.remove(instance);
 		notifyDataSetChanged();

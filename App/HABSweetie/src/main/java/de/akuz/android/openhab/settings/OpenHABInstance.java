@@ -1,5 +1,8 @@
 package de.akuz.android.openhab.settings;
 
+import roboguice.util.temp.Strings;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 import de.akuz.android.openhab.core.objects.Sitemap;
@@ -104,6 +107,27 @@ public class OpenHABInstance implements Parcelable {
 
 	public String getDefaultSitemapUrl(OpenHABConnectionSettings setting) {
 		return setting.getBaseUrl() + "/rest/sitemaps/" + defaultSitemapId;
+	}
+
+	public OpenHABConnectionSettings getSettingForCurrentNetwork(int networkType) {
+		if (networkType == ConnectivityManager.TYPE_MOBILE) {
+			OpenHABConnectionSettings setting = getExternal();
+			if (setting != null && Strings.isEmpty(setting.getBaseUrl())) {
+				return getInternal();
+			}
+			return getExternal();
+		}
+		return getInternal();
+	}
+
+	public OpenHABConnectionSettings getSettingForCurrentNetwork(
+			NetworkInfo currentNetwork) {
+		return getSettingForCurrentNetwork(currentNetwork.getType());
+	}
+
+	public OpenHABConnectionSettings getSettingForCurrentNetwork(
+			ConnectivityManager conManager) {
+		return getSettingForCurrentNetwork(conManager.getActiveNetworkInfo());
 	}
 
 }

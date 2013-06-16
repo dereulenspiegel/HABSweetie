@@ -55,7 +55,8 @@ public class ConnectionWizardActivity extends WizardActivity {
 		openHABInstance.setInternal(internalSettings);
 		prefs.saveInstance(openHABInstance);
 		Log.d(TAG, "Name of new instance is " + openHABInstance.getName());
-		if (prefs.getAllConfiguredInstances().size() == 1) {
+		if (prefs.getAllConfiguredInstances().size() == 1
+				|| prefs.getAllConfiguredInstances().size() == 0) {
 			Log.d(TAG,
 					"The added instance is the only instance configured, setting as default");
 			prefs.setDefaultOpenHABInstanceId(openHABInstance.getId());

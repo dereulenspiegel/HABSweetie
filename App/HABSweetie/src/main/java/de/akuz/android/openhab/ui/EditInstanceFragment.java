@@ -2,6 +2,7 @@ package de.akuz.android.openhab.ui;
 
 import javax.inject.Inject;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +20,6 @@ import de.akuz.android.openhab.core.objects.SitemapsResult;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
-import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class EditInstanceFragment extends BaseFragment implements
@@ -31,10 +31,10 @@ public class EditInstanceFragment extends BaseFragment implements
 	HABSweetiePreferences prefs;
 
 	@Inject
-	OpenHABInstanceUtil instanceUtil;
+	SpiceManager spiceManager;
 
 	@Inject
-	SpiceManager spiceManager;
+	ConnectivityManager conManager;
 
 	private long instanceId;
 
@@ -132,7 +132,7 @@ public class EditInstanceFragment extends BaseFragment implements
 				.build(getString(R.string.message_loading_sitemaps));
 		progressDialog.show(getFragmentManager(), "dialog");
 		SitemapsRequest request = new SitemapsRequest(
-				instanceUtil.chooseSetting(instance));
+				instance.getSettingForCurrentNetwork(conManager));
 		spiceManager.execute(request, new RequestListener<SitemapsResult>() {
 
 			@Override

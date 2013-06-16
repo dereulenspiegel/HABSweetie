@@ -32,7 +32,6 @@ import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListener;
-import de.akuz.android.openhab.ui.views.OpenHABInstanceUtil;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -54,9 +53,6 @@ public class PageActivity extends BaseActivity implements
 
 	@Inject
 	HABSweetiePreferences prefs;
-
-	@Inject
-	OpenHABInstanceUtil instanceUtil;
 
 	private ExpandableListView instanceList;
 	private ExpandableInstanceListAdapter instanceListAdapter;
@@ -97,14 +93,12 @@ public class PageActivity extends BaseActivity implements
 		Log.d(TAG, "Resuming PageActivity");
 		instanceListAdapter.reloadInstances();
 		currentInstance = prefs.getDefaultInstance();
-		Log.d(TAG,
-				"Using base url " + currentInstance == null ? chooseSetting(
-						currentInstance).getBaseUrl() : " none");
 		stateFragment = (PageActivityStateFragment) getSupportFragmentManager()
 				.findFragmentByTag(PageActivityStateFragment.TAG);
 		// If we have fragments to restore restore them, but only if the config
 		// hasn't changed
-		if (stateFragment != null && stateFragment.isHasState()) {
+		if (stateFragment != null && stateFragment.isHasState()
+				&& stateFragment.getSavedInstance() != null) {
 			currentInstance = stateFragment.getSavedInstance();
 		}
 		setNewInstance(currentInstance);
@@ -136,13 +130,11 @@ public class PageActivity extends BaseActivity implements
 			Log.d(TAG, "Restoring previous state after config change");
 			restorePreviousStateAfterConfigurationChange();
 		} else if (isAppConfigured() && hasBaseUrlChanged()) {
-			Log.d(TAG, "App is configured, but baseUrl has changed");
 			loadAvailableSitemaps();
-		} else if (isAppConfigured()) {
-			Log.d(TAG, "App is configured, and baseUrl hasn't changed");
-			String pageUrl = currentInstance
-					.getDefaultSitemapUrl(chooseSetting(currentInstance));
-			if (!Strings.isEmpty(pageUrl) && pageUrl.startsWith("http")) {
+		} else if (isAppConfigured() && currentInstance != null) {
+			if (!Strings.isEmpty(currentInstance.getDefaultSitemapId())) {
+				String pageUrl = currentInstance
+						.getDefaultSitemapUrl(chooseSetting(currentInstance));
 				Log.d(TAG, "Loading default sitemap from url " + pageUrl);
 				loadSubPage(pageUrl);
 			} else {
@@ -158,8 +150,8 @@ public class PageActivity extends BaseActivity implements
 
 	public void setNewInstance(OpenHABInstance instance, Sitemap sitemap) {
 		currentInstance = instance;
-		OpenHABConnectionSettings settings = instanceUtil
-				.chooseSetting(currentInstance);
+		OpenHABConnectionSettings settings = instance
+				.getSettingForCurrentNetwork(conManager);
 		OpenHABAuthManager.updateCredentials(settings.getUsername(),
 				settings.getPassword());
 		loadSubPage(sitemap.homepage.link);
@@ -187,7 +179,7 @@ public class PageActivity extends BaseActivity implements
 	}
 
 	public OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
-		return instanceUtil.chooseSetting(instance);
+		return instance.getSettingForCurrentNetwork(conManager);
 	}
 
 	private void restorePreviousStateAfterConfigurationChange() {
@@ -195,8 +187,8 @@ public class PageActivity extends BaseActivity implements
 				+ stateFragment.getAvailablePageFragments().size()
 				+ " Fragments saved");
 		currentInstance = stateFragment.getSavedInstance();
-		OpenHABConnectionSettings settings = instanceUtil
-				.chooseSetting(currentInstance);
+		OpenHABConnectionSettings settings = currentInstance
+				.getSettingForCurrentNetwork(conManager);
 		OpenHABAuthManager.updateCredentials(settings.getUsername(),
 				settings.getPassword());
 		pagerAdapter = new OpenHABPagePagerAdapter(this,

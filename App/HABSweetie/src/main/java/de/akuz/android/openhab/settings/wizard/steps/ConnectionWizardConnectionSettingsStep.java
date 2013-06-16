@@ -45,6 +45,9 @@ public class ConnectionWizardConnectionSettingsStep extends
 
 	public static ConnectionWizardConnectionSettingsStep build(boolean internal) {
 		ConnectionWizardConnectionSettingsStep fragment = new ConnectionWizardConnectionSettingsStep();
+		// FIXME Ugly hack, because WizarDroid overwrites the arguments instead
+		// of extending them
+		fragment.setInternal(internal);
 		Bundle args = new Bundle();
 		args.putBoolean(INTERNAL_ARG, internal);
 		fragment.setArguments(args);
@@ -65,7 +68,7 @@ public class ConnectionWizardConnectionSettingsStep extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
-		internal = args.getBoolean(INTERNAL_ARG);
+//		internal = args.getBoolean(INTERNAL_ARG);
 		OpenHABConnectionSettings receivedSettings = args
 				.getParcelable(SETTINGS_ARG);
 		if (receivedSettings != null) {
@@ -170,6 +173,14 @@ public class ConnectionWizardConnectionSettingsStep extends
 		editUsername.setEnabled(isChecked);
 		editPassword.setEnabled(isChecked);
 
+	}
+
+	public boolean isInternal() {
+		return internal;
+	}
+
+	public void setInternal(boolean internal) {
+		this.internal = internal;
 	}
 
 }
