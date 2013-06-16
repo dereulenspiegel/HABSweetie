@@ -53,7 +53,10 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		if (mappings != null && mappings.size() > 0) {
 			Log.d(TAG, "Updating selection mappings");
 			selectionAdapter.clear();
-			selectionAdapter.addAll(mappings);
+			// addAll requires API Level 11 or above
+			for (Mapping m : mappings) {
+				selectionAdapter.add(m);
+			}
 		} else {
 			Log.w(TAG, "Received Widget update with 0 mappings");
 		}

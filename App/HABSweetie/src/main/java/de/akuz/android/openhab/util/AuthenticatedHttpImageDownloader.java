@@ -10,10 +10,11 @@ import javax.inject.Inject;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Base64;
 
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.okhttp.OkHttpClient;
+
+import de.akuz.android.openhab.core.OpenHABAuthManager;
 
 public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
@@ -46,10 +47,8 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
 		if (username != null && password != null) {
-			byte[] encoded = Base64.encode(
-					(username + ":" + password).getBytes(), Base64.DEFAULT);
-			conn.setRequestProperty("Authorization", "Basic "
-					+ new String(encoded));
+			conn.setRequestProperty("Authorization",
+					OpenHABAuthManager.getAuthorizationHeaderValue());
 		}
 		conn.connect();
 		return conn;

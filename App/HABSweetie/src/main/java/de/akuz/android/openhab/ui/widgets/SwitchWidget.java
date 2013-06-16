@@ -60,10 +60,8 @@ public class SwitchWidget extends BasicOpenHABWidget implements
 		android.widget.RelativeLayout.LayoutParams params = new android.widget.RelativeLayout.LayoutParams(
 				android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,
 				android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
-		// FIXME Correct layout params so the toggle buttons appear below the
-		// widgetBase
-		params.width = android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;
-		params.height = android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;
+//		params.width = android.widget.RelativeLayout.LayoutParams.FILL_PARENT;
+//		params.height = android.widget.RelativeLayout.LayoutParams.FILL_PARENT;
 		params.addRule(RelativeLayout.BELOW, widgetBase.getId());
 		// params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
