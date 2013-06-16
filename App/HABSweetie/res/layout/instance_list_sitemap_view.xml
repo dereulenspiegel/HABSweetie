@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
     android:background="@drawable/openhab_item_bg"
     android:minHeight="@dimen/min_openhab_widget_height" >
 
