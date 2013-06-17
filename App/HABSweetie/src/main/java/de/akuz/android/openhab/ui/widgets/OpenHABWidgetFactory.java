@@ -99,7 +99,11 @@ public class OpenHABWidgetFactory {
 	}
 
 	public int getViewTypeId(String widgetType) {
-		return viewTypeMap.get(widgetType);
+		Integer typeId = viewTypeMap.get(widgetType);
+		if (typeId == null) {
+			return viewTypeMap.get("Text");
+		}
+		return typeId;
 	}
 
 	public void registerWidgetType(String typeName,
