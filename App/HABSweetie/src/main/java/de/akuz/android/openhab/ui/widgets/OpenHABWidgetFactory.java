@@ -1,6 +1,7 @@
 package de.akuz.android.openhab.ui.widgets;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,6 +24,10 @@ public class OpenHABWidgetFactory {
 
 	private final static Class<?>[] constructorParams = { Context.class,
 			Widget.class };
+
+	private Map<String, Integer> viewTypeMap = new HashMap<String, Integer>();
+
+	private int viewTypeIndex;
 
 	private ObjectGraph objectGraph;
 
@@ -86,15 +91,21 @@ public class OpenHABWidgetFactory {
 					.forName(buf.toString());
 			return widgetClass;
 		} catch (ClassNotFoundException e) {
-//			Log.w(TAG, "Can't locate widget class for widget type "
-//					+ widgetName);
+			// Log.w(TAG, "Can't locate widget class for widget type "
+			// + widgetName);
 		}
 
 		return null;
 	}
 
+	public int getViewTypeId(String widgetType) {
+		return viewTypeMap.get(widgetType);
+	}
+
 	public void registerWidgetType(String typeName,
 			Class<? extends AbstractOpenHABWidget> widgetClass) {
+		viewTypeMap.put(typeName, viewTypeIndex);
+		viewTypeIndex++;
 		widgetMap.put(typeName, widgetClass);
 	}
 
