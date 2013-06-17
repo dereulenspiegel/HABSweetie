@@ -31,7 +31,7 @@ public class FrameWidget extends AbstractOpenHABWidget {
 		widgetImage = findView(R.id.widgetLogo);
 		widgetListContainer.setScrollContainer(false);
 		fragmentHeaderContainer = findView(R.id.frameWidgetHeaderContainer);
-//		updateWidget(widget);
+		// updateWidget(widget);
 	}
 
 	@Override
@@ -52,12 +52,21 @@ public class FrameWidget extends AbstractOpenHABWidget {
 		}
 		widgetListContainer.removeAllViews();
 		if (widget.getWidget() != null) {
+			int widgetCount = widget.getWidget().size();
+			int count = 0;
 			for (Widget w : widget.getWidget()) {
 				AbstractOpenHABWidget openHABWidget = widgetFactory
 						.getFromWidget(getContext(), w, true);
 				openHABWidget.setItemCommandInterface(commandInterface);
 				openHABWidget.updateWidget(w);
 				widgetListContainer.addView(openHABWidget);
+				if (count < widgetCount - 1 && widgetCount > 1) {
+					View seperator = new View(getContext());
+					seperator.setBackgroundResource(R.color.card_grey);
+					seperator.setMinimumHeight(2);
+					widgetListContainer.addView(seperator);
+				}
+				count++;
 			}
 		}
 	}

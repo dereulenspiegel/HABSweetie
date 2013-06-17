@@ -9,4 +9,5 @@
     <color name="light_grey">#F0F0F0</color>
     <color name="transparent">#00000000</color>
     <color name="red">#FF0000</color>
+    <color name="card_grey">#ccc</color>
 </resources>

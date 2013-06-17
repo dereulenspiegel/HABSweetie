@@ -16,6 +16,17 @@
 		<dagger.version>1.0.1</dagger.version>
 		<okhttp.version>1.1.0</okhttp.version>
     </properties>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>oss.sonatype.org-jayway-snapshots</id>
+            <name>Jayway OpenSource SNAPSHOTs on Sonatype.org</name>
+            <url>http://oss.sonatype.org/content/repositories/jayway-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -106,7 +117,7 @@
 		  <dependency>
   			<groupId>com.actionbarsherlock</groupId>
   			<artifactId>actionbarsherlock</artifactId>
-  			<version>4.3.0</version>
+  			<version>4.3.1</version>
   			<exclusions>
         		<exclusion>
             		<groupId>com.google.android</groupId>
@@ -156,7 +167,7 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
                     <assetsDirectory>${project.basedir}/assets</assetsDirectory>
