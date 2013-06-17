@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import com.google.api.client.http.HttpResponseException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.OpenHABAuthManager;
@@ -58,6 +60,7 @@ public class PageActivity extends BaseActivity implements
 	private ExpandableInstanceListAdapter instanceListAdapter;
 
 	private DrawerLayout drawerLayout;
+	private SherlockActionBarDrawerToggle drawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +85,14 @@ public class PageActivity extends BaseActivity implements
 		instanceList.setAdapter(instanceListAdapter);
 		instanceList.setOnChildClickListener(this);
 
+		Log.d(TAG, "onCreate of PageActivity complete");
+		drawerToggle = new SherlockActionBarDrawerToggle(this, drawerLayout,
+				R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
+		drawerLayout.setDrawerListener(drawerToggle);
 		getSupportActionBar().setTitle("HABSweetie");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		Log.d(TAG, "onCreate of PageActivity complete");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		drawerToggle.syncState();
 	}
 
 	@Override
@@ -297,6 +305,9 @@ public class PageActivity extends BaseActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (drawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
 		if (item.getItemId() == android.R.id.home) {
 			pagerAdapter.goOnePageUp();
 			return true;
