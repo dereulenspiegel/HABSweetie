@@ -51,6 +51,8 @@ public class Widget extends AbstractOpenHABObject {
 	@Key
 	protected ArrayList<Widget> widget;
 
+	private Long id;
+
 	public String getWidgetId() {
 		return widgetId;
 	}
@@ -282,5 +284,22 @@ public class Widget extends AbstractOpenHABObject {
 
 	public void setPeriod(String period) {
 		this.period = period;
+	}
+
+	public long getId() {
+		if (id == null) {
+			char[] value = widgetId.toCharArray();
+			int count = value.length;
+			long hash = 0;
+			int multiplier = 1;
+			int offset = 0;
+			for (int i = offset + count - 1; i >= offset; i--) {
+				hash += value[i] * multiplier;
+				int shifted = multiplier << 5;
+				multiplier = shifted - multiplier;
+			}
+			id = hash;
+		}
+		return id;
 	}
 }

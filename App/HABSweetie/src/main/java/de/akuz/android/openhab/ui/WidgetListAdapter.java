@@ -104,7 +104,7 @@ public class WidgetListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		Widget w = (Widget) getItem(position);
-		return w.getWidgetId().hashCode();
+		return w.getId();
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class WidgetListAdapter extends BaseAdapter {
 		openHABWidget.updateWidget(widget);
 		return openHABWidget;
 	}
-	
+
 	@Override
 	public int getItemViewType(int position) {
 		Widget w = (Widget) getItem(position);
