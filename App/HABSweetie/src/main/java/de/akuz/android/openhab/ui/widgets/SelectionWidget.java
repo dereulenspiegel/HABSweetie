@@ -79,6 +79,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 					+ " for mapping label " + mappings.get(i).getLabel());
 			final OnItemSelectedListener listener = selection
 					.getOnItemSelectedListener();
+			selection.setOnItemSelectedListener(null);
 			selection.setSelection(i, false);
 			selection.post(new Runnable() {
 
