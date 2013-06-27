@@ -3,8 +3,14 @@ package de.akuz.android.openhab.core.requests;
 import com.google.api.client.http.HttpRequest;
 
 import de.akuz.android.openhab.core.objects.ItemsResult;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
 public class ItemsRequest extends AbstractOpenHABRequest<ItemsResult> {
+
+	public ItemsRequest(OpenHABConnectionSettings setting) {
+		this(setting.getBaseUrl());
+		super.setting = setting;
+	}
 
 	public ItemsRequest(String baseUrl) {
 		super(ItemsResult.class, baseUrl);

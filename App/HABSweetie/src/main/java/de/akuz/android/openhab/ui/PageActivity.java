@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -129,8 +128,8 @@ public class PageActivity extends BaseActivity implements
 	public void setNewInstance(OpenHABInstance instance) {
 		currentInstance = instance;
 		if (currentInstance != null) {
-			OpenHABAuthManager
-					.updateCredentuals(chooseSetting(currentInstance));
+			OpenHABAuthManager.updateCredentuals(currentInstance
+					.getSettingForCurrentNetwork(conManager));
 		}
 		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
 				&& stateFragment.getAvailablePageFragments() != null
@@ -142,7 +141,8 @@ public class PageActivity extends BaseActivity implements
 		} else if (isAppConfigured() && currentInstance != null) {
 			if (!Strings.isEmpty(currentInstance.getDefaultSitemapId())) {
 				String pageUrl = currentInstance
-						.getDefaultSitemapUrl(chooseSetting(currentInstance));
+						.getDefaultSitemapUrl(currentInstance
+								.getSettingForCurrentNetwork(conManager));
 				Log.d(TAG, "Loading default sitemap from url " + pageUrl);
 				loadSubPage(pageUrl);
 			} else {
@@ -181,13 +181,11 @@ public class PageActivity extends BaseActivity implements
 		if (oldInstance == null && defaultInstance != null) {
 			return false;
 		}
-		String oldBaseUrl = chooseSetting(oldInstance).getBaseUrl();
-		String currentBaseUrl = chooseSetting(defaultInstance).getBaseUrl();
+		String oldBaseUrl = oldInstance.getSettingForCurrentNetwork(conManager)
+				.getBaseUrl();
+		String currentBaseUrl = defaultInstance.getSettingForCurrentNetwork(
+				conManager).getBaseUrl();
 		return !oldBaseUrl.equals(currentBaseUrl);
-	}
-
-	public OpenHABConnectionSettings chooseSetting(OpenHABInstance instance) {
-		return instance.getSettingForCurrentNetwork(conManager);
 	}
 
 	private void restorePreviousStateAfterConfigurationChange() {
@@ -227,13 +225,10 @@ public class PageActivity extends BaseActivity implements
 		setProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
-	private String getBaseUrl() {
-		return chooseSetting(currentInstance).getBaseUrl();
-	}
-
 	private void loadAvailableSitemaps() {
 		Log.d(TAG, "Loading all available sitemaps");
-		String baseUrl = getBaseUrl();
+		String baseUrl = currentInstance
+				.getSettingForCurrentNetwork(conManager).getBaseUrl();
 		final ProgressDialogFragment progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_sitemaps));
 		progressDialog.show(getSupportFragmentManager(), "sitemapsProgress");

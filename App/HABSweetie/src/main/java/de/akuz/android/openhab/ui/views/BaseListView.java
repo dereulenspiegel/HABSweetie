@@ -37,4 +37,8 @@ public abstract class BaseListView<O> extends LinearLayout {
 
 	protected abstract void objectUpdated(O object);
 
+	public O getObject() {
+		return object;
+	}
+
 }

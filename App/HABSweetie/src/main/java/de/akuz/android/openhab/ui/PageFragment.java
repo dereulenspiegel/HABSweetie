@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -54,13 +55,16 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Inject
 	PageConnectionInterface pageConnection;
 
+	@Inject
+	ConnectivityManager conManager;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pageUrl = getArguments().getString(PAGE_URL_ARG);
 		pageActivity = (PageActivity) getActivity();
-		baseUrl = pageActivity.chooseSetting(pageActivity.getCurrentInstance())
-				.getBaseUrl();
+		baseUrl = pageActivity.getCurrentInstance()
+				.getSettingForCurrentNetwork(conManager).getBaseUrl();
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);

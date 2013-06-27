@@ -19,9 +19,11 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 
 	private OpenHABConnectionSettings setting;
 
+	private final static String REST_ITEM_PATH = "/rest/items/";
+
 	public ItemCommandRequest(OpenHABConnectionSettings setting,
-			String itemUrl, String command) {
-		this(itemUrl, command);
+			String itemName, String command) {
+		this(buildItemUrl(setting, itemName), command);
 		this.setting = setting;
 	}
 
@@ -48,6 +50,15 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 		}
 		request.execute();
 		return null;
+	}
+
+	private static String buildItemUrl(OpenHABConnectionSettings setting,
+			String itemName) {
+		String baseUrl = setting.getBaseUrl();
+		StringBuffer buffer = new StringBuffer(baseUrl.length()
+				+ REST_ITEM_PATH.length() + itemName.length());
+		buffer.append(baseUrl).append(REST_ITEM_PATH).append(itemName);
+		return buffer.toString();
 	}
 
 	private static class StringHttpContent implements HttpContent {

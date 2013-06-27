@@ -3,7 +3,6 @@ package de.akuz.android.openhab.core;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.octo.android.robospice.SpiceManager;
@@ -11,6 +10,12 @@ import com.octo.android.robospice.SpiceManager;
 import dagger.Module;
 import dagger.Provides;
 import de.akuz.android.openhab.settings.wizard.steps.ConnectionWizardConnectionSettingsStep;
+import de.akuz.android.openhab.tasker.EditItemActionFragment;
+import de.akuz.android.openhab.tasker.EditTaskerActionActivity;
+import de.akuz.android.openhab.tasker.SelectInstanceDialog;
+import de.akuz.android.openhab.tasker.SelectInstanceDialog.InstanceListAdapter;
+import de.akuz.android.openhab.tasker.SelectItemFragment;
+import de.akuz.android.openhab.tasker.TaskerActionService;
 import de.akuz.android.openhab.ui.BaseActivity;
 import de.akuz.android.openhab.ui.BaseFragment;
 import de.akuz.android.openhab.ui.EditInstanceFragment;
@@ -24,12 +29,15 @@ import de.akuz.android.openhab.ui.PageFragment;
 		PageXMLConnection.class, PageActivity.class,
 		ManageInstancesActivity.class, ManageInstancesFragment.class,
 		ExpandableInstanceListAdapter.class, EditInstanceFragment.class,
-		ConnectionWizardConnectionSettingsStep.class }, complete = false, library = true)
+		ConnectionWizardConnectionSettingsStep.class,
+		TaskerActionService.class, EditTaskerActionActivity.class,
+		SelectItemFragment.class, EditItemActionFragment.class,
+		SelectInstanceDialog.class, InstanceListAdapter.class }, complete = false, library = true)
 public class CommunicationModule {
 
-	private Activity context;
+	private Context context;
 
-	public CommunicationModule(Activity context) {
+	public CommunicationModule(Context context) {
 		this.context = context;
 	}
 

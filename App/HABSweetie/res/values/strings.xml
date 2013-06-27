@@ -68,4 +68,10 @@
 	<string name="edit">Edit</string>
 	<string name="default_sitemap">Default Sitemap</string>
 	<string name="choose">Choose</string>
+	<string name="save">Save</string>
+	<string name="state_percent">Percent</string>
+	<string name="state_number">Numer</string>
+	<string name="state_text">Text</string>
+	<string name="blurb_format">Send command {0} to item {1}</string>
+	<string name="progress_load_items">Loading available items</string>
 </resources>
