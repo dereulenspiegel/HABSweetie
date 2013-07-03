@@ -16,6 +16,8 @@ import org.atmosphere.wasync.Request.TRANSPORT;
 import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 import org.atmosphere.wasync.impl.AtmosphereClient;
+import org.atmosphere.wasync.impl.AtmosphereRequest;
+import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
 
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +34,7 @@ import de.akuz.android.openhab.core.objects.Widgets;
 import de.akuz.android.openhab.core.requests.ItemCommandRequest;
 import de.akuz.android.openhab.core.requests.ItemRequest;
 import de.akuz.android.openhab.core.requests.PageRequest;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
@@ -61,6 +64,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private boolean shouldBeClosed = false;
 
+	private OpenHABConnectionSettings settings;
+
 	@Inject
 	public PageXMLConnection() {
 		uiHandler = new Handler();
@@ -70,7 +75,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 	@Override
 	public void loadCompletePage() {
 		spiceManager.execute(new PageRequest(baseUrl, pageUrl), pageUrl,
-				DurationInMillis.NEVER, this);
+				DurationInMillis.ALWAYS_EXPIRED, this);
 
 	}
 
@@ -83,9 +88,10 @@ public class PageXMLConnection implements PageConnectionInterface,
 	}
 
 	@Override
-	public void open(String baseUrl, String pageUrl) {
-		this.baseUrl = baseUrl;
+	public void open(OpenHABConnectionSettings settings, String pageUrl) {
+		this.baseUrl = settings.getBaseUrl();
 		this.pageUrl = pageUrl;
+		this.settings = settings;
 		establishConnection();
 	}
 
@@ -103,6 +109,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private void openWebSocket(Request request) {
 		try {
+			Log.d(TAG, "Opening Atmoshpere connection");
 			socket.open(request);
 		} catch (IOException e) {
 			wssConnectionEnabled = false;
@@ -111,15 +118,16 @@ public class PageXMLConnection implements PageConnectionInterface,
 	}
 
 	private Request setupWebSocket() {
-		Client client = ClientFactory.getDefault().newClient(
-				AtmosphereClient.class);
+		Client<AtmosphereRequestBuilder> client = ClientFactory.getDefault()
+				.newClient(AtmosphereClient.class);
 
-		RequestBuilder builder = client.newRequestBuilder();
-		if (OpenHABAuthManager.hasCredentials()) {
+		RequestBuilder<AtmosphereRequestBuilder> builder = client
+				.newRequestBuilder();
+		if (settings.hasCredentials()) {
 			builder.header("Authorization",
-					"Basic " + OpenHABAuthManager.getEncodedCredentials());
+					settings.getAuthorizationHeaderValue());
 		}
-		if (prefs.useWebSockets()) {
+		if (settings.isUseWebSockets()) {
 			builder.transport(TRANSPORT.WEBSOCKET);
 		}
 		Request pageRequest = builder
@@ -141,8 +149,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 				.decoder(
 						new BasicJackson2XmlDecoder<Widgets>(baseUrl,
 								Widgets.class)) //
-				.transport(TRANSPORT.LONG_POLLING) //
 				.transport(TRANSPORT.STREAMING) //
+				.transport(TRANSPORT.LONG_POLLING) //
 				.build(); //
 
 		socket = client.create();
@@ -151,8 +159,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 		socket.on(new PageFunction());
 		socket.on(new ExceptionFunction());
 		socket.on(Function.MESSAGE.error.name(), new ExceptionFunction());
-		socket.on(new VoidFunction());
-		socket.on(new PlainStringFunction());
 		socket.on(Function.MESSAGE.open.name(), new Function<Object>() {
 
 			@Override
@@ -195,7 +201,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 			try {
 				socket.close();
 			} catch (Exception e) {
-				Log.e(TAG,"An exception occured while closing the connection",e);
+				Log.e(TAG, "An exception occured while closing the connection",
+						e);
 			}
 		}
 

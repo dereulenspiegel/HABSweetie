@@ -27,6 +27,7 @@ import de.akuz.android.openhab.core.PageUpdateListener;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget.ItemCommandInterface;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
 import de.akuz.android.openhab.util.Utils;
@@ -37,7 +38,6 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	public final static String PAGE_URL_ARG = "pageUrl";
 
-	private String baseUrl;
 	private String pageUrl;
 
 	private ListView widgetList;
@@ -58,20 +58,21 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Inject
 	ConnectivityManager conManager;
 
+	private OpenHABConnectionSettings settings;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pageUrl = getArguments().getString(PAGE_URL_ARG);
 		pageActivity = (PageActivity) getActivity();
-		baseUrl = pageActivity.getCurrentInstance()
-				.getSettingForCurrentNetwork(conManager).getBaseUrl();
+		settings = pageActivity.getCurrentInstance()
+				.getSettingForCurrentNetwork(conManager);
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
 		inject(listAdapter);
-		// ((BaseActivity) getActivity()).inject(pageConnection);
 		pageConnection.registerUpdateListener(this);
-		pageConnection.open(baseUrl, pageUrl);
+		pageConnection.open(settings, pageUrl);
 		if (page == null) {
 			loadCompletePage();
 		} else {

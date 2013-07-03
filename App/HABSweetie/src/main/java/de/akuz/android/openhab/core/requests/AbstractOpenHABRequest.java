@@ -3,8 +3,6 @@ package de.akuz.android.openhab.core.requests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.util.Log;
 
@@ -79,20 +77,12 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 			BasicAuthentication auth = new BasicAuthentication(
 					setting.getUsername(), setting.getPassword());
 			request.setInterceptor(auth);
-			// headers =
-			// headers.setBasicAuthentication(setting.getUsername(),
-			// setting.getPassword());
 		} else if (OpenHABAuthManager.hasCredentials()) {
 			Log.d(TAG, "Setting Authorization from auth manager");
 			BasicAuthentication auth = new BasicAuthentication(
 					OpenHABAuthManager.getUsername(),
 					OpenHABAuthManager.getPassword());
 			request.setInterceptor(auth);
-			// headers = headers.setBasicAuthentication(
-			// OpenHABAuthManager.getUsername(),
-			// OpenHABAuthManager.getPassword());
-		} else {
-			Log.w(TAG, "Failed to set Authorization");
 		}
 		headers.set("Accept-Charset", "utf-8");
 		request.setHeaders(headers);

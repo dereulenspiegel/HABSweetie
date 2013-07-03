@@ -77,15 +77,13 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		if (mappings != null && i < mappings.size()) {
 			Log.d(TAG, "Updating selection to " + mappings.get(i).getCommand()
 					+ " for mapping label " + mappings.get(i).getLabel());
-			final OnItemSelectedListener listener = selection
-					.getOnItemSelectedListener();
 			selection.setOnItemSelectedListener(null);
 			selection.setSelection(i, false);
 			selection.post(new Runnable() {
 
 				@Override
 				public void run() {
-					selection.setOnItemSelectedListener(listener);
+					selection.setOnItemSelectedListener(SelectionWidget.this);
 				}
 			});
 		}
