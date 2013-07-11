@@ -128,7 +128,7 @@
 			<groupId>com.sherlock.navigationdrawer.compat</groupId>
 			<artifactId>SherlockNavigationDrawer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<packaging>apklib</packaging>
+			<type>apklib</type>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.android</groupId>
