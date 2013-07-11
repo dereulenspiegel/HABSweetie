@@ -158,9 +158,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.larswerkman</groupId>
+			<groupId>de.akuz.android</groupId>
 			<artifactId>colorpicker</artifactId>
-			<version>7</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<type>apklib</type>
 			<exclusions>
 				<exclusion>
