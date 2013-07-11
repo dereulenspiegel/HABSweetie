@@ -16,6 +16,16 @@
 		<dagger.version>1.0.1</dagger.version>
 		<okhttp.version>1.1.0</okhttp.version>
 	</properties>
+	
+	<repository>
+  		<id>github.repo</id>
+  		<url>https://github.com/dereulenspiegel/mev-repo/raw/master</url>
+  		<!-- use snapshot version -->
+  		<snapshots>
+     			<enabled>true</enabled>
+     			<updatePolicy>always</updatePolicy>
+   		</snapshots>
+	</repository>
 
 	<pluginRepositories>
 		<pluginRepository>
