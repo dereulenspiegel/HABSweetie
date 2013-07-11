@@ -27,6 +27,14 @@
 	     			<updatePolicy>always</updatePolicy>
 	   		</snapshots>
 		</repository>
+		<repository>
+			<id>goddchen</id>
+			<url>https://github.com/Goddchen/mvn-repo/raw/master/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
 	</repositories>
 	
 	<pluginRepositories>
