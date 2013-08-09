@@ -41,7 +41,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 			mappings.addAll(widget.getMappings());
 		}
 		selectionAdapter = new ArrayAdapter<Mapping>(getContext(),
-				android.R.layout.simple_spinner_item, mappings);
+				android.R.layout.simple_spinner_dropdown_item, mappings);
 		selection.setOnItemSelectedListener(this);
 		selection.setAdapter(selectionAdapter);
 	}
