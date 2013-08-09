@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.akuz.android</groupId>
 	<artifactId>openhab</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>apk</packaging>
 	<name>HAB Sweetie</name>
 
@@ -24,6 +24,7 @@
 				</property>
 			</activation>
 			<properties>
+				<maven.jarsigner.version>1.2</maven.jarsigner.version>
 				<!-- signing properties -->
 				<!-- <sign.keystore>pathtokeystorefile</sign.keystore> -->
 				<sign.alias>habsweetie</sign.alias>
@@ -34,6 +35,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>${maven.jarsigner.version}</version>
 						<executions>
 							<execution>
 								<id>signing</id>
@@ -63,6 +65,7 @@
 						<artifactId>android-maven-plugin</artifactId>
 						<version>${android.maven.version}</version>
 						<configuration>
+						    <release>true</release>
 							<sign>
 								<debug>false</debug>
 							</sign>
@@ -82,6 +85,21 @@
 									<goal>zipalign</goal>
 								</goals>
 							</execution>
+							<execution>
+								<id>update-manifest</id>
+								<goals>
+									<goal>manifest-update</goal>
+								</goals>
+								<configuration>
+									<manifest>
+										<versionName>${project.version}</versionName>
+										<!-- <versionCode>${BUILD_NUMBER}</versionCode> -->
+										<versionCodeAutoIncrement>true</versionCodeAutoIncrement>
+										<!-- <versionCodeUpdateFromVersion>true</versionCodeUpdateFromVersion> -->
+										<debuggable>false</debuggable>
+									</manifest>
+								</configuration>
+							</execution>
 						</executions>
 					</plugin>
 				</plugins>
@@ -90,7 +108,8 @@
 	</profiles>
 
 	<properties>
-		<android.maven.version>3.6.0</android.maven.version>
+		<maven.compiler.version>2.3.2</maven.compiler.version>
+		<android.maven.version>3.6.1</android.maven.version>
 		<platform.version>4.1.1.4</platform.version>
 		<robospice-google-http-client.version>1.4.2</robospice-google-http-client.version>
 		<google.http.client.version>1.15.0-rc</google.http.client.version>
@@ -302,7 +321,7 @@
 
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven.compiler.version}</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>

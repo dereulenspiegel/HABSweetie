@@ -1,60 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.akuz.android.openhab"
-    android:versionCode="6"
-    android:versionName="0.0.6-SNAPSHOT" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:versionCode="8" android:versionName="0.0.5-SNAPSHOT" package="de.akuz.android.openhab">
 
-    <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application
-        android:name="de.akuz.android.openhab.BootstrapApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.HABSweetie" >
-        <activity android:name=".ui.PageActivity" >
+    <application android:allowBackup="true" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="de.akuz.android.openhab.BootstrapApplication" android:theme="@style/Theme.HABSweetie">
+        <activity android:name=".ui.PageActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <service android:name=".core.OpenHABRestService" >
+        <service android:name=".core.OpenHABRestService">
         </service>
 
-        <activity android:name=".settings.wizard.ConnectionWizardActivity" >
+        <activity android:name=".settings.wizard.ConnectionWizardActivity">
         </activity>
-        <activity android:name=".ui.ManageInstancesActivity" >
+        <activity android:name=".ui.ManageInstancesActivity">
         </activity>
 
-        <service android:name=".tasker.TaskerActionService" >
+        <service android:name=".tasker.TaskerActionService">
         </service>
 
-        <receiver
-            android:name=".tasker.TaskerActionReceiver"
-            android:exported="true"
-            android:process=":background"
-            tools:ignore="ExportedReceiver" >
+        <receiver android:exported="true" android:name=".tasker.TaskerActionReceiver" android:process=":background" tools:ignore="ExportedReceiver">
             <intent-filter>
-                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".tasker.EditTaskerActionActivity"
-            android:exported="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name" >
+        <activity android:exported="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name=".tasker.EditTaskerActionActivity">
             <intent-filter>
-                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING"/>
             </intent-filter>
         </activity>
     </application>
