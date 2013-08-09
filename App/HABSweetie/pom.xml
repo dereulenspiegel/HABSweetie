@@ -152,7 +152,7 @@
 			<version>r13</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sherlock.navigationdrawer.compat</groupId>
+			<groupId>de.akuz.android</groupId>
 			<artifactId>SherlockNavigationDrawer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>apklib</type>
