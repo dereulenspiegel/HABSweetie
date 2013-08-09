@@ -3,16 +3,22 @@ package de.akuz.android.openhab.core.atmosphere;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Event;
 import org.atmosphere.wasync.Function;
+import org.atmosphere.wasync.Options;
+import org.atmosphere.wasync.OptionsBuilder;
 import org.atmosphere.wasync.Request;
 import org.atmosphere.wasync.Request.METHOD;
 import org.atmosphere.wasync.Request.TRANSPORT;
+import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 import org.atmosphere.wasync.Socket.STATUS;
-import org.atmosphere.wasync.impl.AtmosphereClient;
+import org.atmosphere.wasync.impl.DefaultClient;
+import org.atmosphere.wasync.impl.DefaultOptions;
 import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
+import org.atmosphere.wasync.impl.DefaultOptionsBuilder;
 
 import android.util.Log;
 
@@ -31,8 +37,6 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	private Socket socket;
 
-	private boolean wssConnectionEnabled;
-
 	private UUID atmosphereId;
 
 	private boolean shouldBeClosed = false;
@@ -47,16 +51,19 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 			Log.d(TAG, "Opening Atmoshpere connection");
 			socket.open(request);
 		} catch (IOException e) {
-			wssConnectionEnabled = false;
 			notifyListenersOfException(e);
 		}
 	}
 
 	private Request setupWebSocket() {
-		AtmosphereClient client = ClientFactory.getDefault().newClient(
-				AtmosphereClient.class);
+		DefaultClient client = ClientFactory.getDefault().newClient(
+				DefaultClient.class);
+		OptionsBuilder<DefaultOptions, DefaultOptionsBuilder> optionsBuilder = client
+				.newOptionsBuilder();
 
-		AtmosphereRequestBuilder builder = client.newRequestBuilder();
+		optionsBuilder.reconnect(true);
+		optionsBuilder.requestTimeoutInSeconds(10);
+		RequestBuilder builder = client.newRequestBuilder();
 		if (settings.hasCredentials()) {
 			builder.header("Authorization",
 					settings.getAuthorizationHeaderValue());
@@ -64,7 +71,10 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 		if (settings.isUseWebSockets()) {
 			builder.transport(TRANSPORT.WEBSOCKET);
 		}
-		builder = builder.trackMessageLength(true);
+		if (builder instanceof AtmosphereRequestBuilder) {
+			((AtmosphereRequestBuilder) builder).trackMessageLength(true);
+		}
+
 		Request pageRequest = builder.method(METHOD.GET)
 		//
 				.uri(pageUrl)
@@ -89,7 +99,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 				.transport(TRANSPORT.LONG_POLLING) //
 				.build(); //
 
-		socket = client.create();
+		socket = client.create(optionsBuilder.build());
 		socket.on(new WidgetsFunction());
 		socket.on(new WidgetFunction());
 		socket.on(new PageFunction());
@@ -99,7 +109,6 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 			@Override
 			public void on(Object t) {
-				wssConnectionEnabled = true;
 				String type = "NULL";
 				if (t != null) {
 					type = t.toString();
@@ -120,10 +129,10 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 			@Override
 			public void on(Object t) {
 				Log.d(TAG, "WebSocket closed");
-				wssConnectionEnabled = false;
 				if (!shouldBeClosed) {
-					Log.d(TAG, "Conenction closed, reestablishing connection");
-					openWebSocketConnection();
+					Log.d(TAG,
+							"Connection closed, even if it should stayed open");
+					// openWebSocketConnection();
 				}
 			}
 		});
