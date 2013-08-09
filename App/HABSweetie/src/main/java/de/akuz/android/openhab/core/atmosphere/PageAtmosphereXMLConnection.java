@@ -10,6 +10,7 @@ import org.atmosphere.wasync.Request;
 import org.atmosphere.wasync.Request.METHOD;
 import org.atmosphere.wasync.Request.TRANSPORT;
 import org.atmosphere.wasync.Socket;
+import org.atmosphere.wasync.Socket.STATUS;
 import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
 
@@ -203,7 +204,8 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	@Override
 	public boolean isServerPushEnabled() {
-		return wssConnectionEnabled;
+		return socket.status() == STATUS.OPEN
+				|| socket.status() == STATUS.REOPENED;
 	}
 
 	@Override

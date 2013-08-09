@@ -159,11 +159,6 @@
 	</pluginRepositories>
 
 	<dependencies>
-	    <dependency>
-	        <groupId>de.tavendo</groupId>
-	        <artifactId>autobahn-android</artifactId>
-	        <version>${autobahn.version}</version>
-	    </dependency>
 		<dependency>
 			<groupId>de.akuz.android</groupId>
 			<artifactId>SwitchCompatLibrary</artifactId>

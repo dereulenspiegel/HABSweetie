@@ -10,15 +10,9 @@
 [submodule "dependencies/actionbarsherlock"]
 	path = dependencies/actionbarsherlock
 	url = git://github.com/JakeWharton/ActionBarSherlock.git
-[submodule "dependencies/SwitchCompat"]
-	path = dependencies/SwitchCompat
-	url = git://github.com/ankri/SwitchCompatLibrary.git
 [submodule "dependencies/SwitchCompatLibrary"]
 	path = dependencies/SwitchCompatLibrary
 	url = git@github.com:dereulenspiegel/SwitchCompatLibrary.git
 [submodule "dependencies/SherlockNavigationDrawer"]
 	path = dependencies/SherlockNavigationDrawer
 	url = git@github.com:dereulenspiegel/SherlockNavigationDrawer.git
-[submodule "dependencies/autobahn"]
-	path = dependencies/autobahn
-	url = git@github.com:tavendo/AutobahnAndroid.git

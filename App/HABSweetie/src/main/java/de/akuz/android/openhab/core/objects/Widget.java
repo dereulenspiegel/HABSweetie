@@ -113,7 +113,8 @@ public class Widget extends AbstractOpenHABObject {
 		// FIXME workaround for possible bug in openHAB. icon should be null if
 		// there is no icon defined. Currently icon as the lower case
 		// representation of the widget type if not specified
-		if (type.equalsIgnoreCase(icon) || "none".equals(icon)) {
+		if ((type != null && type.equalsIgnoreCase(icon))
+				|| "none".equals(icon)) {
 			return null;
 		}
 		if (getIcon() == null) {
