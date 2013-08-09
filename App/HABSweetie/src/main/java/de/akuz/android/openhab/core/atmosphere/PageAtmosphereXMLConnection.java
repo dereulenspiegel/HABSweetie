@@ -3,11 +3,9 @@ package de.akuz.android.openhab.core.atmosphere;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Event;
 import org.atmosphere.wasync.Function;
-import org.atmosphere.wasync.Options;
 import org.atmosphere.wasync.OptionsBuilder;
 import org.atmosphere.wasync.Request;
 import org.atmosphere.wasync.Request.METHOD;
@@ -15,9 +13,9 @@ import org.atmosphere.wasync.Request.TRANSPORT;
 import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 import org.atmosphere.wasync.Socket.STATUS;
+import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
 import org.atmosphere.wasync.impl.DefaultClient;
 import org.atmosphere.wasync.impl.DefaultOptions;
-import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
 import org.atmosphere.wasync.impl.DefaultOptionsBuilder;
 
 import android.util.Log;
@@ -62,14 +60,16 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 				.newOptionsBuilder();
 
 		optionsBuilder.reconnect(true);
-		optionsBuilder.requestTimeoutInSeconds(10);
+		// optionsBuilder.requestTimeoutInSeconds(10);
 		RequestBuilder builder = client.newRequestBuilder();
 		if (settings.hasCredentials()) {
 			builder.header("Authorization",
 					settings.getAuthorizationHeaderValue());
 		}
+		String atmosphereTransports = "long-polling|streaming";
 		if (settings.isUseWebSockets()) {
 			builder.transport(TRANSPORT.WEBSOCKET);
+			atmosphereTransports = "websocket|long-polling|streaming";
 		}
 		if (builder instanceof AtmosphereRequestBuilder) {
 			((AtmosphereRequestBuilder) builder).trackMessageLength(true);
@@ -84,6 +84,8 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 				.header("X-Atmosphere-tracking-id", atmosphereId.toString())
 				//
 				.header("Accept-Charset", "utf-8")
+				//
+				.header("X-Atmosphere-Transport", atmosphereTransports)
 				//
 				.decoder(
 						new BasicJackson2XmlDecoder<Page>(

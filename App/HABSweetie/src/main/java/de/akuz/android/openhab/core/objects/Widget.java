@@ -292,7 +292,9 @@ public class Widget extends AbstractOpenHABObject {
 
 	public long getId() {
 		if (id == null) {
-			char[] value = widgetId.toCharArray();
+			// FIXME Why is here sometimes a NPE
+			char[] value = widgetId != null ? widgetId.toCharArray()
+					: "nothing".toCharArray();
 			int count = value.length;
 			long hash = 0;
 			int multiplier = 1;

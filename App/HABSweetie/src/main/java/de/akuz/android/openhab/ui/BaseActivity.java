@@ -48,9 +48,6 @@ public class BaseActivity extends SherlockFragmentActivity {
 		if (sslInteractionReceiver == null) {
 			sslInteractionReceiver = InteractionReceiver.registerReceiver(this);
 		}
-		String username = getPreferenceStringValue(R.string.pref_username_key);
-		String password = getPreferenceStringValue(R.string.pref_password_key);
-		OpenHABAuthManager.updateCredentials(username, password);
 	}
 
 	@Override
