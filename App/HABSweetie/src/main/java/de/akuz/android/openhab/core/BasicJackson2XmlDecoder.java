@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.atmosphere.wasync.Decoder;
-import org.atmosphere.wasync.Transport.EVENT_TYPE;
-
-import android.util.Log;
+import org.atmosphere.wasync.Event;
 
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.XmlObjectParser;
@@ -33,8 +31,8 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 	}
 
 	@Override
-	public T decode(EVENT_TYPE e, String s) {
-		if (EVENT_TYPE.MESSAGE == e) {
+	public T decode(Event e, String s) {
+		if (e == Event.MESSAGE) {
 			// Log.d(TAG, resultClass.getSimpleName() + " Decoding message " +
 			// s);
 			long receivedAt = System.currentTimeMillis();

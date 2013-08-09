@@ -57,20 +57,23 @@ public class ManageInstancesFragment extends BaseFragment implements
 	public void onResume() {
 		super.onResume();
 		List<OpenHABInstance> instances = prefs.getAllConfiguredInstances();
-		listAdapter = new InstanceListAdapter(getActivity(), instances);
+		listAdapter = new InstanceListAdapter(getActivity(), instances, this);
 		inject(listAdapter);
 		instanceListView.setAdapter(listAdapter);
 	}
 
-	public class InstanceListAdapter extends
+	public static class InstanceListAdapter extends
 			ArrayAdapter<OpenHABInstance> implements OnCheckedChangeListener {
 
 		@Inject
 		HABSweetiePreferences prefs;
+		
+		private OnClickListener clickListener;
 
 		public InstanceListAdapter(Context context,
-				List<OpenHABInstance> objects) {
+				List<OpenHABInstance> objects, OnClickListener listener) {
 			super(context, -1, -1, objects);
+			this.clickListener = listener;
 		}
 
 		@Override
@@ -82,7 +85,7 @@ public class ManageInstancesFragment extends BaseFragment implements
 			} else {
 				layout = LayoutInflater.from(getContext()).inflate(
 						R.layout.instance_list_view_item, parent, false);
-				layout.setOnClickListener(ManageInstancesFragment.this);
+				layout.setOnClickListener(clickListener);
 			}
 			layout.setTag(instance);
 			String name = instance.getName();

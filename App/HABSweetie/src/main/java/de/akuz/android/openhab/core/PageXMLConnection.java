@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
+import org.atmosphere.wasync.Event;
 import org.atmosphere.wasync.Function;
 import org.atmosphere.wasync.Request;
 import org.atmosphere.wasync.Request.METHOD;
@@ -66,7 +67,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private OpenHABConnectionSettings settings;
 
-	@Inject
 	public PageXMLConnection() {
 		uiHandler = new Handler();
 		atmosphereId = UUID.randomUUID();
@@ -118,8 +118,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 	}
 
 	private Request setupWebSocket() {
-		Client<AtmosphereRequestBuilder> client = ClientFactory.getDefault()
-				.newClient(AtmosphereClient.class);
+		AtmosphereClient client = ClientFactory.getDefault().newClient(
+				AtmosphereClient.class);
 
 		RequestBuilder<AtmosphereRequestBuilder> builder = client
 				.newRequestBuilder();
@@ -158,8 +158,8 @@ public class PageXMLConnection implements PageConnectionInterface,
 		socket.on(new WidgetFunction());
 		socket.on(new PageFunction());
 		socket.on(new ExceptionFunction());
-		socket.on(Function.MESSAGE.error.name(), new ExceptionFunction());
-		socket.on(Function.MESSAGE.open.name(), new Function<Object>() {
+		socket.on(Event.ERROR.name(), new ExceptionFunction());
+		socket.on(Event.OPEN.name(), new Function<Object>() {
 
 			@Override
 			public void on(Object t) {
@@ -171,7 +171,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 				Log.i(TAG, "WSS connection has been openend: " + type);
 			}
 		});
-		socket.on(Function.MESSAGE.headers.name(), new Function<String>() {
+		socket.on(Event.HEADERS.name(), new Function<String>() {
 
 			@Override
 			public void on(String t) {
@@ -179,7 +179,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 			}
 
 		});
-		socket.on(Function.MESSAGE.close.name(), new Function<Object>() {
+		socket.on(Event.CLOSE.name(), new Function<Object>() {
 
 			@Override
 			public void on(Object t) {

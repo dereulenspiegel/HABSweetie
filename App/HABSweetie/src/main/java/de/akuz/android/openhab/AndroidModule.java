@@ -12,6 +12,8 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import de.akuz.android.openhab.core.OpenHABRestService;
+import de.akuz.android.openhab.core.PageConnectionInterface;
+import de.akuz.android.openhab.core.PageXMLConnection;
 import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
@@ -88,6 +90,11 @@ public class AndroidModule {
 	public ConnectivityManager provideConnectivityManager(Context ctx) {
 		return (ConnectivityManager) ctx
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
+	}
+	
+	@Provides
+	public PageConnectionInterface providePageConnection(){
+		return new PageXMLConnection();
 	}
 
 }

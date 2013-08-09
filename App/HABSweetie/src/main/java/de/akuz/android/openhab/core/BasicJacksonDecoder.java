@@ -3,7 +3,7 @@ package de.akuz.android.openhab.core;
 import java.io.IOException;
 
 import org.atmosphere.wasync.Decoder;
-import org.atmosphere.wasync.Transport.EVENT_TYPE;
+import org.atmosphere.wasync.Event;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -28,9 +28,9 @@ public class BasicJacksonDecoder<T extends AbstractOpenHABObject> implements
 	}
 
 	@Override
-	public T decode(EVENT_TYPE e, String s) {
+	public T decode(Event e, String s) {
 		Log.d(TAG, "Decoding received message: " + s);
-		if (EVENT_TYPE.MESSAGE == e) {
+		if (e == Event.MESSAGE) {
 			try {
 				T result = mapper.readValue(s, resultClass);
 				result.setBaseUrl(baseUrl);

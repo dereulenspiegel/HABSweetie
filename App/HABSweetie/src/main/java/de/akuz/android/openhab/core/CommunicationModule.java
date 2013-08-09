@@ -54,9 +54,4 @@ public class CommunicationModule {
 		return context;
 	}
 
-	@Provides
-	public PageConnectionInterface providePageConnection(PageXMLConnection con) {
-		return con;
-	}
-
 }
