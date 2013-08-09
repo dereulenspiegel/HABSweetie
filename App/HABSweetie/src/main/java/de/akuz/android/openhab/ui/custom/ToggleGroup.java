@@ -105,11 +105,11 @@ public class ToggleGroup extends LinearLayout {
 		}
 
 		if (mCheckedId != -1) {
-			setCheckedStateForView(mCheckedId, false);
+			setCheckedStateForView(mCheckedId, false, notifyListener);
 		}
 
 		if (id != -1) {
-			setCheckedStateForView(id, true);
+			setCheckedStateForView(id, true, notifyListener);
 		}
 
 		setCheckedId(id, notifyListener);
@@ -134,9 +134,25 @@ public class ToggleGroup extends LinearLayout {
 	}
 
 	private void setCheckedStateForView(int viewId, boolean checked) {
+		setCheckedStateForView(viewId, checked, true);
+	}
+
+	private void setCheckedStateForView(int viewId, boolean checked,
+			boolean notifyListener) {
 		View checkedView = findViewById(viewId);
 		if (checkedView != null && checkedView instanceof ToggleButton) {
-			((ToggleButton) checkedView).setChecked(checked);
+			final ToggleButton button = (ToggleButton) checkedView;
+			button.setOnCheckedChangeListener(null);
+			button.setChecked(checked);
+			button.post(new Runnable() {
+
+				@Override
+				public void run() {
+					button.setOnCheckedChangeListener(mChildOnCheckedChangeListener);
+
+				}
+
+			});
 		}
 	}
 

@@ -2,6 +2,7 @@ package de.akuz.android.openhab.core.atmosphere;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Event;
@@ -47,7 +48,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 	private void openWebSocket(Request request) {
 		try {
 			Log.d(TAG, "Opening Atmoshpere connection");
-			socket.open(request);
+			socket.open(request, 2, TimeUnit.SECONDS);
 		} catch (IOException e) {
 			notifyListenersOfException(e);
 		}
