@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.akuz.android</groupId>
 	<artifactId>openhab</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<packaging>apk</packaging>
 	<name>HAB Sweetie</name>
 
@@ -124,6 +124,7 @@
 		<dagger.version>1.0.0</dagger.version>
 		<okhttp.version>1.1.0</okhttp.version>
 		<wasync.version>1.0.0.RC5</wasync.version>
+		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
 	</properties>
 
 	<repositories>
@@ -158,6 +159,11 @@
 	</pluginRepositories>
 
 	<dependencies>
+	    <dependency>
+	        <groupId>de.tavendo</groupId>
+	        <artifactId>autobahn-android</artifactId>
+	        <version>${autobahn.version}</version>
+	    </dependency>
 		<dependency>
 			<groupId>de.akuz.android</groupId>
 			<artifactId>SwitchCompatLibrary</artifactId>

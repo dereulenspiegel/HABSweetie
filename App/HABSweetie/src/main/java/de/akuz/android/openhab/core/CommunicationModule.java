@@ -9,6 +9,8 @@ import com.octo.android.robospice.SpiceManager;
 
 import dagger.Module;
 import dagger.Provides;
+import de.akuz.android.openhab.core.atmosphere.PageAtmosphereXMLConnection;
+import de.akuz.android.openhab.core.autobahn.PageAutobahnXMLConnection;
 import de.akuz.android.openhab.settings.wizard.steps.ConnectionWizardConnectionSettingsStep;
 import de.akuz.android.openhab.tasker.EditItemActionFragment;
 import de.akuz.android.openhab.tasker.EditTaskerActionActivity;
@@ -26,7 +28,7 @@ import de.akuz.android.openhab.ui.PageActivity;
 import de.akuz.android.openhab.ui.PageFragment;
 
 @Module(injects = { BaseActivity.class, BaseFragment.class, PageFragment.class,
-		PageXMLConnection.class, PageActivity.class,
+		PageAtmosphereXMLConnection.class, PageActivity.class,
 		ManageInstancesActivity.class, ManageInstancesFragment.class,
 		ExpandableInstanceListAdapter.class, EditInstanceFragment.class,
 		ConnectionWizardConnectionSettingsStep.class,
@@ -57,7 +59,8 @@ public class CommunicationModule {
 	@Provides
 	public PageConnectionInterface providePageConnection(
 			SpiceManager spiceManager) {
-		return new PageXMLConnection(spiceManager);
+		// return new PageAtmosphereXMLConnection(spiceManager);
+		return new PageAutobahnXMLConnection(spiceManager);
 	}
 
 }

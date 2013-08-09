@@ -12,12 +12,16 @@ public interface PageConnectionInterface {
 
 	public void unregisterUpdateListener(PageUpdateListener listener);
 
+	public void open(OpenHABConnectionSettings settings, String sitemapId,
+			String pageId);
+
 	public void open(OpenHABConnectionSettings settings, String pageUrl);
 
 	public void close();
 
-	public void sendCommand(Item item, String command, ItemUpdateListener listener);
-	
+	public void sendCommand(Item item, String command,
+			ItemUpdateListener listener);
+
 	public boolean isServerPushEnabled();
 
 }
