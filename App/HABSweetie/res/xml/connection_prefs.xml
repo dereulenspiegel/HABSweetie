@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <EditTextPreference android:enabled="true" android:key="@string/pref_url_key" android:summary="@string/pref_url_summary" android:title="@string/pref_url_title" android:inputType="textUri"/>
-    <CheckBoxPreference android:title="@string/pref_authenticate_title" android:summary="@string/pref_authenticate_summary" android:key="@string/pref_authenticate_key"/>
-    <EditTextPreference android:summary="@string/pref_username_summary" android:key="@string/pref_username_key" android:title="@string/pref_username_title" android:dependency="@string/pref_authenticate_key" />
-    <EditTextPreference android:summary="@string/pref_password_summary" android:title="@string/pref_password_title" android:key="@string/pref_password_key" android:dependency="@string/pref_authenticate_key" android:inputType="textPassword"/>
     
     
-    <PreferenceCategory android:title="@string/pref_cat_advanced_title"><CheckBoxPreference android:summary="@string/pref_use_websockets_summary" android:key="@string/pref_use_websockets_key" android:title="@string/pref_use_websockets_title" /><EditTextPreference android:title="@string/pref_send_delay_title" android:summary="@string/pref_send_delay_summary" android:key="@string/pref_send_delay_key" android:inputType="number" android:defaultValue="1" /></PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_advanced_title"><EditTextPreference android:title="@string/pref_send_delay_title" android:summary="@string/pref_send_delay_summary" android:key="@string/pref_send_delay_key" android:inputType="number" android:defaultValue="1" /></PreferenceCategory>
     
 
 </PreferenceScreen>

@@ -4,15 +4,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,6 +18,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.util.HABSweetiePreferences;

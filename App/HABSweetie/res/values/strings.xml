@@ -2,18 +2,6 @@
 <resources>
     <string name="hello">Hello maven.test!</string>
     <string name="app_name">HABSweetie</string>
-    <string name="pref_url_key">open_hab_url</string>
-    <string name="pref_url_title">openHAB URL</string>
-    <string name="pref_url_summary">The URL to connect to openHAB (eg http://openhab:8080)</string>
-    <string name="pref_username_key">pref_username</string>
-    <string name="pref_username_title">Username</string>
-    <string name="pref_username_summary">The username to authenticate with</string>
-    <string name="pref_password_key">pref_password</string>
-    <string name="pref_password_title">Password</string>
-    <string name="pref_password_summary">Password to athenticate with</string>
-    <string name="pref_authenticate_key">pref_authenticate</string>
-    <string name="pref_authenticate_title">Authenticate?</string>
-    <string name="pref_authenticate_summary">Use Basic Authentication to connect to openHAB?</string>
     <string name="main_menu_settings">Settings</string>
     <string name="pref_default_sitemap_url_key">pref_default_sitemap</string>
     <string name="select_sitemap_dialog_title">Select sitemap</string>
@@ -35,9 +23,6 @@
 	<string name="error_connect">Can\'t connect to the openHAB host? Is openHAB running?</string>
 	<string name="error_timeout">The connection to openHAB timed out</string>
 	<string name="message_loading_page">Loading openHAB page</string>
-	<string name="pref_use_websockets_key">pref_use_websockets</string>
-	<string name="pref_use_websockets_title">Use WebSockets</string>
-	<string name="pref_use_websockets_summary">Try to use WebSockets to receive realtime updates of openHAB items?</string>
 	<string name="pref_send_delay_key">pref_send_delay_key</string>
 	<string name="pref_send_delay_title">Command send delay in seconds</string>
 	<string name="pref_send_delay_summary">Some widgets like Setpoint or Slider can cause many commands to be send in a very short time frame. Especially on my mobile networks this can become quite problem. This lets you configure a delay for sending commands. Only the last command after the delay has passed will be send.</string>

@@ -1,11 +1,10 @@
 package de.akuz.android.openhab.ui;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ProgressDialogFragment extends SherlockDialogFragment {
 

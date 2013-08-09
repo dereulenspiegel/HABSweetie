@@ -97,6 +97,8 @@ public class PageActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// TODO create option to control this
+		pager.setKeepScreenOn(false);
 		Log.d(TAG, "Resuming PageActivity");
 		instanceListAdapter.reloadInstances();
 		currentInstance = prefs.getDefaultInstance();
