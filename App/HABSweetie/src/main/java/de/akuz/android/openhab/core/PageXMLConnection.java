@@ -117,8 +117,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 		AtmosphereClient client = ClientFactory.getDefault().newClient(
 				AtmosphereClient.class);
 
-		RequestBuilder<AtmosphereRequestBuilder> builder = client
-				.newRequestBuilder();
+		AtmosphereRequestBuilder builder = client.newRequestBuilder();
 		if (settings.hasCredentials()) {
 			builder.header("Authorization",
 					settings.getAuthorizationHeaderValue());
@@ -126,6 +125,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 		if (settings.isUseWebSockets()) {
 			builder.transport(TRANSPORT.WEBSOCKET);
 		}
+		builder = builder.trackMessageLength(true);
 		Request pageRequest = builder
 				.method(METHOD.GET)
 				//
@@ -145,7 +145,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 				.decoder(
 						new BasicJackson2XmlDecoder<Widgets>(baseUrl,
 								Widgets.class)) //
-//				.transport(TRANSPORT.STREAMING) //
+				.transport(TRANSPORT.STREAMING) //
 				.transport(TRANSPORT.LONG_POLLING) //
 				.build(); //
 
