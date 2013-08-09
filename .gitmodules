@@ -16,3 +16,6 @@
 [submodule "dependencies/ABSDrawer"]
 	path = dependencies/ABSDrawer
 	url = https://github.com/nicolasjafelle/SherlockNavigationDrawer.git
+[submodule "dependencies/SwitchCompatLibrary"]
+	path = dependencies/SwitchCompatLibrary
+	url = git@github.com:dereulenspiegel/SwitchCompatLibrary.git
