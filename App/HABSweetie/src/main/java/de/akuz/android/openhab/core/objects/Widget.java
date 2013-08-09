@@ -110,10 +110,10 @@ public class Widget extends AbstractOpenHABObject {
 	}
 
 	public String getImageUrl() {
-		// FIXME workaround for possible in openHAB. icon should be null if
+		// FIXME workaround for possible bug in openHAB. icon should be null if
 		// there is no icon defined. Currently icon as the lower case
-		// represantation of the widget type if not specified
-		if (type.equalsIgnoreCase(icon)) {
+		// representation of the widget type if not specified
+		if (type.equalsIgnoreCase(icon) || "none".equals(icon)) {
 			return null;
 		}
 		if (getIcon() == null) {
@@ -226,6 +226,9 @@ public class Widget extends AbstractOpenHABObject {
 		}
 
 		if (!(o instanceof Widget)) {
+			return false;
+		}
+		if (((Widget) o).getWidgetId() == null) {
 			return false;
 		}
 		return ((Widget) o).getWidgetId().equals(widgetId);

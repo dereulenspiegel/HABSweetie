@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
 import org.atmosphere.wasync.Decoder;
 import org.atmosphere.wasync.Event;
 
+import android.util.Log;
+
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.XmlObjectParser;
 
@@ -32,6 +34,7 @@ public class BasicJackson2XmlDecoder<T extends AbstractOpenHABObject>
 
 	@Override
 	public T decode(Event e, String s) {
+		Log.d(TAG, "Decoding message: " + s);
 		if (e == Event.MESSAGE) {
 			// Log.d(TAG, resultClass.getSimpleName() + " Decoding message " +
 			// s);

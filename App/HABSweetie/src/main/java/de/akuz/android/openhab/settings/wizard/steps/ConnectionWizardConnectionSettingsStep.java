@@ -68,7 +68,7 @@ public class ConnectionWizardConnectionSettingsStep extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
-//		internal = args.getBoolean(INTERNAL_ARG);
+		// internal = args.getBoolean(INTERNAL_ARG);
 		OpenHABConnectionSettings receivedSettings = args
 				.getParcelable(SETTINGS_ARG);
 		if (receivedSettings != null) {
@@ -117,7 +117,12 @@ public class ConnectionWizardConnectionSettingsStep extends
 				authenticateCheckBox.setChecked(true);
 				editUsername.setText(username);
 				editPassword.setText(password);
+			} else {
+				authenticateCheckBox.setChecked(false);
+				editUsername.setText("");
+				editPassword.setText("");
 			}
+			useWebsocketsCheckBox.setChecked(settings.isUseWebSockets());
 		}
 	}
 
@@ -159,6 +164,9 @@ public class ConnectionWizardConnectionSettingsStep extends
 		if (authenticateCheckBox.isChecked()) {
 			settings.setUsername(editUsername.getText().toString());
 			settings.setPassword(editPassword.getText().toString());
+		} else {
+			settings.setUsername(null);
+			settings.setPassword(null);
 		}
 
 	}

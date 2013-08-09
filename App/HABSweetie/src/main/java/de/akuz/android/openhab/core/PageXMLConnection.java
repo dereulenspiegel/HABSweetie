@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Event;
 import org.atmosphere.wasync.Function;
@@ -17,7 +16,6 @@ import org.atmosphere.wasync.Request.TRANSPORT;
 import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 import org.atmosphere.wasync.impl.AtmosphereClient;
-import org.atmosphere.wasync.impl.AtmosphereRequest;
 import org.atmosphere.wasync.impl.AtmosphereRequest.AtmosphereRequestBuilder;
 
 import android.os.Handler;
@@ -49,9 +47,6 @@ public class PageXMLConnection implements PageConnectionInterface,
 	@Inject
 	SpiceManager spiceManager;
 
-	@Inject
-	HABSweetiePreferences prefs;
-
 	private String baseUrl;
 	private String pageUrl;
 
@@ -67,9 +62,10 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 	private OpenHABConnectionSettings settings;
 
-	public PageXMLConnection() {
+	public PageXMLConnection(SpiceManager spiceManager) {
 		uiHandler = new Handler();
 		atmosphereId = UUID.randomUUID();
+		this.spiceManager = spiceManager;
 	}
 
 	@Override
@@ -149,7 +145,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 				.decoder(
 						new BasicJackson2XmlDecoder<Widgets>(baseUrl,
 								Widgets.class)) //
-				.transport(TRANSPORT.STREAMING) //
+//				.transport(TRANSPORT.STREAMING) //
 				.transport(TRANSPORT.LONG_POLLING) //
 				.build(); //
 
@@ -166,7 +162,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 				wssConnectionEnabled = true;
 				String type = "NULL";
 				if (t != null) {
-					type = t.getClass().getName();
+					type = t.toString();
 				}
 				Log.i(TAG, "WSS connection has been openend: " + type);
 			}
@@ -175,7 +171,7 @@ public class PageXMLConnection implements PageConnectionInterface,
 
 			@Override
 			public void on(String t) {
-				Log.d(TAG, "Received headers");
+				Log.d(TAG, "Received headers: " + t);
 			}
 
 		});
@@ -189,6 +185,22 @@ public class PageXMLConnection implements PageConnectionInterface,
 					Log.d(TAG, "Conenction closed, reestablishing connection");
 					establishConnection();
 				}
+			}
+		});
+		socket.on(Event.TRANSPORT.name(), new Function<String>() {
+
+			@Override
+			public void on(String t) {
+				Log.d(TAG, "Using transport: " + t);
+
+			}
+		});
+		socket.on(Event.STATUS.name(), new Function<String>() {
+
+			@Override
+			public void on(String t) {
+				Log.d(TAG, "Status changed: " + t);
+
 			}
 		});
 		return pageRequest;

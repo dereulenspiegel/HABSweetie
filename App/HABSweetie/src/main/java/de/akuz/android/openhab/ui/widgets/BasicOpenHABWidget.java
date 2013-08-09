@@ -52,7 +52,6 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 
 	@Override
 	protected void widgetUpdated(Widget widget) {
-		widgetText.setText(widget.getLabel());
 		if (Strings.isEmpty(widget.getImageUrl())) {
 			widgetImage.setVisibility(View.GONE);
 		} else {
@@ -61,6 +60,7 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 		if (Strings.isEmpty(widget.getLabel())) {
 			widgetText.setVisibility(View.GONE);
 		} else {
+			widgetText.setText(widget.getLabel());
 			widgetText.setVisibility(View.VISIBLE);
 		}
 

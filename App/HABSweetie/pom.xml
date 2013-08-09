@@ -8,6 +8,13 @@
 	<packaging>apk</packaging>
 	<name>HAB Sweetie</name>
 
+	<scm>
+		<connection>scm:git:git@github.com:dereulenspiegel/HABSweetie.git</connection>
+		<developerConnection>scm:git:git@github.com:dereulenspiegel/HABSweetie.git</developerConnection>
+		<url>https://github.com/dereulenspiegel/HABSweetie</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<profiles>
 		<profile>
 			<id>standard</id>
@@ -65,7 +72,7 @@
 						<artifactId>android-maven-plugin</artifactId>
 						<version>${android.maven.version}</version>
 						<configuration>
-						    <release>true</release>
+							<release>true</release>
 							<sign>
 								<debug>false</debug>
 							</sign>
