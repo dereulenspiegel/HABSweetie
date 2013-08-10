@@ -178,6 +178,32 @@ public abstract class AbstractPageConnection implements
 		});
 	}
 
+	protected void notifyListenersConnected() {
+		uiHandler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				for (final PageUpdateListener l : listeners) {
+					l.connected();
+
+				}
+			}
+		});
+	}
+
+	protected void notifyListenersDisconnected() {
+		uiHandler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				for (final PageUpdateListener l : listeners) {
+					l.disconnected();
+
+				}
+			}
+		});
+	}
+
 	protected String getFullPageUrl() {
 		StringBuilder b = new StringBuilder();
 		b.append(settings.getBaseUrl());

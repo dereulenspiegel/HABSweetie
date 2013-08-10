@@ -112,6 +112,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 			@Override
 			public void on(Object t) {
+				notifyListenersConnected();
 				String type = "NULL";
 				if (t != null) {
 					type = t.toString();
@@ -131,6 +132,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 			@Override
 			public void on(Object t) {
+				notifyListenersDisconnected();
 				Log.d(TAG, "WebSocket closed");
 				if (!shouldBeClosed) {
 					Log.d(TAG,
@@ -216,8 +218,8 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	@Override
 	public boolean isServerPushEnabled() {
-		return socket.status() == STATUS.OPEN
-				|| socket.status() == STATUS.REOPENED;
+		return socket != null
+				&& (socket.status() == STATUS.OPEN || socket.status() == STATUS.REOPENED);
 	}
 
 	@Override

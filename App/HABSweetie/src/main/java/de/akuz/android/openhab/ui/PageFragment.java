@@ -278,4 +278,16 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	}
 
+	@Override
+	public void connected() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void disconnected() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

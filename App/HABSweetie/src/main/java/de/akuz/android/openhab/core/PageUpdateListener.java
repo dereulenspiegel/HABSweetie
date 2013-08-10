@@ -10,5 +10,9 @@ public interface PageUpdateListener {
 	public void pageUpdateReceived(Page page);
 	
 	public void exceptionOccured(Throwable t);
+	
+	public void connected();
+	
+	public void disconnected();
 
 }
