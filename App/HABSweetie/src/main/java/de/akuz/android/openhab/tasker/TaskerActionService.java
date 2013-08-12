@@ -44,8 +44,8 @@ public class TaskerActionService extends IntentService implements
 	@Inject
 	ConnectivityManager conManager;
 
-	public TaskerActionService(String name) {
-		super(name);
+	public TaskerActionService() {
+		super(TaskerActionService.class.getSimpleName());
 		setIntentRedelivery(true);
 	}
 
