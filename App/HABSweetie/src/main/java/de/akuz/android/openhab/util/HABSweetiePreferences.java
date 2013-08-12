@@ -43,6 +43,11 @@ public class HABSweetiePreferences {
 
 	}
 
+	public boolean keepScreenOn() {
+		return prefs.getBoolean(getString(R.string.pref_keep_screen_on_key),
+				false);
+	}
+
 	public void setDefaultOpenHABInstanceId(long id) {
 		Editor edit = prefs.edit();
 		edit.putLong(getString(R.string.pref_default_config_id), id);

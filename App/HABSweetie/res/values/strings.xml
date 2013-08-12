@@ -59,4 +59,10 @@
 	<string name="state_text">Text</string>
 	<string name="blurb_format">Send command {0} to item {1}</string>
 	<string name="progress_load_items">Loading available items</string>
+	<string name="pref_keep_screen_on_key">pref_keep_screen_on</string>
+	<string name="pref_keep_screen_on_summary">Keep the screen on permanently</string>
+	<string name="pref_keep_screen_on_titlt">Keep screen on</string>
+	<string name="pref_button_manage_instances_title">Manage instances</string>
+	<string name="pref_button_manage_instances_summary">Create, edit or delete the connection settings for openHAB instances</string>
+	<string name="main_menu_settings">Settings</string>
 </resources>

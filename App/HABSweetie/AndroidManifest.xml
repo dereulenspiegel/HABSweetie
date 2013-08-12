@@ -38,6 +38,7 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.SettingsActivity"></activity>
     </application>
 
 </manifest>

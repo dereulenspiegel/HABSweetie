@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    
-    <PreferenceCategory android:title="@string/pref_cat_advanced_title"><EditTextPreference android:title="@string/pref_send_delay_title" android:summary="@string/pref_send_delay_summary" android:key="@string/pref_send_delay_key" android:inputType="number" android:defaultValue="1" /></PreferenceCategory>
-    
+
+    <PreferenceCategory android:title="@string/pref_cat_advanced_title" >
+        <EditTextPreference
+            android:defaultValue="1"
+            android:inputType="number"
+            android:key="@string/pref_send_delay_key"
+            android:summary="@string/pref_send_delay_summary"
+            android:title="@string/pref_send_delay_title" />
+    </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:key="@string/pref_keep_screen_on_key"
+        android:summary="@string/pref_keep_screen_on_summary"
+        android:title="@string/pref_keep_screen_on_titlt" />
+
+    <Preference
+        android:key="manageInstances"
+        android:summary="@string/pref_button_manage_instances_summary"
+        android:title="@string/pref_button_manage_instances_title" />
 
 </PreferenceScreen>

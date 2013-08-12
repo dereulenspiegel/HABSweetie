@@ -102,9 +102,9 @@ public class BaseActivity extends SherlockFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean result = false;
 		switch (item.getItemId()) {
-		case R.id.menu_manage_instances:
-			Intent i = new Intent(this, ManageInstancesActivity.class);
-			startActivity(i);
+		case R.id.settings:
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			startActivity(settingsIntent);
 			result = true;
 			break;
 		default:
