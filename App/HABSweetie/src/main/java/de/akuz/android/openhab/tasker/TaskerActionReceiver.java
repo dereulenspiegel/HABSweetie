@@ -15,7 +15,7 @@ public class TaskerActionReceiver extends BroadcastReceiver {
 		if (com.twofortyfouram.locale.Intent.ACTION_FIRE_SETTING.equals(intent
 				.getAction())) {
 			Intent i = new Intent(context, TaskerActionService.class);
-			i.putExtras(i.getExtras());
+			i.putExtras(intent.getExtras());
 			context.startService(i);
 		} else {
 			Log.w(TAG, "Received unkown/invalid intent " + intent.getAction());
