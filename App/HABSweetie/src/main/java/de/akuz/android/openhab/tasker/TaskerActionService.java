@@ -52,6 +52,7 @@ public class TaskerActionService extends IntentService implements
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.d(TAG, "TaskerActionService created");
 		objectGraph = ((BootstrapApplication) getApplication())
 				.getObjectGraph().plus(
 						new CommunicationModule(getApplicationContext()));
@@ -63,8 +64,10 @@ public class TaskerActionService extends IntentService implements
 		final Bundle bundle = intent
 				.getBundleExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE);
 		long instanceId = bundle.getLong(EXTRA_INSTANCE_ID);
+		Log.d(TAG, "Loading openHAB instance with id " + instanceId);
 		String itemName = bundle.getString(EXTRA_ITEM_ID);
 		String itemCommand = bundle.getString(EXTRA_ITEM_COMMAND);
+		Log.d(TAG, "Sending command " + itemCommand + " to item " + itemName);
 		sendCommand(prefs.loadInstance(instanceId), itemName, itemCommand);
 
 	}
@@ -76,7 +79,17 @@ public class TaskerActionService extends IntentService implements
 					.getSettingForCurrentNetwork(conManager);
 			ItemCommandRequest request = new ItemCommandRequest(settings,
 					itemName, itemCommand);
-			spiceManager.execute(request, this);
+			// spiceManager.execute(request, this);
+			try {
+				SynchronousOpenHABRequestExecutor executor = new SynchronousOpenHABRequestExecutor();
+				executor.setObjectGraph(objectGraph);
+				executor.executeRequest(request);
+				Log.d(TAG, "Command send");
+			} catch (SpiceException e1) {
+				onRequestFailure(e1);
+			}
+		} else {
+			Log.w(TAG, "Instance was NULL");
 		}
 	}
 

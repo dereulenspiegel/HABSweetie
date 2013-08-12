@@ -14,9 +14,9 @@ import de.akuz.android.openhab.core.http.OkHttpTransport;
 
 public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
-	private final static boolean useOkHttp = false;
+	private final static boolean useOkHttp = true;
 
-	private ObjectGraph objectGraph;
+	protected ObjectGraph objectGraph;
 
 	@Override
 	public CacheManager createCacheManager(Application application) {
