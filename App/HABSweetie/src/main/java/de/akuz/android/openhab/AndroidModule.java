@@ -32,6 +32,8 @@ import de.akuz.android.openhab.ui.widgets.TextWidget;
 import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
+import de.akuz.android.openhab.util.ImageLoadHelper;
+import de.akuz.android.openhab.util.imageloader.UniversalImageLoaderImpl;
 
 @Module(library = true, injects = { BootstrapApplication.class,
 		WidgetListAdapter.class, OpenHABWidgetFactory.class, FrameWidget.class,
@@ -88,6 +90,13 @@ public class AndroidModule {
 	public ConnectivityManager provideConnectivityManager(Context ctx) {
 		return (ConnectivityManager) ctx
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
+	}
+
+	@Provides
+	@Singleton
+	public ImageLoadHelper provideImageLoadHelper(ImageLoader loader,
+			ObjectGraph graph) {
+		return new UniversalImageLoaderImpl(loader, graph);
 	}
 
 }

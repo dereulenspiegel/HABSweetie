@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.ImageLoadHelper;
 import de.akuz.android.openhab.util.Strings;
 
 public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
@@ -37,7 +38,7 @@ public abstract class BasicOpenHABWidget extends AbstractOpenHABWidget {
 	}
 
 	@Inject
-	ImageLoader imageLoader;
+	ImageLoadHelper imageLoader;
 
 	public BasicOpenHABWidget(Context context, Widget widget) {
 		super(context, widget);

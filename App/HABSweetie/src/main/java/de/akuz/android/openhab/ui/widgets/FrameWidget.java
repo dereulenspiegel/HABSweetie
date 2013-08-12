@@ -1,5 +1,7 @@
 package de.akuz.android.openhab.ui.widgets;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.ImageLoadHelper;
 
 public class FrameWidget extends AbstractOpenHABWidget {
 
@@ -18,6 +21,9 @@ public class FrameWidget extends AbstractOpenHABWidget {
 	private TextView widgetName;
 	private ImageView widgetImage;
 	private LinearLayout fragmentHeaderContainer;
+	
+	@Inject
+	ImageLoadHelper imageLoader;
 
 	public FrameWidget(Context context, Widget widget) {
 		super(context, widget);
@@ -40,7 +46,7 @@ public class FrameWidget extends AbstractOpenHABWidget {
 				&& widget.getImageUrl() == null) {
 			fragmentHeaderContainer.setVisibility(View.GONE);
 		} else {
-			ImageLoader.getInstance().displayImage(widget.getImageUrl(),
+			imageLoader.displayImage(widget.getImageUrl(),
 					widgetImage);
 			fragmentHeaderContainer.setVisibility(View.VISIBLE);
 			if (widget.getLabel() != null) {

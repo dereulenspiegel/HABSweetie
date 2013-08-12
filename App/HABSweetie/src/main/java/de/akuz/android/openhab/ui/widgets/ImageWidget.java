@@ -7,14 +7,11 @@ import javax.inject.Inject;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.ImageLoadHelper;
 
 public class ImageWidget extends BasicOpenHABWidget {
 
@@ -23,7 +20,7 @@ public class ImageWidget extends BasicOpenHABWidget {
 	private Timer refreshTimer;
 
 	@Inject
-	ImageLoader imageLoader;
+	ImageLoadHelper imageLoader;
 
 	public ImageWidget(Context context, Widget widget) {
 		super(context, widget);

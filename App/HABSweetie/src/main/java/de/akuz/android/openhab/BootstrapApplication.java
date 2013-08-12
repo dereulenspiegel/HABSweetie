@@ -1,24 +1,10 @@
 package de.akuz.android.openhab;
 
-import java.io.File;
-
 import javax.inject.Inject;
 
 import roboguice.util.temp.Ln;
 import android.app.Application;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.util.Log;
-
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
-import com.nostra13.universalimageloader.utils.StorageUtils;
-
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.ui.widgets.ChartWidget;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
@@ -32,7 +18,7 @@ import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
 import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
-import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
+import de.akuz.android.openhab.util.ImageLoadHelper;
 import de.duenndns.ssl.MemorizingTrustManager;
 import de.duenndns.ssl.TrustManagerException;
 
@@ -49,6 +35,9 @@ public class BootstrapApplication extends Application {
 
 	@Inject
 	OpenHABWidgetFactory widgetFactory;
+
+	@Inject
+	ImageLoadHelper imageLoadHelper;
 
 	@Override
 	public void onCreate() {
@@ -80,45 +69,12 @@ public class BootstrapApplication extends Application {
 		widgetFactory.registerWidgetType("Webview", WebviewWidget.class);
 		widgetFactory.registerWidgetType("Chart", ChartWidget.class);
 
-		initializeImageLoader();
+		imageLoadHelper.initialize(getApplicationContext());
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 	}
 
 	public ObjectGraph getObjectGraph() {
 		return objectGraph;
-	}
-
-	public void initializeImageLoader() {
-		File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
-
-		DisplayImageOptions displayOptions = new DisplayImageOptions.Builder() //
-				// .showStubImage(0)
-				// .showImageForEmptyUri(0)
-				// .showImageOnFail(0)
-				.resetViewBeforeLoading() //
-				.cacheInMemory() //
-				.cacheOnDisc() //
-				.bitmapConfig(Bitmap.Config.RGB_565).build(); //
-
-		AuthenticatedHttpImageDownloader downloader = new AuthenticatedHttpImageDownloader(
-				getApplicationContext());
-		objectGraph.inject(downloader);
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				getApplicationContext()) //
-				.discCache(new UnlimitedDiscCache(cacheDir)) //
-				.threadPoolSize(3) //
-				.threadPriority(Thread.NORM_PRIORITY - 1) //
-				.memoryCache(new LruMemoryCache(2 * 1024 * 1024)) //
-				.memoryCacheSize(2 * 1024 * 1024) //
-				.discCacheSize(50 * 1024 * 1024) //
-				.discCacheFileCount(100) //
-				.discCacheFileNameGenerator(new HashCodeFileNameGenerator())
-				//
-				.imageDownloader(downloader) //
-				.imageDecoder(new BaseImageDecoder()) //
-				.defaultDisplayImageOptions(displayOptions) //
-				.build(); //
-		ImageLoader.getInstance().init(config);
 	}
 
 	public MemorizingTrustManager getMemorizingTrustManager() {
