@@ -9,7 +9,6 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
-import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
 public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
@@ -27,7 +26,7 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 		this.setting = setting;
 	}
 
-	public ItemCommandRequest(String itemUrl, String command) {
+	private ItemCommandRequest(String itemUrl, String command) {
 		super(Void.class);
 		this.itemUrl = itemUrl;
 		this.command = command;
@@ -41,11 +40,6 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 		if (setting != null && setting.hasCredentials()) {
 			BasicAuthentication auth = new BasicAuthentication(
 					setting.getUsername(), setting.getPassword());
-			request.setInterceptor(auth);
-		} else if (OpenHABAuthManager.hasCredentials()) {
-			BasicAuthentication auth = new BasicAuthentication(
-					OpenHABAuthManager.getUsername(),
-					OpenHABAuthManager.getPassword());
 			request.setInterceptor(auth);
 		}
 		request.execute();

@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 
 import de.akuz.android.openhab.core.objects.Page;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
 public class PageRequest extends AbstractOpenHABRequest<Page> {
 
@@ -11,8 +12,8 @@ public class PageRequest extends AbstractOpenHABRequest<Page> {
 
 	private String pageUrl;
 
-	public PageRequest(String baseUrl, String pageUrl) {
-		super(Page.class, baseUrl);
+	public PageRequest(OpenHABConnectionSettings settings, String pageUrl) {
+		super(Page.class, settings);
 		this.pageUrl = pageUrl;
 	}
 

@@ -1,10 +1,11 @@
-package de.akuz.android.openhab.util;
+package de.akuz.android.openhab.util.imageloader;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,17 +15,19 @@ import android.net.Uri;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.okhttp.OkHttpClient;
 
-import de.akuz.android.openhab.core.OpenHABAuthManager;
+import de.akuz.android.openhab.settings.OpenHABInstance;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
+import de.akuz.android.openhab.util.Strings;
 
 public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 
 	private static final int MAX_REDIRECT_COUNT = 5;
 
-	private static String username;
-	private static String password;
-
 	@Inject
 	OkHttpClient okClient;
+
+	@Inject
+	HABSweetiePreferences prefs;
 
 	@Override
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra)
@@ -46,33 +49,36 @@ public class AuthenticatedHttpImageDownloader extends BaseImageDownloader {
 		HttpURLConnection conn = okClient.open(new URL(encodedUrl));
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
-		if (username != null && password != null) {
-			conn.setRequestProperty("Authorization",
-					OpenHABAuthManager.getAuthorizationHeaderValue());
+		String authorizationHeaderValue = getAuthorizationStringForUrl(encodedUrl);
+		if (!Strings.isEmpty(authorizationHeaderValue)) {
+			conn.setRequestProperty("Authorization", authorizationHeaderValue);
 		}
 		conn.connect();
 		return conn;
 	}
 
+	private String getAuthorizationStringForUrl(String url) {
+		Uri uri = Uri.parse(url);
+		StringBuffer buf = new StringBuffer();
+		buf.append(uri.getScheme());
+		buf.append("://");
+		buf.append(uri.getHost());
+		String baseUrl = buf.toString();
+		List<OpenHABInstance> instances = prefs.getAllConfiguredInstances();
+		for (OpenHABInstance instance : instances) {
+			if (instance.getExternal().getBaseUrl().startsWith(baseUrl)) {
+				return instance.getExternal().getAuthorizationHeaderValue();
+			}
+			if (instance.getInternal().getBaseUrl().startsWith(baseUrl)) {
+				return instance.getInternal().getAuthorizationHeaderValue();
+			}
+		}
+		return null;
+	}
+
 	public AuthenticatedHttpImageDownloader(Context context) {
 		super(context);
 
-	}
-
-	public static String getUsername() {
-		return username;
-	}
-
-	public static void setUsername(String username) {
-		AuthenticatedHttpImageDownloader.username = username;
-	}
-
-	public static String getPassword() {
-		return password;
-	}
-
-	public static void setPassword(String password) {
-		AuthenticatedHttpImageDownloader.password = password;
 	}
 
 }

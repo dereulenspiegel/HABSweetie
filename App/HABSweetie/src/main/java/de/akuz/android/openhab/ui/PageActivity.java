@@ -24,7 +24,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
 
 import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
@@ -128,10 +127,6 @@ public class PageActivity extends BaseActivity implements
 
 	public void setNewInstance(OpenHABInstance instance) {
 		currentInstance = instance;
-		if (currentInstance != null) {
-			OpenHABAuthManager.updateCredentuals(currentInstance
-					.getSettingForCurrentNetwork(conManager));
-		}
 		if (isAppConfigured() && !hasBaseUrlChanged() && stateFragment != null
 				&& stateFragment.getAvailablePageFragments() != null
 				&& stateFragment.getAvailablePageFragments().size() > 0) {
@@ -161,8 +156,6 @@ public class PageActivity extends BaseActivity implements
 		currentInstance = instance;
 		OpenHABConnectionSettings settings = instance
 				.getSettingForCurrentNetwork(conManager);
-		OpenHABAuthManager.updateCredentials(settings.getUsername(),
-				settings.getPassword());
 		loadSubPage(sitemap.homepage.link);
 	}
 
@@ -196,8 +189,6 @@ public class PageActivity extends BaseActivity implements
 		currentInstance = stateFragment.getSavedInstance();
 		OpenHABConnectionSettings settings = currentInstance
 				.getSettingForCurrentNetwork(conManager);
-		OpenHABAuthManager.updateCredentials(settings.getUsername(),
-				settings.getPassword());
 		pagerAdapter = new OpenHABPagePagerAdapter(this,
 				getSupportFragmentManager(),
 				stateFragment.getAvailablePageFragments());
@@ -233,7 +224,9 @@ public class PageActivity extends BaseActivity implements
 		final ProgressDialogFragment progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_sitemaps));
 		progressDialog.show(getSupportFragmentManager(), "sitemapsProgress");
-		spiceManager.execute(new SitemapsRequest(baseUrl), baseUrl,
+		spiceManager.execute(
+				new SitemapsRequest(currentInstance
+						.getSettingForCurrentNetwork(conManager)), baseUrl,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new RequestListener<SitemapsResult>() {
 

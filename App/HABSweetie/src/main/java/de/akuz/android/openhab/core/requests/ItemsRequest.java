@@ -12,7 +12,7 @@ public class ItemsRequest extends AbstractOpenHABRequest<ItemsResult> {
 		super.setting = setting;
 	}
 
-	public ItemsRequest(String baseUrl) {
+	private ItemsRequest(String baseUrl) {
 		super(ItemsResult.class, baseUrl);
 	}
 

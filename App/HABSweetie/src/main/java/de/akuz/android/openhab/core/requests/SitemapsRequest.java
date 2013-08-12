@@ -11,9 +11,9 @@ public class SitemapsRequest extends AbstractOpenHABRequest<SitemapsResult> {
 		super(SitemapsResult.class, setting);
 	}
 
-	public SitemapsRequest(String baseUrl) {
-		super(SitemapsResult.class, baseUrl);
-	}
+//	public SitemapsRequest(String baseUrl) {
+//		super(SitemapsResult.class, baseUrl);
+//	}
 
 	@Override
 	public void setParameters(String... params) {

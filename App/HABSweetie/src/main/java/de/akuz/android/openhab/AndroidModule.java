@@ -31,8 +31,8 @@ import de.akuz.android.openhab.ui.widgets.SwitchWidget;
 import de.akuz.android.openhab.ui.widgets.TextWidget;
 import de.akuz.android.openhab.ui.widgets.VideoWidget;
 import de.akuz.android.openhab.ui.widgets.WebviewWidget;
-import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 import de.akuz.android.openhab.util.ImageLoadHelper;
+import de.akuz.android.openhab.util.imageloader.AuthenticatedHttpImageDownloader;
 import de.akuz.android.openhab.util.imageloader.UniversalImageLoaderImpl;
 
 @Module(library = true, injects = { BootstrapApplication.class,

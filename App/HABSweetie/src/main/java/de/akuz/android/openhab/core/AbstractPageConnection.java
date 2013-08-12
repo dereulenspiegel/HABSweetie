@@ -45,8 +45,8 @@ public abstract class AbstractPageConnection implements
 
 	@Override
 	public void loadCompletePage() {
-		spiceManager.execute(new PageRequest(settings.getBaseUrl(), pageUrl),
-				pageUrl, DurationInMillis.ALWAYS_EXPIRED, this);
+		spiceManager.execute(new PageRequest(settings, pageUrl), pageUrl,
+				DurationInMillis.ALWAYS_EXPIRED, this);
 
 	}
 
@@ -88,28 +88,28 @@ public abstract class AbstractPageConnection implements
 	@Override
 	public void sendCommand(final Item item, final String command,
 			final ItemUpdateListener listener) {
-		spiceManager.execute(new ItemCommandRequest(item.link, command),
-				new RequestListener<Void>() {
+		spiceManager.execute(new ItemCommandRequest(settings, item.name,
+				command), new RequestListener<Void>() {
 
-					@Override
-					public void onRequestFailure(SpiceException spiceException) {
-						notifyListenersOfException(spiceException.getCause());
+			@Override
+			public void onRequestFailure(SpiceException spiceException) {
+				notifyListenersOfException(spiceException.getCause());
 
-					}
+			}
 
-					@Override
-					public void onRequestSuccess(Void result) {
-						if (!isServerPushEnabled() && listener != null) {
-							pollItem(item, listener);
-						}
+			@Override
+			public void onRequestSuccess(Void result) {
+				if (!isServerPushEnabled() && listener != null) {
+					pollItem(item, listener);
+				}
 
-					}
-				});
+			}
+		});
 
 	}
 
 	protected void pollItem(Item item, final ItemUpdateListener listener) {
-		spiceManager.execute(new ItemRequest(item, settings.getBaseUrl()),
+		spiceManager.execute(new ItemRequest(settings, item),
 				new RequestListener<Item>() {
 
 					@Override

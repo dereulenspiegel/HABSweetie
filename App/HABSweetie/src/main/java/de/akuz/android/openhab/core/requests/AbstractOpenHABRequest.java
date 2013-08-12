@@ -15,7 +15,6 @@ import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.XmlObjectParser;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
-import de.akuz.android.openhab.core.OpenHABAuthManager;
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
@@ -76,12 +75,6 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 					"Setting Authorization from supplied connection settings");
 			BasicAuthentication auth = new BasicAuthentication(
 					setting.getUsername(), setting.getPassword());
-			request.setInterceptor(auth);
-		} else if (OpenHABAuthManager.hasCredentials()) {
-			Log.d(TAG, "Setting Authorization from auth manager");
-			BasicAuthentication auth = new BasicAuthentication(
-					OpenHABAuthManager.getUsername(),
-					OpenHABAuthManager.getPassword());
 			request.setInterceptor(auth);
 		}
 		headers.set("Accept-Charset", "utf-8");

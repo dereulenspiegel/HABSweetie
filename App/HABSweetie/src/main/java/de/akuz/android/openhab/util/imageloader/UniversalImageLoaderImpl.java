@@ -19,7 +19,6 @@ import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import dagger.ObjectGraph;
-import de.akuz.android.openhab.util.AuthenticatedHttpImageDownloader;
 import de.akuz.android.openhab.util.ImageLoadHelper;
 
 public class UniversalImageLoaderImpl implements ImageLoadHelper {
