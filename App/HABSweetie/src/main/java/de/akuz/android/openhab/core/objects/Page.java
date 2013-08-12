@@ -117,15 +117,20 @@ public class Page extends AbstractOpenHABObject {
 	}
 
 	public void updateWidget(Widget widget) {
-		for (int i = 0; i < this.widget.size(); i++) {
-			Widget w = this.widget.get(i);
-			if (w.getWidgetId().equals(widget.getWidgetId())) {
-				this.widget.remove(i);
-				this.widget.add(i, widget);
-				return;
-			} else if (w.updateSubWidget(widget)) {
-				return;
+		if (this.widget != null) {
+			for (int i = 0; i < this.widget.size(); i++) {
+				Widget w = this.widget.get(i);
+				if (w.getWidgetId().equals(widget.getWidgetId())) {
+					this.widget.remove(i);
+					this.widget.add(i, widget);
+					return;
+				} else if (w.updateSubWidget(widget)) {
+					return;
+				}
 			}
+		} else {
+			this.widget = new ArrayList<Widget>();
+			this.widget.add(widget);
 		}
 	}
 

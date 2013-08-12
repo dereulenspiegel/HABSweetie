@@ -122,7 +122,12 @@ public class OpenHABInstance implements Parcelable {
 
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(
 			NetworkInfo currentNetwork) {
-		return getSettingForCurrentNetwork(currentNetwork.getType());
+		if (currentNetwork != null) {
+			return getSettingForCurrentNetwork(currentNetwork.getType());
+		}
+		// FIXME: Strange situation if we don't have a current network, for now
+		// we will default to internal
+		return getInternal();
 	}
 
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(
