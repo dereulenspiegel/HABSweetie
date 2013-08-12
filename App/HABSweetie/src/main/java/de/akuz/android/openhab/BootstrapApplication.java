@@ -1,6 +1,10 @@
 package de.akuz.android.openhab;
 
+import java.net.URL;
+
 import javax.inject.Inject;
+
+import com.squareup.okhttp.OkHttpClient;
 
 import roboguice.util.temp.Ln;
 import android.app.Application;
@@ -39,6 +43,9 @@ public class BootstrapApplication extends Application {
 	@Inject
 	ImageLoadHelper imageLoadHelper;
 
+	@Inject
+	OkHttpClient okHttpClient;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -46,6 +53,8 @@ public class BootstrapApplication extends Application {
 
 		objectGraph = ObjectGraph.create(new AndroidModule(this));
 		objectGraph.inject(this);
+
+		URL.setURLStreamHandlerFactory(okHttpClient);
 
 		// register MemorizingTrustManager for HTTPS
 		try {
