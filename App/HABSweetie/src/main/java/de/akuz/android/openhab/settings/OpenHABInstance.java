@@ -13,14 +13,12 @@ public class OpenHABInstance implements Parcelable {
 
 		@Override
 		public OpenHABInstance createFromParcel(Parcel source) {
-			// TODO Auto-generated method stub
-			return null;
+			return new OpenHABInstance(source);
 		}
 
 		@Override
 		public OpenHABInstance[] newArray(int size) {
-			// TODO Auto-generated method stub
-			return null;
+			return new OpenHABInstance[size];
 		}
 	};
 
@@ -30,6 +28,7 @@ public class OpenHABInstance implements Parcelable {
 	private OpenHABConnectionSettings internal;
 	private String name;
 	private String defaultSitemapId;
+	private boolean internalConnectFailed = false;
 
 	public OpenHABInstance(Parcel source) {
 		createFromParcel(source);
@@ -45,6 +44,7 @@ public class OpenHABInstance implements Parcelable {
 		internal = source.readParcelable(null);
 		external = source.readParcelable(null);
 		defaultSitemapId = source.readString();
+		internalConnectFailed = source.readInt() == 1;
 	}
 
 	public OpenHABConnectionSettings getExternal() {
@@ -92,6 +92,7 @@ public class OpenHABInstance implements Parcelable {
 		dest.writeParcelable(internal, flags);
 		dest.writeParcelable(external, flags);
 		dest.writeString(defaultSitemapId);
+		dest.writeInt(internalConnectFailed ? 1 : 0);
 	}
 
 	public String getDefaultSitemapId() {
@@ -110,6 +111,9 @@ public class OpenHABInstance implements Parcelable {
 	}
 
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(int networkType) {
+		if (internalConnectFailed) {
+			return getExternal();
+		}
 		if (networkType == ConnectivityManager.TYPE_MOBILE) {
 			OpenHABConnectionSettings setting = getExternal();
 			if (setting != null && Strings.isEmpty(setting.getBaseUrl())) {
@@ -117,7 +121,7 @@ public class OpenHABInstance implements Parcelable {
 			}
 			return getExternal();
 		}
-		return getInternal();
+		return getExternal();
 	}
 
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(
@@ -133,6 +137,18 @@ public class OpenHABInstance implements Parcelable {
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(
 			ConnectivityManager conManager) {
 		return getSettingForCurrentNetwork(conManager.getActiveNetworkInfo());
+	}
+
+	public void notifyInternalConnectFailed() {
+		internalConnectFailed = true;
+	}
+
+	public void clearInternConnectFailed() {
+		internalConnectFailed = false;
+	}
+
+	public boolean hasInternalCommandFailed() {
+		return internalConnectFailed;
 	}
 
 }

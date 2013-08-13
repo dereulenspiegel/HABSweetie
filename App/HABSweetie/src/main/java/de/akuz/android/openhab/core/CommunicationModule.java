@@ -4,6 +4,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 
 import com.octo.android.robospice.SpiceManager;
 
@@ -25,6 +26,7 @@ import de.akuz.android.openhab.ui.ManageInstancesActivity;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;
 import de.akuz.android.openhab.ui.PageActivity;
 import de.akuz.android.openhab.ui.PageFragment;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 @Module(injects = { BaseActivity.class, BaseFragment.class, PageFragment.class,
 		PageAtmosphereXMLConnection.class, PageActivity.class,
@@ -57,8 +59,9 @@ public class CommunicationModule {
 
 	@Provides
 	public PageConnectionInterface providePageConnection(
-			SpiceManager spiceManager) {
-		return new PageAtmosphereXMLConnection(spiceManager);
+			SpiceManager spiceManager, HABSweetiePreferences prefs,
+			ConnectivityManager conManager) {
+		return new PageAtmosphereXMLConnection(spiceManager, prefs, conManager);
 	}
 
 }

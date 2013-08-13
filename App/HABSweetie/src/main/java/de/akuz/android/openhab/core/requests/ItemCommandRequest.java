@@ -3,15 +3,16 @@ package de.akuz.android.openhab.core.requests;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
+import de.akuz.android.openhab.core.requests.ItemCommandRequest.VoidOpenHABObject;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 
-public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
+public class ItemCommandRequest extends
+		AbstractOpenHABRequest<VoidOpenHABObject> {
 
 	private String itemUrl;
 	private String command;
@@ -22,28 +23,10 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 
 	public ItemCommandRequest(OpenHABConnectionSettings setting,
 			String itemName, String command) {
-		this(buildItemUrl(setting, itemName), command);
+		super(VoidOpenHABObject.class, setting);
 		this.setting = setting;
-	}
-
-	private ItemCommandRequest(String itemUrl, String command) {
-		super(Void.class);
-		this.itemUrl = itemUrl;
+		itemUrl = buildItemUrl(setting, itemName);
 		this.command = command;
-	}
-
-	@Override
-	public Void loadDataFromNetwork() throws Exception {
-		HttpContent content = new StringHttpContent(command);
-		HttpRequest request = getHttpRequestFactory().buildPostRequest(
-				new GenericUrl(itemUrl), content);
-		if (setting != null && setting.hasCredentials()) {
-			BasicAuthentication auth = new BasicAuthentication(
-					setting.getUsername(), setting.getPassword());
-			request.setInterceptor(auth);
-		}
-		request.execute();
-		return null;
 	}
 
 	private static String buildItemUrl(OpenHABConnectionSettings setting,
@@ -84,6 +67,26 @@ public class ItemCommandRequest extends GoogleHttpClientSpiceRequest<Void> {
 			return true;
 		}
 
+	}
+
+	public static class VoidOpenHABObject extends AbstractOpenHABObject {
+
+	}
+
+	@Override
+	public void setParameters(String... params) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected VoidOpenHABObject executeRequest() throws Exception {
+		HttpContent content = new StringHttpContent(command);
+		HttpRequest request = getHttpRequestFactory().buildPostRequest(
+				new GenericUrl(itemUrl), content);
+		configureRequest(request);
+		request.execute();
+		return null;
 	}
 
 }

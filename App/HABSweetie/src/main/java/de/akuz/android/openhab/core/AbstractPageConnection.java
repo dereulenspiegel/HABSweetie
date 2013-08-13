@@ -3,6 +3,7 @@ package de.akuz.android.openhab.core;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.net.ConnectivityManager;
 import android.os.Handler;
 
 import com.octo.android.robospice.SpiceManager;
@@ -12,12 +13,16 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
+import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.core.requests.ItemCommandRequest;
+import de.akuz.android.openhab.core.requests.ItemCommandRequest.VoidOpenHABObject;
 import de.akuz.android.openhab.core.requests.ItemRequest;
 import de.akuz.android.openhab.core.requests.PageRequest;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
+import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public abstract class AbstractPageConnection implements
 		PageConnectionInterface, RequestListener<Page> {
@@ -38,8 +43,15 @@ public abstract class AbstractPageConnection implements
 
 	protected OpenHABConnectionSettings settings;
 
-	public AbstractPageConnection(SpiceManager spiceManager) {
+	protected HABSweetiePreferences prefs;
+
+	protected ConnectivityManager conManager;
+
+	public AbstractPageConnection(SpiceManager spiceManager,
+			HABSweetiePreferences prefs, ConnectivityManager conManager) {
 		this.spiceManager = spiceManager;
+		this.prefs = prefs;
+		this.conManager = conManager;
 		uiHandler = new Handler();
 	}
 
@@ -89,16 +101,20 @@ public abstract class AbstractPageConnection implements
 	public void sendCommand(final Item item, final String command,
 			final ItemUpdateListener listener) {
 		spiceManager.execute(new ItemCommandRequest(settings, item.name,
-				command), new RequestListener<Void>() {
+				command), new RequestListener<VoidOpenHABObject>() {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				notifyListenersOfException(spiceException.getCause());
+				if (!canWeRetry()) {
+					notifyListenersOfException(spiceException.getCause());
+				} else {
+					sendCommand(item, command, listener);
+				}
 
 			}
 
 			@Override
-			public void onRequestSuccess(Void result) {
+			public void onRequestSuccess(VoidOpenHABObject result) {
 				if (!isServerPushEnabled() && listener != null) {
 					pollItem(item, listener);
 				}
@@ -108,13 +124,18 @@ public abstract class AbstractPageConnection implements
 
 	}
 
-	protected void pollItem(Item item, final ItemUpdateListener listener) {
+	protected void pollItem(final Item item, final ItemUpdateListener listener) {
 		spiceManager.execute(new ItemRequest(settings, item),
 				new RequestListener<Item>() {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
-						notifyListenersOfException(spiceException.getCause());
+						if (!canWeRetry()) {
+							notifyListenersOfException(spiceException
+									.getCause());
+						} else {
+							pollItem(item, listener);
+						}
 
 					}
 
@@ -204,6 +225,19 @@ public abstract class AbstractPageConnection implements
 		});
 	}
 
+	protected void notifyListenerSitemapsResult(final List<Sitemap> sitemaps) {
+		uiHandler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				for (final PageUpdateListener l : listeners) {
+					l.sitemapsReceived(sitemaps);
+
+				}
+			}
+		});
+	}
+
 	protected String getFullPageUrl() {
 		StringBuilder b = new StringBuilder();
 		b.append(settings.getBaseUrl());
@@ -215,5 +249,17 @@ public abstract class AbstractPageConnection implements
 		b.append("/");
 		b.append(pageId);
 		return b.toString();
+	}
+
+	protected boolean canWeRetry() {
+		OpenHABInstance instance = prefs.getInstanceForSettings(settings);
+		instance.notifyInternalConnectFailed();
+		OpenHABConnectionSettings newSettings = instance
+				.getSettingForCurrentNetwork(conManager);
+		if (newSettings.getId() != settings.getId()) {
+			settings = newSettings;
+			return true;
+		}
+		return false;
 	}
 }

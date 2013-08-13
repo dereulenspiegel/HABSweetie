@@ -1,5 +1,7 @@
 package de.akuz.android.openhab.ui;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import roboguice.util.temp.Strings;
@@ -24,9 +26,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
 
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.PageConnectionInterface;
+import de.akuz.android.openhab.core.PageUpdateListener;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
+import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
@@ -53,6 +58,9 @@ public class PageActivity extends BaseActivity implements
 
 	@Inject
 	HABSweetiePreferences prefs;
+
+	@Inject
+	PageConnectionInterface pageConnection;
 
 	private ExpandableListView instanceList;
 	private ExpandableInstanceListAdapter instanceListAdapter;
@@ -223,18 +231,26 @@ public class PageActivity extends BaseActivity implements
 				.getSettingForCurrentNetwork(conManager).getBaseUrl();
 		final ProgressDialogFragment progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_sitemaps));
+		final OpenHABConnectionSettings currentSettings = currentInstance
+				.getSettingForCurrentNetwork(conManager);
 		progressDialog.show(getSupportFragmentManager(), "sitemapsProgress");
-		spiceManager.execute(
-				new SitemapsRequest(currentInstance
-						.getSettingForCurrentNetwork(conManager)), baseUrl,
+		spiceManager.execute(new SitemapsRequest(currentSettings), baseUrl,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new RequestListener<SitemapsResult>() {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
-						progressDialog.dismissAllowingStateLoss();
-						Exception cause = (Exception) spiceException.getCause();
-						handleException(cause);
+						currentInstance.notifyInternalConnectFailed();
+						OpenHABConnectionSettings newSettings = currentInstance
+								.getSettingForCurrentNetwork(conManager);
+						if (newSettings.getId() != currentSettings.getId()) {
+							loadAvailableSitemaps();
+						} else {
+							progressDialog.dismissAllowingStateLoss();
+							Exception cause = (Exception) spiceException
+									.getCause();
+							handleException(cause);
+						}
 					}
 
 					@Override
@@ -349,4 +365,5 @@ public class PageActivity extends BaseActivity implements
 		drawerLayout.closeDrawers();
 		return true;
 	}
+
 }

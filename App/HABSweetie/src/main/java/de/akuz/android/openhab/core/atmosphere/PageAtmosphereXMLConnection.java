@@ -19,6 +19,7 @@ import org.atmosphere.wasync.impl.DefaultClient;
 import org.atmosphere.wasync.impl.DefaultOptions;
 import org.atmosphere.wasync.impl.DefaultOptionsBuilder;
 
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.octo.android.robospice.SpiceManager;
@@ -28,6 +29,7 @@ import de.akuz.android.openhab.core.BasicJackson2XmlDecoder;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.core.objects.Widgets;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
@@ -40,8 +42,9 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	private boolean shouldBeClosed = false;
 
-	public PageAtmosphereXMLConnection(SpiceManager spiceManager) {
-		super(spiceManager);
+	public PageAtmosphereXMLConnection(SpiceManager spiceManager,
+			HABSweetiePreferences prefs, ConnectivityManager conManager) {
+		super(spiceManager, prefs, conManager);
 		atmosphereId = UUID.randomUUID();
 	}
 
@@ -50,7 +53,11 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 			Log.d(TAG, "Opening Atmoshpere connection");
 			socket.open(request, 2, TimeUnit.SECONDS);
 		} catch (IOException e) {
-			notifyListenersOfException(e);
+			if (canWeRetry()) {
+				openWebSocket(request);
+			} else {
+				notifyListenersOfException(e);
+			}
 		}
 	}
 
@@ -187,8 +194,12 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 		@Override
 		public void on(Throwable t) {
-			Log.e(TAG, "Got error from WSS", t);
-			notifyListenersOfException(t);
+			if (canWeRetry()) {
+				openWebSocketConnection();
+			} else {
+				Log.e(TAG, "Got error from WSS", t);
+				notifyListenersOfException(t);
+			}
 		}
 
 	}

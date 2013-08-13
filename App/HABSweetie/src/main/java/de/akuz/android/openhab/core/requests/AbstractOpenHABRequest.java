@@ -56,7 +56,9 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 	@Override
 	public final RESULT loadDataFromNetwork() throws Exception {
 		RESULT result = executeRequest();
-		result.setBaseUrl(baseUrl);
+		if (result != null) {
+			result.setBaseUrl(baseUrl);
+		}
 		return result;
 	}
 
@@ -64,6 +66,13 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		Log.d(TAG, "Building request for URL " + url);
 		HttpRequest request = getHttpRequestFactory().buildGetRequest(
 				new GenericUrl(url));
+		configureRequest(request);
+		ObjectParser parser = getObjectParser();
+		request.setParser(parser);
+		return request;
+	}
+
+	protected HttpRequest configureRequest(HttpRequest request) {
 		request.setCurlLoggingEnabled(false);
 		request.setLoggingEnabled(false);
 		request.setFollowRedirects(true);
@@ -79,8 +88,6 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 		}
 		headers.set("Accept-Charset", "utf-8");
 		request.setHeaders(headers);
-		ObjectParser parser = getObjectParser();
-		request.setParser(parser);
 		return request;
 	}
 
@@ -94,6 +101,10 @@ public abstract class AbstractOpenHABRequest<RESULT extends AbstractOpenHABObjec
 				resultClass);
 		result.setReceivedAt(System.currentTimeMillis());
 		return result;
+	}
+
+	public OpenHABConnectionSettings getConnectionSettings() {
+		return setting;
 	}
 
 	protected abstract RESULT executeRequest() throws Exception;

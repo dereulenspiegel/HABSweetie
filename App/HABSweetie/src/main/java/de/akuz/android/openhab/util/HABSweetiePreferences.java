@@ -88,9 +88,11 @@ public class HABSweetiePreferences {
 		}
 		OpenHABConnectionSettings internalSettings = cupboard()
 				.withDatabase(db).get(instance.getInternal());
+		internalSettings.setParentId(instance.getId());
 		instance.setInternal(internalSettings);
 		OpenHABConnectionSettings externalSettings = cupboard()
 				.withDatabase(db).get(instance.getExternal());
+		externalSettings.setParentId(instance.getId());
 		instance.setExternal(externalSettings);
 		cachedInstances.put(id, instance);
 		if (openDatabase) {
@@ -126,6 +128,11 @@ public class HABSweetiePreferences {
 		open();
 		cupboard().withDatabase(db).put(settings);
 		close();
+	}
+
+	public OpenHABInstance getInstanceForSettings(
+			OpenHABConnectionSettings settings) {
+		return loadInstance(settings.getParentId());
 	}
 
 	public OpenHABInstance getDefaultInstance() {

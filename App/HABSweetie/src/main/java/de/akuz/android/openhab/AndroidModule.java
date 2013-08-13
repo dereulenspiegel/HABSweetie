@@ -11,6 +11,7 @@ import com.squareup.okhttp.OkHttpClient;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import de.akuz.android.openhab.core.AbstractPageConnection;
 import de.akuz.android.openhab.core.OpenHABRestService;
 import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
@@ -44,7 +45,8 @@ import de.akuz.android.openhab.util.imageloader.UniversalImageLoaderImpl;
 		ChartWidget.class, ChooseSitemapDialogFragment.class,
 		OpenHABRestService.class, OkHttpTransport.class,
 		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class,
-		ManageInstancesFragment.InstanceListAdapter.class, })
+		ManageInstancesFragment.InstanceListAdapter.class,
+		AbstractPageConnection.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;

@@ -23,6 +23,7 @@ public class OpenHABConnectionSettings implements Parcelable {
 
 	private Long _id;
 
+	private long parentId;
 	private String baseUrl;
 	private String username;
 	private String password;
@@ -42,6 +43,7 @@ public class OpenHABConnectionSettings implements Parcelable {
 		password = source.readString();
 		username = source.readString();
 		useWebSockets = source.readInt() == 1;
+		parentId = source.readLong();
 	}
 
 	public String getBaseUrl() {
@@ -76,6 +78,14 @@ public class OpenHABConnectionSettings implements Parcelable {
 		this._id = id;
 	}
 
+	public long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -89,7 +99,7 @@ public class OpenHABConnectionSettings implements Parcelable {
 		dest.writeString(password);
 		dest.writeString(username);
 		dest.writeInt(useWebSockets ? 1 : 0);
-
+		dest.writeLong(parentId);
 	}
 
 	public boolean isUseWebSockets() {

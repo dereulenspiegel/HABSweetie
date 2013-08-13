@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,7 @@ import de.akuz.android.openhab.core.PageConnectionInterface;
 import de.akuz.android.openhab.core.PageUpdateListener;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
+import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget.ItemCommandInterface;
@@ -288,6 +290,12 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	public void disconnected() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void sitemapsReceived(List<Sitemap> sitemaps) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
