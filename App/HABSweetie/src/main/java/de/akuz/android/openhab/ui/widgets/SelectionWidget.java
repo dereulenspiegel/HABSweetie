@@ -14,6 +14,7 @@ import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Mapping;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.util.AdapterViewHelper;
 
 public class SelectionWidget extends BasicOpenHABWidget implements
 		OnItemSelectedListener {
@@ -77,15 +78,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		if (mappings != null && i < mappings.size()) {
 			Log.d(TAG, "Updating selection to " + mappings.get(i).getCommand()
 					+ " for mapping label " + mappings.get(i).getLabel());
-			selection.setOnItemSelectedListener(null);
-			selection.setSelection(i, false);
-			selection.post(new Runnable() {
-
-				@Override
-				public void run() {
-					selection.setOnItemSelectedListener(SelectionWidget.this);
-				}
-			});
+			AdapterViewHelper.updateSelection(selection, i);
 		}
 
 	}
