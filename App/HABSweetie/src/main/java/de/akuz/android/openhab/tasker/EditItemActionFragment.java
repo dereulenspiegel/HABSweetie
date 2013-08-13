@@ -4,8 +4,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.netty.util.internal.ReusableIterator;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -87,10 +85,12 @@ public class EditItemActionFragment extends BaseFragment implements
 			stateList.add("DOWN");
 			stateList.add("STOP");
 			stateList.add("MOVE");
+			stateList.add("TOGGLE");
 			stateList.add(getString(R.string.state_percent));
 		} else if ("SwitchItem".equals(item.type)) {
 			stateList.add("ON");
 			stateList.add("OFF");
+			stateList.add("TOGGLE");
 		} else if ("DimmerItem".equals(item.type)) {
 			stateList.add("ON");
 			stateList.add("OFF");
