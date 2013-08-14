@@ -127,6 +127,10 @@ public class EditItemActionFragment extends BaseFragment implements
 						.getId());
 		extras.putString(TaskerActionService.EXTRA_ITEM_ID, item.name);
 		extras.putString(TaskerActionService.EXTRA_ITEM_COMMAND, state);
+		extras.putString(
+				com.twofortyfouram.locale.Intent.VARIABLE_REPLACE_KEYS,
+				TaskerActionService.EXTRA_ITEM_COMMAND + ","
+						+ TaskerActionService.EXTRA_ITEM_ID);
 
 		String blurbFormat = getString(R.string.blurb_format);
 		String blurb = MessageFormat.format(blurbFormat, state, item.name);

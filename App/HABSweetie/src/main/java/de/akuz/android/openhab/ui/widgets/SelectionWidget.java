@@ -53,11 +53,19 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		List<Mapping> mappings = widget.getMappings();
 		if (mappings != null && mappings.size() > 0) {
 			Log.d(TAG, "Updating selection mappings");
+			selection.setOnItemSelectedListener(null);
 			selectionAdapter.clear();
 			// addAll requires API Level 11 or above
 			for (Mapping m : mappings) {
 				selectionAdapter.add(m);
 			}
+			selection.post(new Runnable() {
+
+				@Override
+				public void run() {
+					selection.setOnItemSelectedListener(SelectionWidget.this);
+				}
+			});
 		} else {
 			Log.w(TAG, "Received Widget update with 0 mappings");
 		}
