@@ -12,6 +12,25 @@ public class PageRequest extends AbstractOpenHABRequest<Page> {
 
 	private String pageUrl;
 
+	public PageRequest(OpenHABConnectionSettings settings, String sitemapId,
+			String pageId) {
+		this(settings, buildPageUrl(settings, sitemapId, pageId));
+	}
+
+	private static String buildPageUrl(OpenHABConnectionSettings settings,
+			String sitemapId, String pageId) {
+		StringBuilder b = new StringBuilder();
+		b.append(settings.getBaseUrl());
+		if (!settings.getBaseUrl().endsWith("/")) {
+			b.append('/');
+		}
+		b.append("rest/sitemaps/");
+		b.append(sitemapId);
+		b.append('/');
+		b.append(pageId);
+		return b.toString();
+	}
+
 	public PageRequest(OpenHABConnectionSettings settings, String pageUrl) {
 		super(Page.class, settings);
 		this.pageUrl = pageUrl;

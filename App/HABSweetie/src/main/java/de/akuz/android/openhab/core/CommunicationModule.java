@@ -11,6 +11,7 @@ import com.octo.android.robospice.SpiceManager;
 import dagger.Module;
 import dagger.Provides;
 import de.akuz.android.openhab.core.atmosphere.PageAtmosphereXMLConnection;
+import de.akuz.android.openhab.core.spice.OpenHABSpiceRestService;
 import de.akuz.android.openhab.settings.wizard.steps.ConnectionWizardConnectionSettingsStep;
 import de.akuz.android.openhab.tasker.EditItemActionFragment;
 import de.akuz.android.openhab.tasker.EditTaskerActionActivity;
@@ -62,6 +63,13 @@ public class CommunicationModule {
 			SpiceManager spiceManager, HABSweetiePreferences prefs,
 			ConnectivityManager conManager) {
 		return new PageAtmosphereXMLConnection(spiceManager, prefs, conManager);
+	}
+
+	@Provides
+	@Singleton
+	OpenHABAsyncRestInterface provideOpenHABAsyncRestService(
+			SpiceManager spiceManager, ConnectivityManager conManager) {
+		return new OpenHABSpiceRestService(spiceManager, conManager);
 	}
 
 }

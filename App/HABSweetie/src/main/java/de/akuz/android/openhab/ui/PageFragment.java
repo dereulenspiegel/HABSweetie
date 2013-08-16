@@ -23,15 +23,21 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import de.akuz.android.openhab.R;
+import de.akuz.android.openhab.core.OpenHABAsyncRestInterface;
+import de.akuz.android.openhab.core.OpenHABAsyncRestInterface.OpenHABAsyncRestListener;
 import de.akuz.android.openhab.core.PageConnectionInterface;
 import de.akuz.android.openhab.core.PageUpdateListener;
+import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
+import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget.ItemCommandInterface;
 import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
+import de.akuz.android.openhab.util.HABSweetiePreferences;
+import de.akuz.android.openhab.util.OpenHABUrlHelper;
 import de.akuz.android.openhab.util.Utils;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -60,7 +66,15 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Inject
 	ConnectivityManager conManager;
 
+	@Inject
+	OpenHABAsyncRestInterface restService;
+
+	@Inject
+	HABSweetiePreferences prefs;
+
 	private OpenHABConnectionSettings settings;
+
+	private OpenHABInstance instance;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +83,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		pageActivity = (PageActivity) getActivity();
 		settings = pageActivity.getCurrentInstance()
 				.getSettingForCurrentNetwork(conManager);
+		instance = prefs.getInstanceForSettings(settings);
 		Log.d(TAG, "PageFragment has been created");
 
 		listAdapter = new WidgetListAdapter(this);
@@ -90,7 +105,26 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 		progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_page));
 		progressDialog.show(getFragmentManager(), "progressDialog");
-		pageConnection.loadCompletePage();
+
+		restService.loadCompletePage(instance,
+				OpenHABUrlHelper.extractSitemapId(pageUrl),
+				OpenHABUrlHelper.extractPageId(pageUrl),
+				new OpenHABAsyncRestListener() {
+
+					@Override
+					public void requestFailed(Exception e) {
+						progressDialog.dismiss();
+						handleException(e);
+					}
+
+					@Override
+					public void success(AbstractOpenHABObject object) {
+//						progressDialog.dismiss();
+						pageUpdateReceived((Page) object);
+
+					}
+
+				});
 	}
 
 	@Override
@@ -155,7 +189,21 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	public void sendCommand(Item item, String command,
 			final ItemUpdateListener updateListener) {
 		Log.d(TAG, "Sending command " + command + " to item " + item.name);
-		pageConnection.sendCommand(item, command, updateListener);
+		restService.sendCommand(instance, item, command,
+				new OpenHABAsyncRestListener() {
+
+					@Override
+					public void success(AbstractOpenHABObject object) {
+						// Nothing to do
+
+					}
+
+					@Override
+					public void requestFailed(Exception e) {
+						handleException(e);
+
+					}
+				});
 	}
 
 	private void handleHttpResponseException(HttpResponseException exception) {
@@ -295,7 +343,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	@Override
 	public void sitemapsReceived(List<Sitemap> sitemaps) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

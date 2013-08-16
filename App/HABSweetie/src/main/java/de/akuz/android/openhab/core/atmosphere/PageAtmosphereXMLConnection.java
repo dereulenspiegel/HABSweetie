@@ -44,7 +44,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	public PageAtmosphereXMLConnection(SpiceManager spiceManager,
 			HABSweetiePreferences prefs, ConnectivityManager conManager) {
-		super(spiceManager, prefs, conManager);
+		super(prefs, conManager);
 		atmosphereId = UUID.randomUUID();
 	}
 

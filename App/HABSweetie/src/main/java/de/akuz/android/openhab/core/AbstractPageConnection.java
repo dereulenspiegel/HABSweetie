@@ -32,8 +32,6 @@ public abstract class AbstractPageConnection implements
 
 	private List<PageUpdateListener> listeners = new LinkedList<PageUpdateListener>();
 
-	protected SpiceManager spiceManager;
-
 	protected String pageId;
 	protected String sitemapId;
 
@@ -47,19 +45,11 @@ public abstract class AbstractPageConnection implements
 
 	protected ConnectivityManager conManager;
 
-	public AbstractPageConnection(SpiceManager spiceManager,
-			HABSweetiePreferences prefs, ConnectivityManager conManager) {
-		this.spiceManager = spiceManager;
+	public AbstractPageConnection(HABSweetiePreferences prefs,
+			ConnectivityManager conManager) {
 		this.prefs = prefs;
 		this.conManager = conManager;
 		uiHandler = new Handler();
-	}
-
-	@Override
-	public void loadCompletePage() {
-		spiceManager.execute(new PageRequest(settings, pageUrl), pageUrl,
-				DurationInMillis.ALWAYS_EXPIRED, this);
-
 	}
 
 	@Override
@@ -96,56 +86,6 @@ public abstract class AbstractPageConnection implements
 	}
 
 	protected abstract void openWebSocketConnection();
-
-	@Override
-	public void sendCommand(final Item item, final String command,
-			final ItemUpdateListener listener) {
-		spiceManager.execute(new ItemCommandRequest(settings, item.name,
-				command), new RequestListener<VoidOpenHABObject>() {
-
-			@Override
-			public void onRequestFailure(SpiceException spiceException) {
-				if (!canWeRetry()) {
-					notifyListenersOfException(spiceException.getCause());
-				} else {
-					sendCommand(item, command, listener);
-				}
-
-			}
-
-			@Override
-			public void onRequestSuccess(VoidOpenHABObject result) {
-				if (!isServerPushEnabled() && listener != null) {
-					pollItem(item, listener);
-				}
-
-			}
-		});
-
-	}
-
-	protected void pollItem(final Item item, final ItemUpdateListener listener) {
-		spiceManager.execute(new ItemRequest(settings, item),
-				new RequestListener<Item>() {
-
-					@Override
-					public void onRequestFailure(SpiceException spiceException) {
-						if (!canWeRetry()) {
-							notifyListenersOfException(spiceException
-									.getCause());
-						} else {
-							pollItem(item, listener);
-						}
-
-					}
-
-					@Override
-					public void onRequestSuccess(Item result) {
-						listener.itemUpdateReceived(result);
-
-					}
-				});
-	}
 
 	@Override
 	public void onRequestFailure(SpiceException spiceException) {

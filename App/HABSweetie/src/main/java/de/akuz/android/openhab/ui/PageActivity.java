@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.ui;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import roboguice.util.temp.Strings;
@@ -20,19 +18,15 @@ import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.api.client.http.HttpResponseException;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
 
 import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.PageConnectionInterface;
-import de.akuz.android.openhab.core.PageUpdateListener;
+import de.akuz.android.openhab.core.OpenHABAsyncRestInterface;
+import de.akuz.android.openhab.core.OpenHABAsyncRestInterface.OpenHABAsyncRestListener;
+import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.SitemapsResult;
-import de.akuz.android.openhab.core.objects.Widget;
-import de.akuz.android.openhab.core.requests.SitemapsRequest;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
@@ -60,7 +54,7 @@ public class PageActivity extends BaseActivity implements
 	HABSweetiePreferences prefs;
 
 	@Inject
-	PageConnectionInterface pageConnection;
+	OpenHABAsyncRestInterface restService;
 
 	private ExpandableListView instanceList;
 	private ExpandableInstanceListAdapter instanceListAdapter;
@@ -227,34 +221,15 @@ public class PageActivity extends BaseActivity implements
 
 	private void loadAvailableSitemaps() {
 		Log.d(TAG, "Loading all available sitemaps");
-		String baseUrl = currentInstance
-				.getSettingForCurrentNetwork(conManager).getBaseUrl();
 		final ProgressDialogFragment progressDialog = ProgressDialogFragment
 				.build(getString(R.string.message_loading_sitemaps));
-		final OpenHABConnectionSettings currentSettings = currentInstance
-				.getSettingForCurrentNetwork(conManager);
 		progressDialog.show(getSupportFragmentManager(), "sitemapsProgress");
-		spiceManager.execute(new SitemapsRequest(currentSettings), baseUrl,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new RequestListener<SitemapsResult>() {
+		restService.loadSitemaps(currentInstance,
+				new OpenHABAsyncRestListener() {
 
 					@Override
-					public void onRequestFailure(SpiceException spiceException) {
-						currentInstance.notifyInternalConnectFailed();
-						OpenHABConnectionSettings newSettings = currentInstance
-								.getSettingForCurrentNetwork(conManager);
-						if (newSettings.getId() != currentSettings.getId()) {
-							loadAvailableSitemaps();
-						} else {
-							progressDialog.dismissAllowingStateLoss();
-							Exception cause = (Exception) spiceException
-									.getCause();
-							handleException(cause);
-						}
-					}
-
-					@Override
-					public void onRequestSuccess(SitemapsResult result) {
+					public void success(AbstractOpenHABObject object) {
+						SitemapsResult result = (SitemapsResult) object;
 						loadingIndicatorFalse();
 						progressDialog.dismissAllowingStateLoss();
 						if (result.getSitemap() != null
@@ -277,6 +252,11 @@ public class PageActivity extends BaseActivity implements
 							makeCrouton(R.string.error_no_sitemaps_found,
 									Style.ALERT);
 						}
+					}
+
+					@Override
+					public void requestFailed(Exception e) {
+						handleException(e);
 
 					}
 				});
