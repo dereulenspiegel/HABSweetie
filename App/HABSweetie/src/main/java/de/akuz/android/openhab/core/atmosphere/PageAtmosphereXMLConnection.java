@@ -51,7 +51,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 	private void openWebSocket(Request request) {
 		try {
 			Log.d(TAG, "Opening Atmoshpere connection");
-			socket.open(request, 2, TimeUnit.SECONDS);
+			socket.open(request);
 		} catch (IOException e) {
 			if (canWeRetry()) {
 				openWebSocket(request);
