@@ -5,7 +5,6 @@ import java.util.Set;
 
 import android.net.ConnectivityManager;
 import android.os.Handler;
-
 import de.akuz.android.openhab.core.objects.AbstractOpenHABObject;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;

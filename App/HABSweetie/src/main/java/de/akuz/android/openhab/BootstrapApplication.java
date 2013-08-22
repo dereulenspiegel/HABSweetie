@@ -4,11 +4,12 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import roboguice.util.temp.Ln;
 import android.app.Application;
 import android.util.Log;
+
+import com.squareup.okhttp.OkHttpClient;
+
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.ui.widgets.ChartWidget;
 import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;

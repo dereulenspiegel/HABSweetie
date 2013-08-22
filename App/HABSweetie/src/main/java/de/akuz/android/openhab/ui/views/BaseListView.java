@@ -1,10 +1,10 @@
 package de.akuz.android.openhab.ui.views;
 
-import de.akuz.android.openhab.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import de.akuz.android.openhab.R;
 
 public abstract class BaseListView<O> extends LinearLayout {
 

@@ -1,5 +1,7 @@
 package de.akuz.android.openhab.core;
 
+import javax.inject.Inject;
+
 import android.app.Application;
 
 import com.google.api.client.http.HttpRequestFactory;
@@ -7,10 +9,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.octo.android.robospice.GoogleHttpClientSpiceService;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.googlehttpclient.json.Jackson2ObjectPersisterFactory;
+import com.squareup.okhttp.OkHttpClient;
 
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.BootstrapApplication;
-import de.akuz.android.openhab.core.http.OkHttpTransport;
+import de.akuz.google.api.OkHttpTransport;
 
 public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
@@ -18,9 +21,13 @@ public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
 	protected ObjectGraph objectGraph;
 
+	@Inject
+	OkHttpClient okClient;
+
 	@Override
 	public CacheManager createCacheManager(Application application) {
 		objectGraph = ((BootstrapApplication) application).getObjectGraph();
+		objectGraph.inject(this);
 		CacheManager cacheManager = new CacheManager();
 		Jackson2ObjectPersisterFactory factory = new Jackson2ObjectPersisterFactory(
 				application);
@@ -46,8 +53,8 @@ public class OpenHABRestService extends GoogleHttpClientSpiceService {
 
 	private HttpRequestFactory createOkHttpRequestFactory() {
 		OkHttpTransport.Builder okTransportBuilder = new OkHttpTransport.Builder();
+		okTransportBuilder.setOkHttpClient(okClient);
 		OkHttpTransport transport = okTransportBuilder.build();
-		objectGraph.inject(transport);
 		HttpRequestFactory factory = transport.createRequestFactory();
 		return factory;
 	}

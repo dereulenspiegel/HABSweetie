@@ -1,10 +1,11 @@
 package de.akuz.android.openhab.settings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.api.client.util.Base64;
 
 import de.akuz.android.openhab.util.Strings;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class OpenHABConnectionSettings implements Parcelable {
 

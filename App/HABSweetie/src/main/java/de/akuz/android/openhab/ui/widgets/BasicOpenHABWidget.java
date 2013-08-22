@@ -10,9 +10,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.util.ImageLoadHelper;

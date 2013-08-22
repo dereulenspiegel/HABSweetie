@@ -1,7 +1,7 @@
 package de.akuz.android.openhab.ui.views;
 
-import de.akuz.android.openhab.R;
 import android.content.Context;
+import de.akuz.android.openhab.R;
 
 public class LoadingSitemapsView extends BaseListView<Object> {
 

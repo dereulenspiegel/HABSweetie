@@ -7,8 +7,6 @@ import java.nio.charset.Charset;
 import org.atmosphere.wasync.Decoder;
 import org.atmosphere.wasync.Event;
 
-import android.util.Log;
-
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.XmlObjectParser;
 

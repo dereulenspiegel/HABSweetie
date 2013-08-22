@@ -6,22 +6,14 @@ import java.util.List;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Page;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.core.objects.Widget;
-import de.akuz.android.openhab.core.requests.ItemCommandRequest;
-import de.akuz.android.openhab.core.requests.ItemCommandRequest.VoidOpenHABObject;
-import de.akuz.android.openhab.core.requests.ItemRequest;
-import de.akuz.android.openhab.core.requests.PageRequest;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
-import de.akuz.android.openhab.ui.widgets.ItemUpdateListener;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
 public abstract class AbstractPageConnection implements

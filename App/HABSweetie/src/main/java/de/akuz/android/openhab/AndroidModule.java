@@ -13,7 +13,6 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 import de.akuz.android.openhab.core.AbstractPageConnection;
 import de.akuz.android.openhab.core.OpenHABRestService;
-import de.akuz.android.openhab.core.http.OkHttpTransport;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;
@@ -43,8 +42,8 @@ import de.akuz.android.openhab.util.imageloader.UniversalImageLoaderImpl;
 		ColorpickerWidget.class, BasicOpenHABWidget.class,
 		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
 		ChartWidget.class, ChooseSitemapDialogFragment.class,
-		OpenHABRestService.class, OkHttpTransport.class,
-		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class,
+		OpenHABRestService.class, AuthenticatedHttpImageDownloader.class,
+		ConnectionWizardActivity.class,
 		ManageInstancesFragment.InstanceListAdapter.class,
 		AbstractPageConnection.class })
 public class AndroidModule {

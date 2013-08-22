@@ -2,7 +2,6 @@ package de.akuz.android.openhab.core.atmosphere;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.atmosphere.wasync.ClientFactory;
 import org.atmosphere.wasync.Event;
