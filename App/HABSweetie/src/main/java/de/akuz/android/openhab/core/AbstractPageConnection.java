@@ -60,7 +60,7 @@ public abstract class AbstractPageConnection implements
 	}
 
 	@Override
-	public void open(OpenHABConnectionSettings settings, String sitemapId,
+	public final void open(OpenHABConnectionSettings settings, String sitemapId,
 			String pageId) {
 		this.settings = settings;
 		this.sitemapId = sitemapId;
@@ -70,7 +70,7 @@ public abstract class AbstractPageConnection implements
 	}
 
 	@Override
-	public void open(OpenHABConnectionSettings settings, String pageUrl) {
+	public final void open(OpenHABConnectionSettings settings, String pageUrl) {
 		String[] urlParts = pageUrl.split("/");
 		String pageId = urlParts[urlParts.length - 1];
 		String sitemapId = urlParts[urlParts.length - 2];
