@@ -111,21 +111,11 @@ public class OpenHABInstance implements Parcelable {
 	}
 
 	public OpenHABConnectionSettings getSettingForCurrentNetwork(int networkType) {
-		if (internalConnectFailed && isConfigurationValid(getExternal())) {
+		if ((networkType == ConnectivityManager.TYPE_MOBILE || internalConnectFailed)
+				&& isConfigurationValid(getExternal())) {
 			return getExternal();
 		}
-		if (networkType == ConnectivityManager.TYPE_MOBILE) {
-			OpenHABConnectionSettings setting = getExternal();
-			if (!isConfigurationValid(setting)) {
-				return getInternal();
-			}
-			return getExternal();
-		}
-		if (isConfigurationValid(getExternal())) {
-			return getExternal();
-		} else {
-			return getInternal();
-		}
+		return getInternal();
 	}
 
 	private boolean isConfigurationValid(OpenHABConnectionSettings settings) {
