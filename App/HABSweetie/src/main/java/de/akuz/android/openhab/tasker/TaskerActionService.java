@@ -79,12 +79,12 @@ public class TaskerActionService extends IntentService implements
 					.getSettingForCurrentNetwork(conManager);
 			ItemCommandRequest request = new ItemCommandRequest(settings,
 					itemName, itemCommand);
-			// spiceManager.execute(request, this);
 			try {
 				SynchronousOpenHABRequestExecutor executor = new SynchronousOpenHABRequestExecutor();
 				executor.setObjectGraph(objectGraph);
 				executor.executeRequest(request);
 				Log.d(TAG, "Command send");
+				// FIXME this could be more robust, probably use a retry.
 			} catch (SpiceException e1) {
 				onRequestFailure(e1);
 			}

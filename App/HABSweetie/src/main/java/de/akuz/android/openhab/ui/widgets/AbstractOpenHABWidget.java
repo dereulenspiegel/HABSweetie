@@ -30,8 +30,6 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 
 	private SendingDelayer sendingDelayer;
 
-	private long lastCommandSend = 0;
-
 	@Inject
 	OpenHABWidgetFactory widgetFactory;
 
@@ -43,19 +41,16 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 		layoutInflater = LayoutInflater.from(context);
 		this.widget = widget;
 		buildUi();
-		if (hasChildren()) {
-			rootView.setOnClickListener(this);
-		}
 	}
 
 	public final void updateWidget(Widget widget) {
-		if (widget.getReceivedAt() >= lastCommandSend) {
-			this.widget = widget;
-			widgetUpdated(widget);
-			updateItem(widget.getItem());
-		} else {
-			Log.w(TAG, "Ignoring update for widget " + widget.getWidgetId());
+		this.widget = widget;
+		if (hasChildren()) {
+			rootView.setOnClickListener(this);
 		}
+		widgetUpdated(widget);
+		updateItem(widget.getItem());
+
 	}
 
 	protected abstract void widgetUpdated(Widget widget);
@@ -105,7 +100,6 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 
 	protected void sendCommand(String command) {
 		if (commandInterface != null) {
-			lastCommandSend = System.currentTimeMillis();
 			commandInterface.sendCommand(widget.getItem(), command, this);
 		} else {
 			Log.w(TAG,
@@ -114,7 +108,6 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 	}
 
 	protected void sendCommandDelayed(String command) {
-		lastCommandSend = System.currentTimeMillis();
 		if (sendingDelayer != null && sendingDelayer.isAlive()) {
 			sendingDelayer.updateLastTriggerTimeAndCommand(
 					System.currentTimeMillis(), command);
@@ -143,6 +136,8 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 			Log.i(TAG,
 					"Command interface is not NULL and Widget has child page, loading child page");
 			commandInterface.loadPage(widget.getLinkedPage());
+		} else {
+			Log.w(TAG, "Received onClick interface but commandInterface is NULL");
 		}
 
 	}
