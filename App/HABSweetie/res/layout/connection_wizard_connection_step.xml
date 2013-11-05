@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="false" >
+    android:scrollbarAlwaysDrawVerticalTrack="false"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical" >
 
     <TextView
         android:id="@+id/textViewHeader"
@@ -39,7 +41,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:ems="10" >
+        android:ems="10"
+        android:inputType="textUri" >
 
         <requestFocus />
     </EditText>
@@ -76,7 +79,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:ems="10" />
+        android:ems="10"
+        android:inputType="textNoSuggestions" />
 
     <TextView
         android:id="@+id/textView2"
