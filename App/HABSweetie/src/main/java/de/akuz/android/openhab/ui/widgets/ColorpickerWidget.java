@@ -33,7 +33,11 @@ public class ColorpickerWidget extends BasicOpenHABWidget implements
 		String[] hsvStrings = colorState.split(",");
 		float[] hsv = new float[3];
 		for (int i = 0; i < hsvStrings.length; i++) {
-			hsv[i] = Float.parseFloat(hsvStrings[i]);
+			try {
+				hsv[i] = Float.parseFloat(hsvStrings[i]);
+			} catch (NumberFormatException e) {
+				hsv[i] = 0;
+			}
 		}
 		int color = Color.HSVToColor(new float[] { hsv[0], hsv[1] / 100,
 				hsv[2] / 100 });
