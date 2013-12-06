@@ -123,7 +123,7 @@
 		<commons.logging.version>1.1.1</commons.logging.version>
 		<dagger.version>1.0.0</dagger.version>
 		<okhttp.version>1.2.0</okhttp.version>
-		<wasync.version>1.0.0.RC5</wasync.version>
+		<wasync.version>1.1.1</wasync.version>
 		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
 	</properties>
 
