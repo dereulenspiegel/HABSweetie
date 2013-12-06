@@ -22,6 +22,7 @@ import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.settings.OpenHABSQLLiteHelper;
 
+@Singleton
 public class HABSweetiePreferences {
 
 	private final static String TAG = HABSweetiePreferences.class
@@ -36,7 +37,6 @@ public class HABSweetiePreferences {
 	private Map<Long, OpenHABInstance> cachedInstances = new WeakHashMap<Long, OpenHABInstance>();
 
 	@Inject
-	@Singleton
 	public HABSweetiePreferences(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

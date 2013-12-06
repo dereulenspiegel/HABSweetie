@@ -118,11 +118,11 @@
 		<maven.compiler.version>2.3.2</maven.compiler.version>
 		<android.maven.version>3.6.1</android.maven.version>
 		<platform.version>4.1.1.4</platform.version>
-		<robospice-google-http-client.version>1.4.2</robospice-google-http-client.version>
+		<robospice-google-http-client.version>1.4.5</robospice-google-http-client.version>
 		<google.http.client.version>1.15.0-rc</google.http.client.version>
 		<commons.logging.version>1.1.1</commons.logging.version>
-		<dagger.version>1.0.0</dagger.version>
-		<okhttp.version>1.2.0</okhttp.version>
+		<dagger.version>1.1.0</dagger.version>
+		<okhttp.version>1.2.1</okhttp.version>
 		<wasync.version>1.1.1</wasync.version>
 		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
 	</properties>
@@ -343,7 +343,7 @@
 					<sdk>
 						<platform>16</platform>
 					</sdk>
-					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+					<undeployBeforeDeploy>false</undeployBeforeDeploy>
 					<extractDuplicates>true</extractDuplicates>
 				</configuration>
 				<extensions>true</extensions>

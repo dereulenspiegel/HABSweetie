@@ -25,6 +25,8 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 
 	private ArrayAdapter<Mapping> selectionAdapter;
 
+	private int lastSelection = -1;
+
 	public SelectionWidget(Context context, Widget widget) {
 		super(context, widget);
 	}
@@ -53,19 +55,14 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		List<Mapping> mappings = widget.getMappings();
 		if (mappings != null && mappings.size() > 0) {
 			Log.d(TAG, "Updating selection mappings");
-			selection.setOnItemSelectedListener(null);
 			selectionAdapter.clear();
-			// addAll requires API Level 11 or above
+
+			final int selectedItemPosition = selection
+					.getSelectedItemPosition();
+			lastSelection = selectedItemPosition;
 			for (Mapping m : mappings) {
 				selectionAdapter.add(m);
 			}
-			selection.post(new Runnable() {
-
-				@Override
-				public void run() {
-					selection.setOnItemSelectedListener(SelectionWidget.this);
-				}
-			});
 		} else {
 			Log.w(TAG, "Received Widget update with 0 mappings");
 		}
@@ -86,7 +83,7 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 		if (mappings != null && i < mappings.size()) {
 			Log.d(TAG, "Updating selection to " + mappings.get(i).getCommand()
 					+ " for mapping label " + mappings.get(i).getLabel());
-			AdapterViewHelper.updateSelection(selection, i);
+			AdapterViewHelper.updateSelection(selection, i, this);
 		}
 
 	}
@@ -94,13 +91,18 @@ public class SelectionWidget extends BasicOpenHABWidget implements
 	@Override
 	public void onItemSelected(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		Mapping mapping = selectionAdapter.getItem(position);
-		if (mapping != null) {
-			Log.d(TAG, "Sending command " + mapping.getCommand()
-					+ " for mapping " + mapping.getLabel());
-			sendCommand(mapping.getCommand());
-		} else if (mapping == null) {
-			Log.w(TAG, "Can't find mapping for position " + position);
+		Log.d(TAG, "OnItemSelected called");
+		if (lastSelection != position) {
+			Mapping mapping = selectionAdapter.getItem(position);
+			if (mapping != null) {
+				Log.d(TAG, "Sending command " + mapping.getCommand()
+						+ " for mapping " + mapping.getLabel());
+				sendCommand(mapping.getCommand());
+			} else if (mapping == null) {
+				Log.w(TAG, "Can't find mapping for position " + position);
+			}
+		} else {
+			Log.d(TAG, "Ignoring selecting position " + position);
 		}
 	}
 
