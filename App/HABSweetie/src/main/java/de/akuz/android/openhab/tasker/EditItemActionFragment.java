@@ -29,7 +29,7 @@ public class EditItemActionFragment extends BaseFragment implements
 	private static class ItemStateSpinnerAdapter extends ArrayAdapter<String> {
 
 		public ItemStateSpinnerAdapter(Context context, List<String> objects) {
-			super(context, android.R.layout.simple_spinner_item, objects);
+			super(context, android.R.layout.simple_spinner_dropdown_item, objects);
 		}
 
 	}
