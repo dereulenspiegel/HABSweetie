@@ -119,7 +119,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 					@Override
 					public void success(AbstractOpenHABObject object) {
-//						progressDialog.dismiss();
+						// progressDialog.dismiss();
 						pageUpdateReceived((Page) object);
 
 					}
@@ -243,6 +243,7 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 	public void pageUpdateReceived(Page page) {
 		// Ugly workaround for cases where widget updates are parsed as page
 		// updates
+		Log.d(TAG, "Received some kind of update, deciding which it is...");
 		if (progressDialog != null) {
 			progressDialog.dismissAllowingStateLoss();
 			progressDialog = null;

@@ -96,14 +96,14 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 				//
 				.decoder(
 						new BasicJackson2XmlDecoder<Page>(
-								settings.getBaseUrl(), Page.class))
+								settings.getBaseUrl(), Page.class, "page"))
 				//
 				.decoder(
 						new BasicJackson2XmlDecoder<Widget>(settings
-								.getBaseUrl(), Widget.class)) //
-				.decoder(
-						new BasicJackson2XmlDecoder<Widgets>(settings
-								.getBaseUrl(), Widgets.class)) //
+								.getBaseUrl(), Widget.class, "widget")) //
+				// .decoder(
+				// new BasicJackson2XmlDecoder<Widgets>(settings
+				// .getBaseUrl(), Widgets.class)) //
 				.transport(TRANSPORT.STREAMING) //
 				.transport(TRANSPORT.LONG_POLLING) //
 				.build(); //
