@@ -104,8 +104,8 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 				// .decoder(
 				// new BasicJackson2XmlDecoder<Widgets>(settings
 				// .getBaseUrl(), Widgets.class)) //
-				.transport(TRANSPORT.STREAMING) //
 				.transport(TRANSPORT.LONG_POLLING) //
+				.transport(TRANSPORT.STREAMING) //
 				.build(); //
 
 		socket = client.create(optionsBuilder.build());
