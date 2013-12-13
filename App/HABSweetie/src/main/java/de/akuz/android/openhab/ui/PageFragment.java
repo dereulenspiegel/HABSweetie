@@ -98,6 +98,10 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 	}
 
+	public void reload() {
+		loadCompletePage();
+	}
+
 	private void loadCompletePage() {
 		if (progressDialog != null) {
 			progressDialog.dismissAllowingStateLoss();
