@@ -29,6 +29,8 @@ public class OpenHABConnectionSettings implements Parcelable {
 	private String username;
 	private String password;
 	private boolean useWebSockets;
+	private int sendDelay;
+	private boolean useCertificatePinning;
 
 	public OpenHABConnectionSettings() {
 
@@ -45,6 +47,8 @@ public class OpenHABConnectionSettings implements Parcelable {
 		username = source.readString();
 		useWebSockets = source.readInt() == 1;
 		parentId = source.readLong();
+		sendDelay = source.readInt();
+		useCertificatePinning = source.readInt() == 1;
 	}
 
 	public String getBaseUrl() {
@@ -101,6 +105,8 @@ public class OpenHABConnectionSettings implements Parcelable {
 		dest.writeString(username);
 		dest.writeInt(useWebSockets ? 1 : 0);
 		dest.writeLong(parentId);
+		dest.writeInt(sendDelay);
+		dest.writeInt(useCertificatePinning ? 1 : 0);
 	}
 
 	public boolean isUseWebSockets() {
@@ -119,6 +125,22 @@ public class OpenHABConnectionSettings implements Parcelable {
 		String encoded = Base64.encodeBase64String((username + ":" + password)
 				.getBytes());
 		return "Basic " + encoded;
+	}
+
+	public int getSendDelay() {
+		return sendDelay;
+	}
+
+	public void setSendDelay(int sendDelay) {
+		this.sendDelay = sendDelay;
+	}
+
+	public boolean isUseCertificatePinning() {
+		return useCertificatePinning;
+	}
+
+	public void setUseCertificatePinning(boolean useCertificatePinning) {
+		this.useCertificatePinning = useCertificatePinning;
 	}
 
 }
