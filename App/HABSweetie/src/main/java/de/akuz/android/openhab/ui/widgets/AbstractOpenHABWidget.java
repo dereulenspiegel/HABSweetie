@@ -108,6 +108,10 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 	}
 
 	protected void sendCommandDelayed(String command) {
+		if (prefs.getCommandSendingDelay() == 0) {
+			sendCommand(command);
+			return;
+		}
 		if (sendingDelayer != null && sendingDelayer.isAlive()) {
 			sendingDelayer.updateLastTriggerTimeAndCommand(
 					System.currentTimeMillis(), command);
@@ -137,7 +141,8 @@ public abstract class AbstractOpenHABWidget extends LinearLayout implements
 					"Command interface is not NULL and Widget has child page, loading child page");
 			commandInterface.loadPage(widget.getLinkedPage());
 		} else {
-			Log.w(TAG, "Received onClick interface but commandInterface is NULL");
+			Log.w(TAG,
+					"Received onClick interface but commandInterface is NULL");
 		}
 
 	}
