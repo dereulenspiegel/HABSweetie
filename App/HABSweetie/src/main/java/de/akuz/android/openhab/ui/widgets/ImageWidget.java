@@ -6,18 +6,25 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.util.ImageLoadHelper;
+import de.akuz.android.openhab.util.ImageLoadHelper.ImageLoadListener;
 
-public class ImageWidget extends BasicOpenHABWidget {
+public class ImageWidget extends BasicOpenHABWidget implements
+		ImageLoadListener {
 
 	private ImageView imageView;
 
 	private Timer refreshTimer;
+
+	private ProgressBar imageLoadingBar;
 
 	@Inject
 	ImageLoadHelper imageLoader;
@@ -30,17 +37,21 @@ public class ImageWidget extends BasicOpenHABWidget {
 	protected void buildUi() {
 		setView(R.layout.image_widget);
 		super.buildUi();
+
 		imageView = findView(R.id.imageView);
+		imageView.setVisibility(View.GONE);
+
+		imageLoadingBar = findView(R.id.imageLoadingBar);
+		imageLoadingBar.setIndeterminate(true);
 	}
 
 	@Override
 	public void widgetUpdated(Widget widget) {
 		super.widgetUpdated(widget);
 		Log.d(TAG, "Loading image from URL " + widget.getFullUrl());
-		imageLoader.displayImage(getImageUrl(), imageView);
-		if (widget.getRefresh() != null) {
-			startRefreshTimer();
-		}
+		imageLoadingBar.setVisibility(View.VISIBLE);
+		imageLoader.loadImageAsync(getImageUrl(), this);
+
 	}
 
 	protected String getImageUrl() {
@@ -80,5 +91,21 @@ public class ImageWidget extends BasicOpenHABWidget {
 	public void updateItem(Item item) {
 		// Ignore
 
+	}
+
+	@Override
+	public void imageLoaded(Bitmap bitmap) {
+		imageView.setImageBitmap(bitmap);
+		imageView.setVisibility(View.VISIBLE);
+		imageLoadingBar.setVisibility(View.GONE);
+		if (widget.getRefresh() != null) {
+			startRefreshTimer();
+		}
+	}
+
+	@Override
+	public void errorOccured(Throwable t) {
+		// TODO probably show an error image
+		imageLoadingBar.setVisibility(View.GONE);
 	}
 }
