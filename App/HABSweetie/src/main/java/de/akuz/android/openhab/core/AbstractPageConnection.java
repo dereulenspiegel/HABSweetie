@@ -60,8 +60,8 @@ public abstract class AbstractPageConnection implements
 	}
 
 	@Override
-	public final void open(OpenHABConnectionSettings settings, String sitemapId,
-			String pageId) {
+	public final void open(OpenHABConnectionSettings settings,
+			String sitemapId, String pageId) {
 		this.settings = settings;
 		this.sitemapId = sitemapId;
 		this.pageId = pageId;
@@ -188,6 +188,9 @@ public abstract class AbstractPageConnection implements
 		instance.notifyInternalConnectFailed();
 		OpenHABConnectionSettings newSettings = instance
 				.getSettingForCurrentNetwork(conManager);
+		if (newSettings == null) {
+			return false;
+		}
 		if (newSettings.getId() != settings.getId()) {
 			settings = newSettings;
 			return true;

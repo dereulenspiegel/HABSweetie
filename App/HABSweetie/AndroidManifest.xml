@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".core.OpenHABRestService">
+        <service android:name="de.akuz.android.openhab.core.spice.OpenHABRestService">
         </service>
 
         <activity android:name=".settings.wizard.ConnectionWizardActivity">

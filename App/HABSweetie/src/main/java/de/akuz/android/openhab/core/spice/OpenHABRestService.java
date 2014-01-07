@@ -1,4 +1,4 @@
-package de.akuz.android.openhab.core;
+package de.akuz.android.openhab.core.spice;
 
 import javax.inject.Inject;
 

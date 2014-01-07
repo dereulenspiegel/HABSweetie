@@ -1,6 +1,7 @@
 package de.akuz.android.openhab.core.spice;
 
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -14,9 +15,13 @@ import de.akuz.android.openhab.core.requests.ItemCommandRequest;
 import de.akuz.android.openhab.core.requests.ItemCommandRequest.VoidOpenHABObject;
 import de.akuz.android.openhab.core.requests.PageRequest;
 import de.akuz.android.openhab.core.requests.SitemapsRequest;
+import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 
 public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
+
+	private final static String TAG = OpenHABSpiceRestService.class
+			.getSimpleName();
 
 	private SpiceManager spiceManager;
 
@@ -29,13 +34,17 @@ public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
 	@Override
 	public void loadSitemaps(final OpenHABInstance instance,
 			final OpenHABAsyncRestListener listener) {
-		SitemapsRequest request = new SitemapsRequest(
-				instance.getSettingForCurrentNetwork(conManager));
+		final OpenHABConnectionSettings conSettings = instance
+				.getSettingForCurrentNetwork(conManager);
+		Log.d(TAG, "Connecting to openHAB via URL " + conSettings.getBaseUrl());
+		SitemapsRequest request = new SitemapsRequest(conSettings);
 		spiceManager.execute(request, new RequestListener<SitemapsResult>() {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				if (canWeRetry(instance)) {
+				if (canWeRetry(conSettings, instance)) {
+					Log.w(TAG,
+							"Loading sitemap failed, retrying with external URL.");
 					loadSitemaps(instance);
 				} else {
 					if (listener == null) {
@@ -63,14 +72,15 @@ public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
 	@Override
 	public void sendCommand(final OpenHABInstance instance, final Item item,
 			final String command, final OpenHABAsyncRestListener listener) {
-		ItemCommandRequest request = new ItemCommandRequest(
-				instance.getSettingForCurrentNetwork(conManager), item.name,
-				command);
+		final OpenHABConnectionSettings conSettings = instance
+				.getSettingForCurrentNetwork(conManager);
+		ItemCommandRequest request = new ItemCommandRequest(conSettings,
+				item.name, command);
 		spiceManager.execute(request, new RequestListener<VoidOpenHABObject>() {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				if (canWeRetry(instance)) {
+				if (canWeRetry(conSettings, instance)) {
 					sendCommand(instance, item, command, listener);
 				} else {
 					if (listener == null) {
@@ -116,16 +126,20 @@ public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
 	public void loadCompletePage(final OpenHABInstance instance,
 			final String sitemapId, final String pageId,
 			final OpenHABAsyncRestListener listener) {
-		PageRequest request = new PageRequest(
-				instance.getSettingForCurrentNetwork(conManager), sitemapId,
-				pageId);
+		final OpenHABConnectionSettings conSettings = instance
+				.getSettingForCurrentNetwork(conManager);
+		Log.d(TAG, "Loading page via URL " + conSettings.getBaseUrl());
+		PageRequest request = new PageRequest(conSettings, sitemapId, pageId);
 		spiceManager.execute(request, new RequestListener<Page>() {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				if (canWeRetry(instance)) {
+				if (canWeRetry(conSettings, instance)) {
+					Log.d(TAG,
+							"Loading page failed, retrying with external URL");
 					loadCompletePage(instance, sitemapId, pageId, listener);
 				} else {
+					Log.w(TAG, "Can't load page from openHAB", spiceException);
 					if (listener == null) {
 						notifyException(spiceException);
 					} else {
@@ -137,6 +151,7 @@ public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
 
 			@Override
 			public void onRequestSuccess(Page result) {
+				Log.d(TAG, "Loaded page from openHAB");
 				if (listener == null) {
 					notifySuccess(result);
 				} else {

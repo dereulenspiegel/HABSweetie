@@ -117,13 +117,14 @@ public class PageFragment extends BaseFragment implements ItemCommandInterface,
 
 					@Override
 					public void requestFailed(Exception e) {
-						progressDialog.dismiss();
+						if (progressDialog != null) {
+							progressDialog.dismiss();
+						}
 						handleException(e);
 					}
 
 					@Override
 					public void success(AbstractOpenHABObject object) {
-						// progressDialog.dismiss();
 						pageUpdateReceived((Page) object);
 
 					}

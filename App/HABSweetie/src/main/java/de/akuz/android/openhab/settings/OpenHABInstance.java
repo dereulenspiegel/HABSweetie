@@ -115,6 +115,7 @@ public class OpenHABInstance implements Parcelable {
 				&& isConfigurationValid(getExternal())) {
 			return getExternal();
 		}
+
 		return getInternal();
 	}
 

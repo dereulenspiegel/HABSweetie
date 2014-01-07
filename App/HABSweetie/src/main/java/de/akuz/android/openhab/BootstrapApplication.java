@@ -55,7 +55,6 @@ public class BootstrapApplication extends Application {
 		objectGraph = ObjectGraph.create(new AndroidModule(this));
 		objectGraph.inject(this);
 
-		URL.setURLStreamHandlerFactory(okHttpClient);
 
 		// register MemorizingTrustManager for HTTPS
 		try {
@@ -65,6 +64,7 @@ public class BootstrapApplication extends Application {
 					"Can't register custom TrustManager to handle SSL exceptions",
 					e);
 		}
+		URL.setURLStreamHandlerFactory(okHttpClient);
 
 		widgetFactory.registerWidgetType("Switch", SwitchWidget.class);
 		widgetFactory.registerWidgetType("Frame", FrameWidget.class);

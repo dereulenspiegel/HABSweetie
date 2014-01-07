@@ -17,23 +17,22 @@ public class OpenHABInstanceTest {
 		instance.setInternal(internal);
 		instance.setExternal(external);
 		internal.setBaseUrl("http://demo.openhab.org:8080");
+
 		OpenHABConnectionSettings chosenSettings = instance
 				.getSettingForCurrentNetwork(ConnectivityManager.TYPE_WIFI);
-		assertEquals("Expected internal connection settings", chosenSettings,
-				internal);
-
-		// External config is not valid, falling back to internal
-		chosenSettings = instance
-				.getSettingForCurrentNetwork(ConnectivityManager.TYPE_MOBILE);
 		assertEquals("Expected internal connection settings", internal,
 				chosenSettings);
+
+		// External config is not valid, returning null
+		chosenSettings = instance
+				.getSettingForCurrentNetwork(ConnectivityManager.TYPE_MOBILE);
+		assertEquals("Expected internal settings", internal, chosenSettings);
 		// Notifying connection failure, to simulate that we are not on our home
 		// wifi
 		instance.notifyInternalConnectFailed();
 		chosenSettings = instance
 				.getSettingForCurrentNetwork(ConnectivityManager.TYPE_WIFI);
-		assertEquals("Expected internal connection settings", internal,
-				chosenSettings);
+		assertEquals("Expected INTERNAL settings", internal, chosenSettings);
 
 		instance.clearInternConnectFailed();
 

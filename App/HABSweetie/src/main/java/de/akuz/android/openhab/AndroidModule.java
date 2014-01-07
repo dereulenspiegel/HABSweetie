@@ -12,7 +12,7 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import de.akuz.android.openhab.core.AbstractPageConnection;
-import de.akuz.android.openhab.core.OpenHABRestService;
+import de.akuz.android.openhab.core.spice.OpenHABRestService;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;

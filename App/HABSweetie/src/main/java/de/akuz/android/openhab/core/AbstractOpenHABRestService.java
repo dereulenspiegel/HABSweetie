@@ -65,14 +65,15 @@ public abstract class AbstractOpenHABRestService implements
 		});
 	}
 
-	protected boolean canWeRetry(OpenHABInstance instance) {
-		OpenHABConnectionSettings settings = instance
-				.getSettingForCurrentNetwork(conManager);
+	protected boolean canWeRetry(OpenHABConnectionSettings currentSettings, OpenHABInstance instance) {
 		instance.notifyInternalConnectFailed();
 		OpenHABConnectionSettings newSettings = instance
 				.getSettingForCurrentNetwork(conManager);
-		if (newSettings.getId() != settings.getId()) {
-			settings = newSettings;
+		if(newSettings == null){
+			return false;
+		}
+		if (newSettings.getId() != currentSettings.getId()) {
+			currentSettings = newSettings;
 			return true;
 		}
 		return false;

@@ -1,6 +1,5 @@
 package de.akuz.android.openhab.core.atmosphere;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.atmosphere.wasync.ClientFactory;
@@ -49,11 +48,13 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 
 	private void openWebSocket(Request request) {
 		try {
-			Log.d(TAG, "Opening Atmoshpere connection");
+			Log.d(TAG,
+					"Opening Atmosphere connection with uri " + request.uri());
 			socket.open(request);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			if (canWeRetry()) {
-				openWebSocket(request);
+				close();
+				openWebSocket(setupWebSocket());
 			} else {
 				notifyListenersOfException(e);
 			}
@@ -61,6 +62,7 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 	}
 
 	private Request setupWebSocket() {
+		Log.d(TAG, "Opening Atmosphere connection to " + pageUrl);
 		DefaultClient client = ClientFactory.getDefault().newClient(
 				DefaultClient.class);
 		OptionsBuilder<DefaultOptions, DefaultOptionsBuilder> optionsBuilder = client
@@ -194,6 +196,8 @@ public class PageAtmosphereXMLConnection extends AbstractPageConnection {
 		@Override
 		public void on(Throwable t) {
 			if (canWeRetry()) {
+				close();
+				pageUrl = getFullPageUrl();
 				openWebSocketConnection();
 			} else {
 				Log.e(TAG, "Got error from WSS", t);

@@ -4,7 +4,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
 import dagger.ObjectGraph;
-import de.akuz.android.openhab.core.OpenHABRestService;
+import de.akuz.android.openhab.core.spice.OpenHABRestService;
 
 public class SynchronousOpenHABRequestExecutor extends OpenHABRestService {
 
