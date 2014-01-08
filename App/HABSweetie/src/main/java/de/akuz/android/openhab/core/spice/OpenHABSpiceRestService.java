@@ -45,7 +45,7 @@ public class OpenHABSpiceRestService extends AbstractOpenHABRestService {
 				if (canWeRetry(conSettings, instance)) {
 					Log.w(TAG,
 							"Loading sitemap failed, retrying with external URL.");
-					loadSitemaps(instance);
+					loadSitemaps(instance, listener);
 				} else {
 					if (listener == null) {
 						notifyException(spiceException);
