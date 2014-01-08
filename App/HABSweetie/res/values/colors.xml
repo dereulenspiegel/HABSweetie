@@ -10,4 +10,5 @@
     <color name="transparent">#00000000</color>
     <color name="red">#FF0000</color>
     <color name="card_grey">#ccc</color>
+    <color name="dark_grey_transparent">#313131B0</color>
 </resources>
