@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import android.content.Context;
 import android.util.Log;
 import dagger.ObjectGraph;
@@ -20,25 +18,20 @@ public class OpenHABWidgetFactory {
 	private final static String PACKAGE_BASE = "de.akuz.android.openhab.ui.widgets";
 	private final static String WIDGET_CLASS_SUFFIX = "Widget";
 
-	private Map<String, Class<? extends AbstractOpenHABWidget>> widgetMap = new LinkedHashMap<String, Class<? extends AbstractOpenHABWidget>>();
+	private static Map<String, Class<? extends AbstractOpenHABWidget>> widgetMap = new LinkedHashMap<String, Class<? extends AbstractOpenHABWidget>>();
 
 	private final static Class<?>[] constructorParams = { Context.class,
 			Widget.class };
 
-	private Map<String, Integer> viewTypeMap = new HashMap<String, Integer>();
+	private static Map<String, Integer> viewTypeMap = new HashMap<String, Integer>();
 
-	private int viewTypeIndex;
+	private static int viewTypeIndex;
 
 	private ObjectGraph objectGraph;
 
-	@Inject
 	public OpenHABWidgetFactory(ObjectGraph objectGraph) {
 		this.objectGraph = objectGraph;
 	}
-
-	// public static OpenHABWidgetFactory getInstance() {
-	// return instance;
-	// }
 
 	public AbstractOpenHABWidget getFromWidget(Context ctx, Widget widget,
 			boolean returnDefault) {
@@ -106,7 +99,7 @@ public class OpenHABWidgetFactory {
 		return typeId;
 	}
 
-	public void registerWidgetType(String typeName,
+	public static void registerWidgetType(String typeName,
 			Class<? extends AbstractOpenHABWidget> widgetClass) {
 		viewTypeMap.put(typeName, viewTypeIndex);
 		viewTypeIndex++;

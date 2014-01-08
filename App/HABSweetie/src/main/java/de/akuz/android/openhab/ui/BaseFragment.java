@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import dagger.ObjectGraph;
 import de.akuz.android.openhab.R;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -70,6 +71,10 @@ public abstract class BaseFragment extends SherlockFragment {
 
 	public void inject(Object o) {
 		((BaseActivity) getActivity()).inject(o);
+	}
+	
+	protected ObjectGraph getObjectGraph(){
+		return ((BaseActivity) getActivity()).getObjectGraph();
 	}
 
 }

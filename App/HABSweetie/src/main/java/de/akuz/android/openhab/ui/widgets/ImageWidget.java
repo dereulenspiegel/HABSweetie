@@ -4,16 +4,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import dagger.ObjectGraph;
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Widget;
+import de.akuz.android.openhab.ui.ImageViewDialog;
 import de.akuz.android.openhab.util.ImageLoadHelper;
 import de.akuz.android.openhab.util.ImageLoadHelper.ImageLoadListener;
 
@@ -29,6 +33,13 @@ public class ImageWidget extends BasicOpenHABWidget implements
 	@Inject
 	ImageLoadHelper imageLoader;
 
+	@Inject
+	@Named("ui")
+	ObjectGraph objectGraph;
+
+	@Inject
+	FragmentManager fragmentManager;
+
 	public ImageWidget(Context context, Widget widget) {
 		super(context, widget);
 	}
@@ -40,6 +51,15 @@ public class ImageWidget extends BasicOpenHABWidget implements
 
 		imageView = findView(R.id.imageView);
 		imageView.setVisibility(View.GONE);
+		imageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				ImageViewDialog dialog = ImageViewDialog.create(getImageUrl());
+				objectGraph.inject(dialog);
+				dialog.show(fragmentManager, "imageDialog");
+			}
+		});
 
 		imageLoadingBar = findView(R.id.imageLoadingBar);
 		imageLoadingBar.setIndeterminate(true);

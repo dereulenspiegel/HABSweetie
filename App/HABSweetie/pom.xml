@@ -121,7 +121,7 @@
 		<robospice-google-http-client.version>1.4.5</robospice-google-http-client.version>
 		<google.http.client.version>1.15.0-rc</google.http.client.version>
 		<commons.logging.version>1.1.1</commons.logging.version>
-		<dagger.version>1.1.0</dagger.version>
+		<dagger.version>1.2.0</dagger.version>
 		<okhttp.version>1.2.1</okhttp.version>
 		<wasync.version>1.1.1</wasync.version>
 		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
@@ -321,10 +321,17 @@
 			<version>${dagger.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>2.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

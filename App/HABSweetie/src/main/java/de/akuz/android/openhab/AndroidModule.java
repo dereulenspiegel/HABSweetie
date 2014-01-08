@@ -1,5 +1,6 @@
 package de.akuz.android.openhab;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import android.content.Context;
@@ -11,41 +12,21 @@ import com.squareup.okhttp.OkHttpClient;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-import de.akuz.android.openhab.core.AbstractPageConnection;
+import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.spice.OpenHABRestService;
 import de.akuz.android.openhab.settings.wizard.ConnectionWizardActivity;
 import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment;
+import de.akuz.android.openhab.ui.ImageViewDialog;
 import de.akuz.android.openhab.ui.ManageInstancesFragment;
-import de.akuz.android.openhab.ui.WidgetListAdapter;
-import de.akuz.android.openhab.ui.widgets.AbstractOpenHABWidget;
-import de.akuz.android.openhab.ui.widgets.BasicOpenHABWidget;
-import de.akuz.android.openhab.ui.widgets.ChartWidget;
-import de.akuz.android.openhab.ui.widgets.ColorpickerWidget;
-import de.akuz.android.openhab.ui.widgets.FrameWidget;
-import de.akuz.android.openhab.ui.widgets.ImageWidget;
-import de.akuz.android.openhab.ui.widgets.OpenHABWidgetFactory;
-import de.akuz.android.openhab.ui.widgets.SelectionWidget;
-import de.akuz.android.openhab.ui.widgets.SetpointWidget;
-import de.akuz.android.openhab.ui.widgets.SliderWidget;
-import de.akuz.android.openhab.ui.widgets.SwitchWidget;
-import de.akuz.android.openhab.ui.widgets.TextWidget;
-import de.akuz.android.openhab.ui.widgets.VideoWidget;
-import de.akuz.android.openhab.ui.widgets.WebviewWidget;
 import de.akuz.android.openhab.util.ImageLoadHelper;
 import de.akuz.android.openhab.util.imageloader.AuthenticatedHttpImageDownloader;
 import de.akuz.android.openhab.util.imageloader.UniversalImageLoaderImpl;
 
-@Module(library = true, injects = { BootstrapApplication.class,
-		WidgetListAdapter.class, OpenHABWidgetFactory.class, FrameWidget.class,
-		TextWidget.class, AbstractOpenHABWidget.class, ImageWidget.class,
-		SliderWidget.class, SwitchWidget.class, SelectionWidget.class,
-		ColorpickerWidget.class, BasicOpenHABWidget.class,
-		SetpointWidget.class, WebviewWidget.class, VideoWidget.class,
-		ChartWidget.class, ChooseSitemapDialogFragment.class,
-		OpenHABRestService.class, AuthenticatedHttpImageDownloader.class,
-		ConnectionWizardActivity.class,
+@Module(injects = { BootstrapApplication.class,
+		ChooseSitemapDialogFragment.class, OpenHABRestService.class,
+		AuthenticatedHttpImageDownloader.class, ConnectionWizardActivity.class,
 		ManageInstancesFragment.InstanceListAdapter.class,
-		AbstractPageConnection.class })
+		ImageViewDialog.class }, complete = true, library = false, includes = { CommunicationModule.class })
 public class AndroidModule {
 
 	private final BootstrapApplication app;
@@ -68,12 +49,7 @@ public class AndroidModule {
 
 	@Provides
 	@Singleton
-	public OpenHABWidgetFactory provideWidgetFactory(ObjectGraph objectGraph) {
-		return new OpenHABWidgetFactory(objectGraph);
-	}
-
-	@Provides
-	@Singleton
+	@Named("app")
 	public ObjectGraph provideObjectGraph() {
 		return app.getObjectGraph();
 	}
@@ -96,7 +72,7 @@ public class AndroidModule {
 	@Provides
 	@Singleton
 	public ImageLoadHelper provideImageLoadHelper(ImageLoader loader,
-			ObjectGraph graph) {
+			@Named("app") ObjectGraph graph) {
 		return new UniversalImageLoaderImpl(loader, graph);
 	}
 

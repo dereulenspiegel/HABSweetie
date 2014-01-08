@@ -18,7 +18,6 @@ import com.octo.android.robospice.SpiceManager;
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -36,8 +35,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BootstrapApplication app = (BootstrapApplication) getApplication();
-		activityGraph = app.getObjectGraph()
-				.plus(new CommunicationModule(this));
+		activityGraph = app.getObjectGraph().plus(new UiModule(this));
 		activityGraph.inject(this);
 	}
 
@@ -132,6 +130,10 @@ public class BaseActivity extends SherlockFragmentActivity {
 	@SuppressWarnings("unchecked")
 	public <T> T getInstance(Class<?> clazz) {
 		return (T) activityGraph.get(clazz);
+	}
+
+	public ObjectGraph getObjectGraph() {
+		return activityGraph;
 	}
 
 }

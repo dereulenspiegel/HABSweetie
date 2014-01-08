@@ -39,9 +39,6 @@ public class BootstrapApplication extends Application {
 	private ObjectGraph objectGraph;
 
 	@Inject
-	OpenHABWidgetFactory widgetFactory;
-
-	@Inject
 	ImageLoadHelper imageLoadHelper;
 
 	@Inject
@@ -66,18 +63,18 @@ public class BootstrapApplication extends Application {
 		}
 		URL.setURLStreamHandlerFactory(okHttpClient);
 
-		widgetFactory.registerWidgetType("Switch", SwitchWidget.class);
-		widgetFactory.registerWidgetType("Frame", FrameWidget.class);
-		widgetFactory.registerWidgetType("Text", TextWidget.class);
-		widgetFactory.registerWidgetType("Slider", SliderWidget.class);
-		widgetFactory.registerWidgetType("Setpoint", SetpointWidget.class);
-		widgetFactory
+		OpenHABWidgetFactory.registerWidgetType("Switch", SwitchWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Frame", FrameWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Text", TextWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Slider", SliderWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Setpoint", SetpointWidget.class);
+		OpenHABWidgetFactory
 				.registerWidgetType("Colorpicker", ColorpickerWidget.class);
-		widgetFactory.registerWidgetType("Selection", SelectionWidget.class);
-		widgetFactory.registerWidgetType("Image", ImageWidget.class);
-		widgetFactory.registerWidgetType("Video", VideoWidget.class);
-		widgetFactory.registerWidgetType("Webview", WebviewWidget.class);
-		widgetFactory.registerWidgetType("Chart", ChartWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Selection", SelectionWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Image", ImageWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Video", VideoWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Webview", WebviewWidget.class);
+		OpenHABWidgetFactory.registerWidgetType("Chart", ChartWidget.class);
 
 		imageLoadHelper.initialize(getApplicationContext());
 		Ln.getConfig().setLoggingLevel(Log.ERROR);

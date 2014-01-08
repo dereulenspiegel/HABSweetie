@@ -231,7 +231,9 @@ public class PageActivity extends BaseActivity implements
 					public void success(AbstractOpenHABObject object) {
 						SitemapsResult result = (SitemapsResult) object;
 						loadingIndicatorFalse();
-						progressDialog.dismissAllowingStateLoss();
+						if (progressDialog != null) {
+							progressDialog.dismissAllowingStateLoss();
+						}
 						if (result.getSitemap() != null
 								&& result.getSitemap().size() == 1) {
 							currentInstance.setDefaultSitemapIdFromUrl(result
@@ -256,6 +258,9 @@ public class PageActivity extends BaseActivity implements
 
 					@Override
 					public void requestFailed(Exception e) {
+						if(progressDialog != null){
+							progressDialog.dismissAllowingStateLoss();
+						}
 						handleException(e);
 
 					}

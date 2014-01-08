@@ -18,7 +18,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.BootstrapApplication;
 import de.akuz.android.openhab.R;
-import de.akuz.android.openhab.core.CommunicationModule;
 import de.akuz.android.openhab.core.requests.ItemCommandRequest;
 import de.akuz.android.openhab.settings.OpenHABConnectionSettings;
 import de.akuz.android.openhab.settings.OpenHABInstance;
@@ -54,8 +53,7 @@ public class TaskerActionService extends IntentService implements
 		super.onCreate();
 		Log.d(TAG, "TaskerActionService created");
 		objectGraph = ((BootstrapApplication) getApplication())
-				.getObjectGraph().plus(
-						new CommunicationModule(getApplicationContext()));
+				.getObjectGraph();
 		objectGraph.inject(this);
 	}
 
