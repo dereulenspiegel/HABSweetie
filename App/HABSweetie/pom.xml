@@ -125,6 +125,7 @@
 		<okhttp.version>1.2.1</okhttp.version>
 		<wasync.version>1.1.1</wasync.version>
 		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
+		<robolectric.version>2.2</robolectric.version>
 	</properties>
 
 	<repositories>
@@ -331,7 +332,7 @@
 		<dependency>
 			<groupId>org.robolectric</groupId>
 			<artifactId>robolectric</artifactId>
-			<version>2.2</version>
+			<version>${robolectric.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
