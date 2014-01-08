@@ -2,13 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_grey_transparent" >
+    android:background="@android:color/transparent" >
     
     <de.akuz.android.openhab.ui.custom.TouchImageView
-            android:id="@+id/touchImageView"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:id="@+id/touchImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_launcher" />
 
     <ProgressBar
         android:id="@+id/progressBar"

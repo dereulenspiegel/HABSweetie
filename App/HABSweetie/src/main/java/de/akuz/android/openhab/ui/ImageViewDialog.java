@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +62,12 @@ public class ImageViewDialog extends SherlockDialogFragment implements
 
 		imageLoader.loadImageAsync(imageUrl, this);
 		builder.setView(layout);
-		return builder.create();
+		
+		AlertDialog dialog = builder.create();
+		Drawable d = new ColorDrawable(getResources().getColor(R.color.dark_grey));
+		d.setAlpha(130);
+		dialog.getWindow().setBackgroundDrawable(d);
+		return dialog;
 	}
 
 	@Override
