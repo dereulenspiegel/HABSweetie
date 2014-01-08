@@ -40,6 +40,7 @@ public class ImageViewDialog extends SherlockDialogFragment implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setRetainInstance(true);
 		super.onCreate(savedInstanceState);
 		Bundle arguments = getArguments();
 		imageUrl = arguments.getString(IMAGE_URL_ARGUMENT);
