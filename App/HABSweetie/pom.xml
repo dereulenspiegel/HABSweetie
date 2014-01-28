@@ -116,7 +116,7 @@
 
 	<properties>
 		<maven.compiler.version>2.3.2</maven.compiler.version>
-		<android.maven.version>3.6.1</android.maven.version>
+		<android.maven.version>3.8.2</android.maven.version>
 		<platform.version>4.1.1.4</platform.version>
 		<robospice-google-http-client.version>1.4.5</robospice-google-http-client.version>
 		<google.http.client.version>1.15.0-rc</google.http.client.version>
