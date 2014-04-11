@@ -146,6 +146,10 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+        <repository>
+            <id>android-sdk</id>
+            <url>file:///${env.ANDROID_HOME}/extras/android/m2repository</url>
+        </repository>
 	</repositories>
 
 	<pluginRepositories>

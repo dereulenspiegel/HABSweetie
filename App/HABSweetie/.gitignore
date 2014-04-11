@@ -1,3 +1,6 @@
 /gen
 /bin
 /target
+.idea
+gen-external-apklibs/
+openhab.iml
