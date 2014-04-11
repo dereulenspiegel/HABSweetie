@@ -194,9 +194,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.codepond.android.wizardroid</groupId>
-			<artifactId>wizardroid-core</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<groupId>org.codepond</groupId>
+			<artifactId>wizardroid</artifactId>
+			<version>1.2.0</version>
+			<type>aar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
