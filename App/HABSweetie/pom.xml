@@ -126,6 +126,7 @@
 		<wasync.version>1.1.1</wasync.version>
 		<autobahn.version>0.5.2-SNAPSHOT</autobahn.version>
 		<robolectric.version>2.2</robolectric.version>
+		<android.home>${env.ANDROID_HOME}</android.home>
 	</properties>
 
 	<repositories>
@@ -148,7 +149,7 @@
 		</repository>
         <repository>
             <id>android-sdk</id>
-            <url>file:///${env.ANDROID_HOME}/extras/android/m2repository</url>
+            <url>file:///${android.home}/extras/android/m2repository</url>
         </repository>
 	</repositories>
 
