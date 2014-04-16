@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://github.com/dereulenspiegel/mev-repo/raw/master/"
+    }
+    maven {
+        androidHome = "$System.env.ANDROID_HOME"
+        url "file:///"+androidHome+"/extras/android/m2repository"
+    }
+}
+
+dependencies {
+
+    compile ("de.akuz.google.api:okhttp-transport:1.0-SNAPSHOT")
+    compile 'com.larswerkman:HoloColorPicker:1.4'
+    compile 'org.codepond:wizardroid:1.2.0'
+    compile 'com.octo.android.robospice:robospice-google-http-client:1.4.5'
+    compile 'com.squareup.okhttp:okhttp:1.2.1'
+    compile 'nl.qbusict:cupboard:1.0'
+    compile 'com.google.http-client:google-http-client-jackson2:1.15.0-rc'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.3'
+    compile 'org.atmosphere:wasync:1.1.1'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.12'
+    compile 'de.akuz.android:MemorizingTrustManager:0.0.2-SNAPSHOT'
+    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'de.keyboardsurfer.android.widget:crouton:1.8.4'
+    compile 'com.squareup.dagger:dagger:1.2.0'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.0'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.2"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+}
