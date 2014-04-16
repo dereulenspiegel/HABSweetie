@@ -1,19 +1,20 @@
 package de.akuz.android.openhab.ui;
 
-import java.text.MessageFormat;
-
-import javax.inject.Inject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.octo.android.robospice.SpiceManager;
+
+import java.text.MessageFormat;
+
+import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.BootstrapApplication;
@@ -22,7 +23,7 @@ import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class BaseActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends ActionBarActivity {
 
 	@Inject
 	SpiceManager spiceManager;

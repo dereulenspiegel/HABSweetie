@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public class ProgressDialogFragment extends SherlockDialogFragment {
+public class ProgressDialogFragment extends BaseDialogFragment {
 
 	public final static String MESSAGE_ARG = "message";
 
@@ -42,5 +40,4 @@ public class ProgressDialogFragment extends SherlockDialogFragment {
 		}
 		return dialog;
 	}
-
 }

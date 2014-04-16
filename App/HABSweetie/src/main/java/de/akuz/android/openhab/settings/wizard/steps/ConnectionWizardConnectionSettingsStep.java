@@ -17,9 +17,6 @@ import de.akuz.android.openhab.util.HABSweetiePreferences;
 public class ConnectionWizardConnectionSettingsStep extends
 		AbstractConnectionWizardStep implements OnCheckedChangeListener {
 
-	public final static String INTERNAL_ARG = "internalArg";
-	public final static String SETTINGS_ARG = "settings";
-
 	private boolean internal;
 
 	private TextView header;
@@ -38,43 +35,40 @@ public class ConnectionWizardConnectionSettingsStep extends
 	@Inject
 	HABSweetiePreferences prefs;
 
-	public static interface ConnectionSettingsEditFinished {
+    public static ConnectionWizardConnectionSettingsStep build(boolean internal, OpenHABConnectionSettings conSettings) {
+        ConnectionWizardConnectionSettingsStep step = null;
+        if(internal){
+            step = new InternalConnectionWizardStep();
+        } else {
+            step = new ExternalConnectionWizardStep();
+        }
+        step.setSettingsToEdit(conSettings);
+        return step;
+    }
+
+    public static interface ConnectionSettingsEditFinished {
 
 		public void editingFinished(OpenHABConnectionSettings settings);
 	}
 
-	public static ConnectionWizardConnectionSettingsStep build(boolean internal) {
-		ConnectionWizardConnectionSettingsStep fragment = new ConnectionWizardConnectionSettingsStep();
-		// FIXME Ugly hack, because WizarDroid overwrites the arguments instead
-		// of extending them
-		fragment.setInternal(internal);
-		Bundle args = new Bundle();
-		args.putBoolean(INTERNAL_ARG, internal);
-		fragment.setArguments(args);
-		return fragment;
-	}
-
-	public static ConnectionWizardConnectionSettingsStep build(
-			boolean internal, OpenHABConnectionSettings conSettings) {
-		ConnectionWizardConnectionSettingsStep fragment = build(internal);
-		Bundle args = fragment.getArguments();
-		args.putParcelable(SETTINGS_ARG, conSettings);
-		fragment.setArguments(args);
-		return fragment;
-
-	}
+    protected ConnectionWizardConnectionSettingsStep(boolean internal){
+        this.internal = internal;
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		// internal = args.getBoolean(INTERNAL_ARG);
-		OpenHABConnectionSettings receivedSettings = args
-				.getParcelable(SETTINGS_ARG);
-		if (receivedSettings != null) {
-			isWizardStep = false;
-			settings = receivedSettings;
-		}
+        // Possible that the settings were set from outside
+        if(settings != null) {
+            if (internal) {
+                settings = instance.getInternal();
+            } else {
+                settings = instance.getExternal();
+            }
+            if (settings == null) {
+                settings = new OpenHABConnectionSettings();
+            }
+        }
 	}
 
 	@Override
@@ -168,12 +162,11 @@ public class ConnectionWizardConnectionSettingsStep extends
 			settings.setUsername(null);
 			settings.setPassword(null);
 		}
-
-	}
-
-	@Override
-	public void onModelBound(Parcelable model) {
-		settings = (OpenHABConnectionSettings) model;
+        if(internal){
+            instance.setInternal(settings);
+        } else {
+            instance.setExternal(settings);
+        }
 	}
 
 	@Override
@@ -183,12 +176,8 @@ public class ConnectionWizardConnectionSettingsStep extends
 
 	}
 
-	public boolean isInternal() {
-		return internal;
-	}
-
-	public void setInternal(boolean internal) {
-		this.internal = internal;
-	}
+    public void setSettingsToEdit(OpenHABConnectionSettings settings){
+        this.settings = settings;
+    }
 
 }

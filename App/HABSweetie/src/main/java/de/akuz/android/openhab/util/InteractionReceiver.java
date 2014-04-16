@@ -1,23 +1,22 @@
 package de.akuz.android.openhab.util;
 
-import java.security.cert.X509Certificate;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import java.security.cert.X509Certificate;
 
 import de.akuz.android.openhab.ui.SSLDecisionDialogFragment;
 import de.duenndns.ssl.MemorizingTrustManager;
 
 public class InteractionReceiver extends BroadcastReceiver {
 
-	private SherlockFragmentActivity activity;
+	private FragmentActivity activity;
 
-	public InteractionReceiver(SherlockFragmentActivity activity) {
+	public InteractionReceiver(FragmentActivity activity) {
 		this.activity = activity;
 	}
 
@@ -36,7 +35,7 @@ public class InteractionReceiver extends BroadcastReceiver {
 		this.abortBroadcast();
 	}
 
-	public static InteractionReceiver registerReceiver(SherlockFragmentActivity activity) {
+	public static InteractionReceiver registerReceiver(FragmentActivity activity) {
 		InteractionReceiver receiver = new InteractionReceiver(activity);
 
 		IntentFilter filter = new IntentFilter(

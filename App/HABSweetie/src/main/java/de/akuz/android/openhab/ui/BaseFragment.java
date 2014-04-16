@@ -1,22 +1,22 @@
 package de.akuz.android.openhab.ui;
 
-import java.text.MessageFormat;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import java.text.MessageFormat;
 
 import dagger.ObjectGraph;
 import de.akuz.android.openhab.R;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public abstract class BaseFragment extends SherlockFragment {
+public abstract class BaseFragment extends Fragment {
 
 	private LayoutInflater inflater;
 	private View rootView;

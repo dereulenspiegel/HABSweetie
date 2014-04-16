@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.EditText;
+
+import org.codepond.wizardroid.persistence.ContextVariable;
+
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 
@@ -15,7 +18,7 @@ public class ConnectionWizardStepOne extends AbstractConnectionWizardStep {
 
 	private EditText editName;
 
-	private OpenHABInstance instance;
+
 
 	@Override
 	protected void buildUi(Bundle savedInstanceState) {
@@ -31,15 +34,6 @@ public class ConnectionWizardStepOne extends AbstractConnectionWizardStep {
 	@Override
 	protected void collectValues() {
 		instance.setName(editName.getText().toString());
-	}
-
-	@Override
-	public void onModelBound(Parcelable model) {
-		Log.d(TAG, "Binding model for first wizard step");
-		if (model == null) {
-			Log.e(TAG, "Model is null");
-		}
-		instance = (OpenHABInstance) model;
 	}
 
 }

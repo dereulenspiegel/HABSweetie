@@ -1,6 +1,9 @@
 /gen
 /bin
 /target
+/classes
+/.gradle
+/build
 .idea
 gen-external-apklibs/
 openhab.iml

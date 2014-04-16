@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import android.preference.PreferenceActivity;
 
 import de.akuz.android.openhab.R;
 
-public class SettingsActivity extends SherlockPreferenceActivity implements
+public class SettingsActivity extends PreferenceActivity implements
 		OnPreferenceClickListener {
 
 	Preference manageInstances;

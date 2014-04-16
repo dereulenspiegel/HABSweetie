@@ -1,15 +1,12 @@
 package de.akuz.android.openhab.tasker;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.settings.OpenHABInstance;
 import de.akuz.android.openhab.ui.BaseActivity;
+import de.akuz.android.openhab.ui.BaseDialogFragment;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
-public class SelectInstanceDialog extends SherlockDialogFragment implements
+public class SelectInstanceDialog extends BaseDialogFragment implements
 		OnClickListener {
 
 	private InstanceListAdapter listAdapter;

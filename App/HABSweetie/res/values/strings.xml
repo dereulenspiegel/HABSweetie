@@ -29,6 +29,8 @@
 	<string name="pref_cat_advanced_title">Advanced settings</string>
 	<string name="pref_default_config_id">pref_default_config_id</string>
 	<string name="connection_wizard_next">Next</string>
+    <string name="connection_wizard_back">Back</string>
+    <string name="connection_wizard_finish">Finish</string>
 	<string name="connection_wizard_welcome">Welcome to HABSweetie</string>
 	<string name="connection_wizard_welcome_text">This wizard will help you to configure HABSweetie so it can connect to your openHAB instance.</string>
 	<string name="connection_wizard_step_1_introduction">First please choose a name for your openHAB instance. Something like "Home" or "Weekend Flat".</string>
@@ -64,5 +66,4 @@
 	<string name="pref_keep_screen_on_titlt">Keep screen on</string>
 	<string name="pref_button_manage_instances_title">Manage instances</string>
 	<string name="pref_button_manage_instances_summary">Create, edit or delete the connection settings for openHAB instances</string>
-	<string name="main_menu_settings">Settings</string>
 </resources>

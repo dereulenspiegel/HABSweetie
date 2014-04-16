@@ -1,24 +1,23 @@
 package de.akuz.android.openhab.ui;
 
-import javax.inject.Inject;
-
-import roboguice.util.temp.Strings;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.google.api.client.http.HttpResponseException;
-import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
+
+import javax.inject.Inject;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.OpenHABAsyncRestInterface;
@@ -34,6 +33,7 @@ import de.akuz.android.openhab.ui.ChooseSitemapDialogFragment.SelectSitemapListe
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 import de.akuz.android.openhab.util.InteractionReceiver;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import roboguice.util.temp.Strings;
 
 public class PageActivity extends BaseActivity implements
 		SelectSitemapListener, OnChildClickListener {
@@ -60,7 +60,7 @@ public class PageActivity extends BaseActivity implements
 	private ExpandableInstanceListAdapter instanceListAdapter;
 
 	private DrawerLayout drawerLayout;
-	private SherlockActionBarDrawerToggle drawerToggle;
+	private ActionBarDrawerToggle drawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class PageActivity extends BaseActivity implements
 		instanceList.setOnChildClickListener(this);
 
 		Log.d(TAG, "onCreate of PageActivity complete");
-		drawerToggle = new SherlockActionBarDrawerToggle(this, drawerLayout,
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
 		drawerLayout.setDrawerListener(drawerToggle);
 		getSupportActionBar().setTitle("HABSweetie");

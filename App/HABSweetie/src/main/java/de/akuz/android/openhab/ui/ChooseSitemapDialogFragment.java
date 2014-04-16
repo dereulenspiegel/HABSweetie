@@ -1,9 +1,5 @@
 package de.akuz.android.openhab.ui;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,13 +15,15 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Sitemap;
 import de.akuz.android.openhab.util.HABSweetiePreferences;
 
-public class ChooseSitemapDialogFragment extends SherlockDialogFragment implements
+public class ChooseSitemapDialogFragment extends BaseDialogFragment implements
 		OnClickListener, OnCheckedChangeListener, OnItemClickListener {
 
 	private List<Sitemap> sitemapList;

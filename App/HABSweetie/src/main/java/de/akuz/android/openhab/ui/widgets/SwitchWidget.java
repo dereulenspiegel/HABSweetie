@@ -6,13 +6,14 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.ToggleButton;
+
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.core.objects.Item;
 import de.akuz.android.openhab.core.objects.Mapping;
 import de.akuz.android.openhab.core.objects.Widget;
 import de.akuz.android.openhab.ui.custom.ToggleGroup;
-import de.ankri.views.Switch;
 
 public class SwitchWidget extends BasicOpenHABWidget implements
 		OnCheckedChangeListener,

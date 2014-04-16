@@ -1,7 +1,5 @@
 package de.akuz.android.openhab.ui;
 
-import java.security.cert.X509Certificate;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,13 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import java.security.cert.X509Certificate;
 
 import de.akuz.android.openhab.R;
 import de.duenndns.ssl.MTMDecision;
 import de.duenndns.ssl.MemorizingTrustManager;
 
-public class SSLDecisionDialogFragment extends SherlockDialogFragment implements
+public class SSLDecisionDialogFragment extends BaseDialogFragment implements
 		OnClickListener {
 
 	private final static String TAG = SSLDecisionDialogFragment.class

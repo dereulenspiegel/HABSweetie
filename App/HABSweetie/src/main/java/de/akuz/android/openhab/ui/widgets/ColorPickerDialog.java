@@ -5,16 +5,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.larswerkman.colorpicker.ColorPicker;
-import com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener;
+import com.larswerkman.holocolorpicker.ColorPicker;
 
 import de.akuz.android.openhab.R;
 
-public class ColorPickerDialog extends SherlockDialogFragment implements
-		OnColorChangedListener, OnClickListener {
+public class ColorPickerDialog extends DialogFragment implements
+        ColorPicker.OnColorChangedListener, OnClickListener {
 
 	private ColorPicker colorPicker;
 

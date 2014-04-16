@@ -12,14 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import de.akuz.android.openhab.R;
 import de.akuz.android.openhab.ui.custom.TouchImageView;
 import de.akuz.android.openhab.util.ImageLoadHelper;
 import de.akuz.android.openhab.util.ImageLoadHelper.ImageLoadListener;
 
-public class ImageViewDialog extends SherlockDialogFragment implements
+public class ImageViewDialog extends BaseDialogFragment implements
 		ImageLoadListener {
 
 	public static String IMAGE_URL_ARGUMENT = "image.url";
